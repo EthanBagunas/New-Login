@@ -33,7 +33,16 @@ const TemporaryDrawer = ({ open, level }) => {
     
   return (
     <div>
-      <Drawer open={open}>
+      <Drawer open={open} hideBackdrop ={true} PaperProps={{      
+        sx: {      
+        borderRadius: 4,
+        position: 'absolute', // Set position to absolute    
+        top: '50%', // Set top to 50% to center the drawer vertically
+        left: '20%', // Set left to 50% to center the drawer horizontally13          
+        transform: 'translate(-50%, -50%)', // Translate the drawer to center it14          
+        width: 300, // Set the width of the drawer15        
+        height: 700, // Set the height of the drawer      
+        }}} >
         <CardList levels={level_list} theme={level}/>        
       </Drawer>
     </div>
