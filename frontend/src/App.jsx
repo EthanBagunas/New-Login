@@ -17,13 +17,15 @@ import RequireNoAuth from './components/Login/RequireNoAuth';
 
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Test from './components/Test';
+
 //import MapContainer from '../../../../webpages/Flood-monitoring-system/client/src/components/Map/Map';
 import MapContainer from './components/Map/Map';
 import RegistrationForm from './components/Register/Signup'; 
 import RegistrationOtp from './components/Register/SignupOTP';
 import './register.css'
- // Adjust the path
+
+//  import Test from './components/Test';
+// <Route exact path="/test" element={<Test />} /> // Use the correct component name
 
 const ROLES = {
   'User': 2001,
@@ -55,7 +57,6 @@ function App() {
             <Route path="reset" element={<Reset />} />
             <Route path="unauthorized" element={<Unauthorized />} />
             <Route element={<RequireNoAuth />}>
-                <Route exact path="/test" element={<Test />} /> // Use the correct component name
                 <Route exact path="/signup" element={<RegistrationForm/>} /> 
                 <Route exact path ="/signup/signupotp" element= {<RegistrationOtp/>}/>
                 <Route path="/" element={<Login />} />
