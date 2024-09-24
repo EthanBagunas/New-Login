@@ -15,16 +15,11 @@ const themeColors = {
   High: "#fc3c04", // Red
   Extreme: "#e404fc" // Purple
 };
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
+// design of a single card
 const CardItem= ({theme, items}) => {
+
+  
   return(
       <Box sx={{ width: 350 }} role="presentation">
         <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={250} width={220} my={4} display="flex" alignItems="center" gap={4} p={2}>
@@ -39,7 +34,6 @@ const CardItem= ({theme, items}) => {
                    {parseFloat(items.LATTITUDE).toFixed(6)}, {parseFloat(items.LONGITUDE).toFixed(6)} 
                     <br/>
                   {items.LOCATION}
-
                   </Typography>
                   <Typography variant="h5" component="div">
                     Water Level: {items.DIST_M}
@@ -59,7 +53,7 @@ const CardItem= ({theme, items}) => {
 };
   
 
-
+// for each of the unique entries
 export default function CardList(list, theme) {
   const [cardlist, setCardList] =useState('');
   const handleCardlist= ()=> {
