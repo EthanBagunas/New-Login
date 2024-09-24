@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
-import { Grid, Paper } from "@mui/material";
 import Button from '@mui/material/Button';
-import { blue } from "@mui/material/colors";
-import OtpTimer from 'otp-timer';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
