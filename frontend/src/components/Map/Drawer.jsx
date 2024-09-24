@@ -33,6 +33,7 @@ const TemporaryDrawer = ({ open, level }) => {
     
   return (
     <div>
+
       <Drawer open={open} hideBackdrop ={true} PaperProps={{      
         sx: {      
         borderRadius: 4,
