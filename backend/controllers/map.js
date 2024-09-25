@@ -37,5 +37,11 @@ const GetPosition = (req, res) => {
   getAllLvl(sql, [min, max], res);
 }
 
+const GetHistory = (req, res) => {
+  const {deviceId} = req.params;
+  const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M FROM logs  WHERE DEVICE_ID = ?;'
+  getAllLvl(sql, [deviceId], res);
+}
 
-module.exports= {GetAllDetails, GetPosition}
+
+module.exports= {GetAllDetails, GetPosition, GetHistory}

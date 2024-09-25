@@ -64,7 +64,7 @@ const AddDevice = ({lat, lng, setLat, setLng}) => {
     return (
       <div>
         <Button onClick={handleAnchor} >
-          <Icon icon="icon-park:water-level" style={{ width: '60px', height: '60px' }} />
+          <Icon icon="icon-park:water-level" style={{ color: '#ff3300', width: '30px', height: '30px' }} />
         </Button>
         <BasePopup id={id} open={open} anchor={anchor} placement="right-end">
           <PopupBody> 
