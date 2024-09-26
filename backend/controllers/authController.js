@@ -32,16 +32,17 @@ const handleLogin = async (req, res) => {
                 if (isMatch) {
                     const firstTimeLogin = !user.password_changed;
 
+                    // Include user ID in the payload
                     const accessToken = jwt.sign(
-                        { email: user.username, roles: roles },
+                        { id: user.id, email: user.username, roles: roles }, // Include user ID here
                         secretKey,
                         { expiresIn: '10s' }
                     );
 
                     const refreshToken = jwt.sign(
-                        { email: user.username, roles: roles },
+                        { id: user.id, email: user.username, roles: roles }, // Include user ID here
                         refreshSecretKey,
-                        { expiresIn: '1hr' } // Change to 7 days for the refresh token
+                        { expiresIn: '1hr' }
                     );
 
                     // Store the refresh token in the database
@@ -58,7 +59,6 @@ const handleLogin = async (req, res) => {
                             secure: true, // Secure only in production
                             sameSite: 'None',
                             maxAge: 10 * 1000 // 10 seconds
-
                         });
 
                         res.cookie('refreshToken', refreshToken, {

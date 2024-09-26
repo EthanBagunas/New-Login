@@ -7,16 +7,10 @@ import OtpTimer from 'otp-timer';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
-import { Icon } from '@iconify/react';
-import TextField from '@mui/material/TextField';
-import { FormControl, FormLabel } from '@mui/material';
 
-
-
-
-const Test = ({lat, lng, setLat, setLng}) => {
-
+const Test = ({lat, lng}) => {
   const theme =useTheme();
+  
   const [anchor, setAnchor] = React.useState(null);
   
     const handleAnchor = (event) => {
@@ -57,54 +51,29 @@ const Test = ({lat, lng, setLat, setLng}) => {
           console.error(error);
           res.error('An error occurred. Please try again.');
         });
-
-        setLat(null);
-        setLng(null);
     };
   
     return (
       <div>
-        <Button style={{ position: 'absolute', bottom: '70px', left: '50px' }} onClick={handleAnchor} >
-          <Icon icon="icon-park:water-level" style={{ width: '60px', height: '60px' }} />
+        <Button sx={{color: theme.palette.primary.main}} onClick={handleAnchor}>
+          Add Device
         </Button>
-        <BasePopup id={id} open={open} anchor={anchor} placement="top-start">
+        <BasePopup id={id} open={open} anchor={anchor}>
           <PopupBody> 
-          <FormControl>
-              <FormLabel>Click on the map to add device positions</FormLabel>
-              <TextField
-                id="deviceName"
-                label="Device Name"
-                name="deviceName"
-                variant="outlined"
-                onChange={handleInputChange}
-                margin= "normal"
-              />
-              <TextField
-                id="location"
-                label="Location"
-                name="location"
-                variant="outlined"
-                onChange={handleInputChange}
-                margin= "normal"
-              />
-              <TextField
-                id="latitude"
-                label="Latitude"
-                variant="outlined"
-                value={lat}
-                disabled
-                margin= "normal"
-              />
-              <TextField
-                id="longitude"
-                label="Longitude"
-                variant="outlined"
-                value={lng}
-                disabled
-                margin= "normal"
-              />
-              <Button sx={{color:"#000000", backgroundColor: theme.palette.primary.main }} onClick={handleSubmit}>Submit</Button>
-            </FormControl>
+            <div>
+              <input type="text" placeholder="Device Name" name="deviceName" onChange={handleInputChange} />
+              <input type="text" placeholder="Location" name="location" onChange={handleInputChange} />
+              <br />
+              <label>Click on the map to add a device</label>
+              <br />
+
+              <input type="number" placeholder="Lattitude" name="latitude" value={lat}/>
+              <input type="number" placeholder="Longitude" name="longitude" value={lng} />
+              <br />
+
+              <Button onClick={handleSubmit}>Submit</Button>
+            </div>
+            
           </PopupBody>
         </BasePopup>
       </div>
@@ -125,6 +94,7 @@ const grey = {
 
 const PopupBody = styled('div')(
   ({ theme }) => `
+  width: max-content;
   padding: 12px 16px;
   margin: 8px;
   border-radius: 8px;

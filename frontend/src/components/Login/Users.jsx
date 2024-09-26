@@ -23,7 +23,7 @@ const Users = () => {
                     
                 } else {
                     console.error(err);
-                    navigate('/login', { state: { from: location }, replace: true });
+                    navigate('/', { state: { from: location }, replace: true });
                 }
             }
         };

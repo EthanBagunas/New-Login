@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 const path = require('path');
 var db = require('./config/dbconnections');
@@ -12,7 +13,8 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
-
+const mapRouter = require('./routes/mapRoutes'); 
+const updateProfileRouter = require('./routes/AuthUpdate');
 
 
 app.use(logger);
@@ -25,6 +27,7 @@ app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname, '/public')));
 
+
 app.use('/', require('./routes/root'));
 app.use('/refresh', require('./routes/refresh'));
 app.use(setdeviceRouter);
@@ -32,7 +35,7 @@ app.use(userRouter);
 app.use('/reset', require('./routes/authRes'));
 app.use('/auth', require('./routes/auth'));
 
-const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
+
 app.use(mapRouter);
 
 
@@ -42,17 +45,22 @@ app.use('/logout', require('./routes/logout'));
 //     return res.status(200).json({ message: "Logout successful" });
 // });
 
+app.use('/api', updateProfileRouter); // Mount the router
 
+app.use('/ProfilePage', require('./routes/api/authProf'));
 
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users'));
 
 
+
+
+
 app.use('/api/protected-route', verifyJWT, (req, res) => {
     res.json({ message: "You have access to this protected route", user: req.user, roles: req.roles });
 });
-// Define the reset route before app.use(verifyJWT) if you don't want JWT verification for reset.
+
 
 
 app.all('*', (req, res) => {

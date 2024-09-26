@@ -68,7 +68,7 @@ const ValidateOtp = (req, res) => {
       return res.json({ message: err });
     }
     if (results.length === 0) {
-      return res.status(400).json({ message: "Invalid OTP" });
+      return res.json({ message: "Invalid OTP" });
     }
       return InsertUser(req, res);
   });

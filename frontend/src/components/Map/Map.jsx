@@ -1,85 +1,85 @@
-import React, { Component, useContext,useState, useEffect } from 'react';
-import { Map, GoogleApiWrapper, Marker} from 'google-maps-react';
-import LevelButtons  from './levelButtons';
+import React, { useContext, useState } from 'react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
 import mediumIcon from './icons/gps(2).png';
 import highIcon from './icons/gps(3).png';
 import extremeIcon from './icons/gps(4).png';
 import Test from '../Test';
-import Navbar from '../Navbar';
-
-
+import useAuth from '../../hooks/useAuth';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
-
 const markerIcons = {
-  Normal: normalIcon, // Green
-  Low: lowIcon, // Yellow
-  Medium: mediumIcon, // Orange
-  High: highIcon, // Red
-  Extreme: extremeIcon // Purple
+  Normal: normalIcon,
+  Low: lowIcon,
+  Medium: mediumIcon,
+  High: highIcon,
+  Extreme: extremeIcon
 };
 
 const mapStyles = {
   width: '95%',
-  height: '80%',  
+  height: '80%',
   margin: '20px auto'
 };
 
-const initposition = {    
-  lat:10.310530313219541, 
-  lng:123.89366616608562
-}
-
+const initposition = {
+  lat: 10.310530313219541,
+  lng: 123.89366616608562
+};
 
 export const MapContainer = (props) => {
+  const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
   const [markers, setMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
-  const [lattitude, SetLattitude]=useState();
-  const [longitude, SetLongitude]=useState();
-  
-  const handlePosition =(position) => {
-    SetLattitude(position.lat());
-    SetLongitude(position.lng());
-    console.log(lattitude, " ", longitude)
-  }
-    return (
-      <div>
-        <Navbar/> 
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+
+  const handlePosition = (position) => {
+    setLatitude(position.lat());
+    setLongitude(position.lng());
+    console.log(latitude, " ", longitude);
+  };
+
+
+  const hasRole1994 = auth.roles.includes('1994');
+
+  return (
+    <div>
       <Map style={mapStyles}
-      google={props.google}
-      zoom={14}
-      initialCenter={initposition}
-      onClick={(mapProps, map, clickEvent) => {
-        handlePosition(clickEvent.latLng)
-      }}>   
-        <LevelContext.Provider value= {[poptext, setPoptext]}>
-          <MarkerContext.Provider value= {[markers, setMarkers]}>
-          <LevelButtons />
+        google={props.google}
+        zoom={14}
+        initialCenter={initposition}
+        onClick={(mapProps, map, clickEvent) => {
+          handlePosition(clickEvent.latLng);
+        }}>
+        <LevelContext.Provider value={[poptext, setPoptext]}>
+          <MarkerContext.Provider value={[markers, setMarkers]}>
+            <LevelButtons />
           </MarkerContext.Provider>
-          </LevelContext.Provider>
-          {markers.map((marker, index) => (
-            <Marker
+        </LevelContext.Provider>
+        {markers.map((marker, index) => (
+          <Marker
             key={index}
             position={{ lat: marker.lat, lng: marker.lng }}
             icon={{
               url: markerIcons[poptext],
               scaledSize: new window.google.maps.Size(30, 30)
             }}
-            />
-          ))}
-                <Test lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>
-           <Marker
-            position={{ lat: lattitude, lng: longitude }}
-            icon={{
-              url: markerIcons['High'],
-              scaledSize: new window.google.maps.Size(30, 30)
-            }}/>
-        </Map>
-        </div>
-    );
+          />
+        ))}
+        {hasRole1994 && <Test lat={latitude} lng={longitude} />}
+        <Marker
+          position={{ lat: latitude, lng: longitude }}
+          icon={{
+            url: markerIcons['High'],
+            scaledSize: new window.google.maps.Size(30, 30)
+          }} />
+      </Map>
+    </div>
+  );
 }
 
 export default GoogleApiWrapper({

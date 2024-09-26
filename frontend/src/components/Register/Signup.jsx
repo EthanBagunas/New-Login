@@ -23,12 +23,14 @@ const RegistrationForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFormSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+
     if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
     }
+
     axios.post(`http://localhost:7000/sendotp`, formData)
       .then(response => {
         toast.success('OTP sent successfully! Redirecting...');
@@ -47,7 +49,7 @@ const RegistrationForm = () => {
       <div className="register-container">
         <div className="circle circle-one"></div>
         <div className="circle circle-two"></div>
-        <form className="form-container" onSubmit={handleFormSubmit}>
+        <form className="form-container" onSubmit={handleSubmit}>
           <Avatar className="avatar-icon">
             <AppRegistrationOutlinedIcon color="primary" />
           </Avatar>
