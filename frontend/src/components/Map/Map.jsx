@@ -13,6 +13,7 @@ import Dashboard from '../Dashboard/Dashboard';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
+export const LogsDataContext = React.createContext();
 
 const markerIcons = {
   Normal: normalIcon, // Green
@@ -40,6 +41,8 @@ export const MapContainer = (props) => {
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
   
+  const [logsdata, SetLogsData]= useState('');
+
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
@@ -56,12 +59,14 @@ export const MapContainer = (props) => {
         onClick={(mapProps, map, clickEvent) => {
           handlePosition(clickEvent.latLng)
         }}>   
-            <LevelContext.Provider value= {[poptext, setPoptext]}>
-                <MarkerContext.Provider value= {[markers, setMarkers]}>
-                  <LevelButtons />
-                </MarkerContext.Provider>
-            </LevelContext.Provider>
-            
+          <LevelContext.Provider value= {[poptext, setPoptext]}>
+            <MarkerContext.Provider value= {[markers, setMarkers]}>
+              <LogsDataContext.Provider value={[logsdata, SetLogsData]}>
+               <LevelButtons />
+              </LogsDataContext.Provider>
+            </MarkerContext.Provider>
+          </LevelContext.Provider>
+
             {markers.map((marker, index) => (
               <Marker
               key={index}

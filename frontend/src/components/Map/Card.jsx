@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
+
+import { LogsDataContext } from './Map';
+
 
 const themeColors = {
   Normal: "#04dc04", // Green
@@ -19,7 +22,12 @@ const themeColors = {
 // design of a single card
 const CardItem= ({theme, items}) => {
 
-  
+  const [logsdata, setLogsData] = useContext(LogsDataContext);
+
+  const handleSetLogsTabledata = (value, event) => {
+      setLogsData(value);
+      event.stopPropagation();
+  }
   return(
       <Box sx={{ width: 350 }} role="presentation">
         <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={250} width={220} my={4} display="flex" alignItems="center" gap={4} p={2}>
@@ -43,7 +51,9 @@ const CardItem= ({theme, items}) => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">Learn More</Button>
+                  <Button size="small" onClick={(event) => handleSetLogsTabledata(items.DEVICE_ID, event)} >
+                    Learn More
+                  </Button>
                 </CardActions>
             </React.Fragment>
           </Box>
@@ -58,7 +68,6 @@ export default function CardList(list, theme) {
   const [cardlist, setCardList] =useState('');
   const handleCardlist= ()=> {
     setCardList(list);
-
   }
 
   useEffect(() => {
