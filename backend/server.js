@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
-const updateProfileRouter = require('./routes/AuthUpdate');
+const updateProfileRouter = require('./routes/authUpdate');
 
 
 app.use(logger);
