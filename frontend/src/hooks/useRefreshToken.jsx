@@ -14,7 +14,9 @@ const useRefreshToken = () => {
                 console.log('New Access Token:', response.data.accessToken);
 
                 return { 
-                    ...prev, 
+                    ...prev,
+                    id: response.data.id, 
+                    email: response.data.email,
                     roles: response.data.roles,
                     accessToken: response.data.accessToken 
                 };

@@ -12,12 +12,14 @@ import Reset from './reset';
 import Unauthorized from './components/Login/Unauthorized';
 import PersistLogin from './components/Login/PersistLogin';
 import RequireNoAuth from './components/Login/RequireNoAuth'; 
-
+import Profile from './components/Profile/Profile';
+import ProfilePage from './components/Profile/ProfilePage'
 
 
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import Navbar from './components/Navbar';
+import Test from './components/Test';
 //import MapContainer from '../../../../webpages/Flood-monitoring-system/client/src/components/Map/Map';
 import MapContainer from './components/Map/Map';
 import RegistrationForm from './components/Register/Signup'; 
@@ -52,25 +54,32 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
+          <Navbar />
             <div className="content">
             <Routes>
             <Route path="reset" element={<Reset />} />
             <Route path="unauthorized" element={<Unauthorized />} />
+            <Route element={<PersistLogin />}>
             <Route element={<RequireNoAuth />}>
+              
                 <Route exact path="/signup" element={<RegistrationForm/>} /> 
                 <Route exact path ="/signup/signupotp" element= {<RegistrationOtp/>}/>
-                <Route path="/" element={<Login />} />
+                <Route path="" element={<Login />} />
+               
                 </Route>
 
 
-                <Route element={<PersistLogin />}>
 
                 <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
+                <Route path="/Profile" element={<Profile />} />
+                <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route exact path="/Home" element={<MapContainer />} /> 
                 </Route>
 
                 <Route element={<RequireAuth allowedRoles={[1994]}/>}>
                 <Route path="admin" element={<Admin />} />
+                <Route exact path="/test" element={<Test />} />
+    
               </Route>
 
 

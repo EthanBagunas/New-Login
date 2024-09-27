@@ -12,7 +12,7 @@ const Home = () => {
         try {
             await logout(); // Call the logout function to clear backend state
             setAuth({}); // Clear the authentication state
-            navigate('/'); // Redirect to the LinkPage after logout
+            navigate('/linkpage'); // Redirect to the LinkPage after logout
         } catch (err) {
             console.error('Logout failed', err);
         }

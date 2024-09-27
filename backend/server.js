@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
-
+const updateProfileRouter = require('./routes/AuthUpdate');
 
 
 app.use(logger);
@@ -42,7 +42,9 @@ app.use('/logout', require('./routes/logout'));
 //     return res.status(200).json({ message: "Logout successful" });
 // });
 
+app.use('/api', updateProfileRouter); // Mount the router
 
+app.use('/ProfilePage', require('./routes/api/authProf'));
 
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));

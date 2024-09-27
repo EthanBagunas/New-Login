@@ -20,9 +20,11 @@ const handleRefreshToken = (req, res) => {
         // Proceed to generate a new access token
         const roles = decoded.roles || []; // Assume roles are part of the decoded payload
         const email = decoded.email;
+        const id = decoded.id;
 
         const accessToken = jwt.sign(
             {
+                id: id,
                 email: email,
                 roles: roles
             },
@@ -30,7 +32,7 @@ const handleRefreshToken = (req, res) => {
             { expiresIn: '1hr' } // Adjust the expiration time as needed
         );
 
-        res.json({ roles, accessToken });
+        res.json({ id, email, roles, accessToken });
     });
 };
 

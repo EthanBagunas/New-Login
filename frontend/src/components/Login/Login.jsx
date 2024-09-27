@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import useAuth from "../../hooks/useAuth"; // Adjust path as needed
+import useAuth from "../../hooks/useAuth"; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from '../../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
