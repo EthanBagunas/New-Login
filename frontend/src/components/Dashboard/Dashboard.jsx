@@ -2,12 +2,8 @@ import React, {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import axios from 'axios';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import AddDevice from './AddDevices';
 
-import TemporaryDrawer from '../Map/Drawer';
-import Collapse from '@mui/material/Collapse';
 import { Icon } from '@iconify/react';
 
 import { Button } from '@mui/material';
