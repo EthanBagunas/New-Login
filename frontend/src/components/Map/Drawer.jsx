@@ -1,31 +1,30 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import axios from 'axios';
 import CardList from './Card'
-
+import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
+import { Icon } from '@iconify/react';
 import DataTable from './HistoryTable';
-
-export const LogsDataContext = React.createContext();
-
-
+import {Button} from '@mui/material'
+export const widthContext= createContext();
 
 const TemporaryDrawer = ({ open, level }) => {
   const [level_list, setLevel_list] = useState('');
+  const [drawerwidth, setDrawerWidth] = useState(350);
   
   const handleList= (levels) => {
     setLevel_list(levels);
   }
   //const [drawer_width, setDrawerWidth]= useState(300);
+
+  const handleExtend = (event, value) => {
+    setDrawerWidth(value);
+    event.stopPropagation();
+  };
+
+
 
 
   useEffect(() => { 
@@ -44,24 +43,37 @@ const TemporaryDrawer = ({ open, level }) => {
  
   return (
     <div>
-      <Drawer open={open} hideBackdrop ={true} PaperProps={{      
+      <Drawer open={open} hideBackdrop ={true} 
+      PaperProps={{      
         sx: {      
           borderRadius: 4,
           position: 'absolute', // Set position to absolute    
           top: '50%', // Set top to 50% to center the drawer vertically
-          left: '40%', // Set left to 50% to center the drawer horizontally13          
+          left: '20%', // Set left to 50% to center the drawer horizontally13          
           transform: 'translate(-50%, -50%)', // Translate the drawer to center it14          
-          width: 1000, // Set the width of the drawer15        
+          width: 350,
           height: 700, // Set the height of the drawer      
         }}} >
-            <Grid container>
-              <Grid item xs={4}>
+            <widthContext.Provider value= {[drawerwidth, setDrawerWidth]}>
+            <Button onClick={(event)=> handleExtend(event, 1000)}>Extend Drawer</Button>
+            <Grid container justifyContent="center" >
+            
+              <Grid item xs={10}>
+                  <Typography variant="h2" style={{ position:'relative', top:'20px', left:'5%', fontSize: 20 }} color='##000000'>
+                    Water Level Station
+                  </Typography>
+              </Grid>
+              <Grid item xs= {2}>
+                <Icon icon='pajamas:go-back' style={{fontSize:'4em', color:'#ff3300', position:'relative', left:'500px'}}/>
+              </Grid>
+              <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
                 <CardList levels={level_list} theme={level}/> 
               </Grid>
-              <Grid item xs= {6}>
+              <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '500px'}}>
                   <DataTable draweropen= {open}/>
               </Grid>
             </Grid>
+            </widthContext.Provider>
       </Drawer>
     </div>
   );

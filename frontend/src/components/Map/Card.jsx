@@ -9,6 +9,7 @@ import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
 
 import { LogsDataContext } from './Map';
+import { widthContext } from './Drawer';
 
 
 const themeColors = {
@@ -20,17 +21,20 @@ const themeColors = {
 };
 
 // design of a single card
-const CardItem= ({theme, items}) => {
-
+const CardItem= ({theme, items, }) => {
+  const [showhistory, setShowHistory]= useState('Learn more');
   const [logsdata, setLogsData] = useContext(LogsDataContext);
+  const [drawerwidth, setDrawerWidth] =useContext(widthContext);
+
 
   const handleSetLogsTabledata = (value, event) => {
-      setLogsData(value);
-      event.stopPropagation();
+    setDrawerWidth(1000);
+    setLogsData(value);
+    event.stopPropagation();
   }
   return(
       <Box sx={{ width: 350 }} role="presentation">
-        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={250} width={220} my={4} display="flex" alignItems="center" gap={4} p={2}>
+        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
         <Box sx={{ minWidth: 275 }} >
           <React.Fragment>
                 <CardContent style={{color: themeColors[theme]}}>
@@ -52,7 +56,7 @@ const CardItem= ({theme, items}) => {
                 </CardContent>
                 <CardActions>
                   <Button size="small" onClick={(event) => handleSetLogsTabledata(items.DEVICE_ID, event)} >
-                    Learn More
+                    {showhistory}
                   </Button>
                 </CardActions>
             </React.Fragment>
@@ -69,7 +73,6 @@ export default function CardList(list, theme) {
   const handleCardlist= ()=> {
     setCardList(list);
   }
-
   useEffect(() => {
 
     if (list && list.levels !== "") {
@@ -81,7 +84,7 @@ export default function CardList(list, theme) {
   return(
     <div>
       {cardlist && cardlist.levels.map((item, index) => (
-        <CardItem key={index} items= {item} theme= {cardlist.theme}/>
+        <CardItem key={index} items= {item} theme= {cardlist.theme} />
       ))}
       <Divider />
     </div>
