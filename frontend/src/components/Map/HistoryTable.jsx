@@ -10,33 +10,26 @@ import { useState, useEffect, useContext } from 'react';
 
 import { LogsDataContext } from './Map';
 
-export default function DataTable({draweropen}){
+export default function DataTable(){
 
-    const [entries, setEntries] = useState([]);
-    const handleEntries = (logdata) => {
-      setEntries(logdata);
+  const [logsdata, setLogsData] = useContext(LogsDataContext);
+
+  useEffect(()=> {
+    if (logsdata != ''){
+      axios.get(`http://localhost:7000/history/${logsdata}`)
+      .then(response => {
+        handleEntries(response.data);
+      })
+      .catch(error => {logsdata
+        console.error(error);
+      });
     }
-
-    useEffect(() => {
-        if (!draweropen) {
-          debugger
-        }
-    },[draweropen]);
-
-    const [logsdata, setLogsData] = useContext(LogsDataContext);
-
-    useEffect(()=> {
-      if (logsdata != ''){
-        axios.get(`http://localhost:7000/history/${logsdata}`)
-            .then(response => {
-              handleEntries(response.data);
-            })
-            .catch(error => {logsdata
-              console.error(error);
-            });
-      }
-    }, [logsdata])
-
+  }, [logsdata])
+  
+  const [entries, setEntries] = useState([]);
+  const handleEntries = (logdata) => {
+    setEntries(logdata);
+  }
     return (
       <div>
       <TableContainer component={Paper} >

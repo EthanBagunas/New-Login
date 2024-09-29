@@ -78,9 +78,9 @@ const handleMarkers = (positions) => {
 
   const Popup = () => {
     return (
-      <BasePopup id={id} open={open} anchor={anchor} onClick={toggleDrawer(!drawerOpen)}>
-        <TemporaryDrawer open={drawerOpen} level={poptext} />
-        <PopupBody>{poptext}</PopupBody>
+      <BasePopup id={id} open={open} anchor={anchor} >
+        <TemporaryDrawer open={drawerOpen} level={poptext} onClose={toggleDrawer(false)}/>
+        <PopupBody onClick={toggleDrawer(true)}>{poptext}</PopupBody>
     </BasePopup>
     );
   };

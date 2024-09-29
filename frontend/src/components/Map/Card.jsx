@@ -9,7 +9,6 @@ import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
 
 import { LogsDataContext } from './Map';
-import { widthContext } from './Drawer';
 
 
 const themeColors = {
@@ -21,16 +20,12 @@ const themeColors = {
 };
 
 // design of a single card
-const CardItem= ({theme, items, }) => {
-  const [showhistory, setShowHistory]= useState('Learn more');
+const CardItem= ({theme, items,extend2}) => {
   const [logsdata, setLogsData] = useContext(LogsDataContext);
-  const [drawerwidth, setDrawerWidth] =useContext(widthContext);
 
-
-  const handleSetLogsTabledata = (value, event) => {
-    setDrawerWidth(1000);
+  const handleSetLogsTabledata = (value) => {
+    extend2(true);
     setLogsData(value);
-    event.stopPropagation();
   }
   return(
       <Box sx={{ width: 350 }} role="presentation">
@@ -55,8 +50,10 @@ const CardItem= ({theme, items, }) => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" onClick={(event) => handleSetLogsTabledata(items.DEVICE_ID, event)} >
-                    {showhistory}
+                  <Button size="small" onClick={() => {
+                  handleSetLogsTabledata(items.DEVICE_ID)} 
+                  }>
+                    Learn More
                   </Button>
                 </CardActions>
             </React.Fragment>
@@ -68,7 +65,7 @@ const CardItem= ({theme, items, }) => {
   
 
 // for each of the unique entries
-export default function CardList(list, theme) {
+ const CardList= (list, theme, drawerextend)=> {
   const [cardlist, setCardList] =useState('');
   const handleCardlist= ()=> {
     setCardList(list);
@@ -84,9 +81,11 @@ export default function CardList(list, theme) {
   return(
     <div>
       {cardlist && cardlist.levels.map((item, index) => (
-        <CardItem key={index} items= {item} theme= {cardlist.theme} />
+        <CardItem key={index} items= {item} theme={cardlist.theme} extend2={drawerextend}/>
       ))}
       <Divider />
     </div>
   )
 }
+
+export default CardList;

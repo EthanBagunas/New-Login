@@ -8,73 +8,76 @@ import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Icon } from '@iconify/react';
 import DataTable from './HistoryTable';
 import {Button} from '@mui/material'
-export const widthContext= createContext();
 
-const TemporaryDrawer = ({ open, level }) => {
+const TemporaryDrawer = ({ open, level, onClose}) => {
   const [level_list, setLevel_list] = useState('');
-  const [drawerwidth, setDrawerWidth] = useState(350);
+  const [drawerstatus, setDrawerStatus] = useState(false);
   
   const handleList= (levels) => {
     setLevel_list(levels);
   }
-  //const [drawer_width, setDrawerWidth]= useState(300);
-
-  const handleExtend = (event, value) => {
-    setDrawerWidth(value);
-    event.stopPropagation();
+  
+  const handleExtend = (status) => {
+    setDrawerStatus(status);
   };
-
-
-
-
+  
   useEffect(() => { 
     if (open) {
       axios.get(`http://localhost:7000/list/${level}`)
-        .then(response => {
-          handleList(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      .then(response => {
+        handleList(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
     } 
   }, [open]);
 
+  useEffect(()=> {
+    console.log('status is:', drawerstatus)
+  },[drawerstatus])
   
- 
   return (
     <div>
-      <Drawer open={open} hideBackdrop ={true} 
+      <Drawer open={open} hideBackdrop={true} 
       PaperProps={{      
         sx: {      
           borderRadius: 4,
           position: 'absolute', // Set position to absolute    
           top: '50%', // Set top to 50% to center the drawer vertically
           left: '20%', // Set left to 50% to center the drawer horizontally13          
-          transform: 'translate(-50%, -50%)', // Translate the drawer to center it14          
-          width: 350,
-          height: 700, // Set the height of the drawer      
+          transform: drawerstatus ? 'translate(10%, -50%)' : 'translate(-50%, -50%)', // Translate the drawer to center it14          
+          width : drawerstatus ? 1000:350,
+          height: 700, // Set the height of the drawer  
         }}} >
-            <widthContext.Provider value= {[drawerwidth, setDrawerWidth]}>
-            <Button onClick={(event)=> handleExtend(event, 1000)}>Extend Drawer</Button>
+            <Button onClick={() => handleExtend(true)}>Extend Drawer
+            </Button>
+            <Button onClick={onClose}>Close Drawer
+            </Button>
             <Grid container justifyContent="center" >
-            
-              <Grid item xs={10}>
+              <Grid item xs={12}>
                   <Typography variant="h2" style={{ position:'relative', top:'20px', left:'5%', fontSize: 20 }} color='##000000'>
                     Water Level Station
                   </Typography>
               </Grid>
-              <Grid item xs= {2}>
-                <Icon icon='pajamas:go-back' style={{fontSize:'4em', color:'#ff3300', position:'relative', left:'500px'}}/>
-              </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
-                <CardList levels={level_list} theme={level}/> 
+                <CardList levels={level_list} theme={level} drawerextend={handleExtend}/> 
               </Grid>
-              <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '500px'}}>
-                  <DataTable draweropen= {open}/>
-              </Grid>
+              {drawerstatus &&
+              <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '100px'}}>
+                  <DataTable />
+              </Grid>}
+              {drawerstatus &&
+                <Grid item xs= {2}>
+                    <Icon icon='pajamas:go-back' style={{fontSize:'4em', color:'#ff3300', position:'relative',right:'100px'}} 
+                    onClick={() => {
+                      handleExtend(false);
+                    }}/>
+                </Grid>}
+
             </Grid>
-            </widthContext.Provider>
       </Drawer>
+                  
     </div>
   );
 };
