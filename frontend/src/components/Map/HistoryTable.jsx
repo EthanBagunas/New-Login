@@ -32,13 +32,13 @@ export default function DataTable(){
   }
     return (
       <div>
-          <Paper sx={{borderRadius:4}}>
+          <Paper sx={{borderRadius:4}} variant="elevation" elevation={4}>
 
       <TableContainer component={Paper} >
-      <Table sx={{ width:400  }} aria-label="simple table">
+      <Table sx={{ width:500  }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Capture</TableCell>
+                <TableCell>Capture ID</TableCell>
                 <TableCell align="right">Date & Time</TableCell>
                 <TableCell align="right">Distance in M</TableCell>
                 <TableCell align="right">Status</TableCell>
@@ -55,6 +55,8 @@ export default function DataTable(){
                 </TableCell>
                 <TableCell align="right">{entry.CAP_DATETIME}</TableCell>
                 <TableCell align="right">{entry.DIST_M}</TableCell>
+                <TableCell align="right">{entry.status}</TableCell>
+
               </TableRow>
             ))}
           </TableBody>

@@ -21,8 +21,8 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
     setLevel_list(levels);
   }
   
-  const handleExtend = () => {
-    setDrawerStatus(true);
+  const handleExtend = (value) => {
+    setDrawerStatus(value);
   };
   
   useEffect(() => { 
@@ -51,39 +51,37 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
           top: '50%', // Set top to 50% to center the drawer vertically
           left: '20%', // Set left to 50% to center the drawer horizontally13          
           transform: 'translate(10%, -50%)', // Translate the drawer to center it14          
-          width : 1000,
-          height: 700, // Set the height of the drawer  
+          width : drawerstatus ? 1000 : 350,
+          height: 750, // Set the height of the drawer  
+          flex:1,
         }}} >
-            <Button onClick={onClose}>Close Drawer
-            </Button>
+          
             <Grid container justifyContent="center" >
 
-              <Grid item xs={12}>
+              <Grid item xs={10}>
                   <Typography variant="h2" style={{ position:'relative', top:'20px', left:'5%', fontSize: 20 }} color='##000000'>
                     Water Level Station
                   </Typography>
               </Grid>
-
+              <Grid item xs= {2}>
+                {drawerstatus &&
+                  <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative',right:'20px',}} onClick={() => {handleExtend(false)}}/>}
+              </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
                   <DrawerExtendedContext.Provider value={{handleExtend}}>
-                    <CardList levels={level_list} theme={level} /> 
+                    <CardList levels={level_list} theme={level}  /> 
                   </DrawerExtendedContext.Provider>
               </Grid>
 
+              <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '50px'}}>
               {drawerstatus &&
-              <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '100px'}}>
                   <DataTable />
-              </Grid>}
-
-              {drawerstatus &&
-                <Grid item xs= {2}>
-                    <Icon icon='material-symbols:assignment-return-rounded' style={{fontSize:'4em', color:'#ff3300', position:'relative',right:'100px'}} 
-                    onClick={() => {
-                      handleExtend(false);
-                    }}/>
-                </Grid>}
-
+              }</Grid>    
+             
             </Grid>
+            <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
+              <Icon icon='uil:down-arrow' style={{color:'#ffffff', }}/>
+            </Button>
       </Drawer>
                   
     </div>

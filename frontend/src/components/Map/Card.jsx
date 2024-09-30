@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
+import { Paper } from '@mui/material';
 
 import { LogsDataContext } from './Map';
 import { DrawerExtendedContext } from './Drawer';
@@ -25,14 +26,13 @@ const CardItem= ({theme, items}) => {
   const {handleExtend} = useContext(DrawerExtendedContext);
 
   const handleSetLogsTabledata = (value) => {
-    handleExtend();
     setLogsData(value);
+    handleExtend(true);
   }
 
   return(
-      <Box sx={{ width: 350 }} role="presentation">
-        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
-        <Box sx={{ minWidth: 275 }} >
+        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 ,  }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
+        <Box sx={{ minWidth: 275 }}>
           <React.Fragment>
                 <CardContent style={{color: themeColors[theme]}}>
                   <HouseboatIcon style={{width: '20%', height: '20%', color: "inherit"}}/>
@@ -61,7 +61,6 @@ const CardItem= ({theme, items}) => {
             </React.Fragment>
           </Box>
         </Box>
-      </Box>
     )
 };
   
@@ -81,12 +80,13 @@ const CardItem= ({theme, items}) => {
   }, [list, theme]);
 
   return(
-    <div>
+      <Paper sx={{ height:600, width: 350, overflow: 'auto' }} role="presentation" >
+
       {cardlist && cardlist.levels.map((item, index) => (
         <CardItem key={index} items= {item} theme={cardlist.theme}/>
       ))}
       <Divider />
-    </div>
+      </Paper>
   )
 }
 
