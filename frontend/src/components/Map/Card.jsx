@@ -9,7 +9,7 @@ import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
 
 import { LogsDataContext } from './Map';
-
+import { DrawerExtendedContext } from './Drawer';
 
 const themeColors = {
   Normal: "#04dc04", // Green
@@ -20,13 +20,15 @@ const themeColors = {
 };
 
 // design of a single card
-const CardItem= ({theme, items,extend2}) => {
+const CardItem= ({theme, items}) => {
   const [logsdata, setLogsData] = useContext(LogsDataContext);
+  const {handleExtend} = useContext(DrawerExtendedContext);
 
   const handleSetLogsTabledata = (value) => {
-    extend2(true);
+    handleExtend();
     setLogsData(value);
   }
+
   return(
       <Box sx={{ width: 350 }} role="presentation">
         <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
@@ -65,7 +67,7 @@ const CardItem= ({theme, items,extend2}) => {
   
 
 // for each of the unique entries
- const CardList= (list, theme, drawerextend)=> {
+ const CardList= (list, theme)=> {
   const [cardlist, setCardList] =useState('');
   const handleCardlist= ()=> {
     setCardList(list);
@@ -81,7 +83,7 @@ const CardItem= ({theme, items,extend2}) => {
   return(
     <div>
       {cardlist && cardlist.levels.map((item, index) => (
-        <CardItem key={index} items= {item} theme={cardlist.theme} extend2={drawerextend}/>
+        <CardItem key={index} items= {item} theme={cardlist.theme}/>
       ))}
       <Divider />
     </div>

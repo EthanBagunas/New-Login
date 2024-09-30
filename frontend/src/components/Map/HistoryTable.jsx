@@ -4,7 +4,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import {Paper} from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 
@@ -32,14 +32,17 @@ export default function DataTable(){
   }
     return (
       <div>
+          <Paper sx={{borderRadius:4}}>
+
       <TableContainer component={Paper} >
       <Table sx={{ width:400  }} aria-label="simple table">
-      <TableHead>
-            <TableRow>
-            <TableCell>Device Name</TableCell>
-            <TableCell align="right">Date & Time</TableCell>
-            <TableCell align="right">Distance in M</TableCell>
-            </TableRow>
+            <TableHead>
+              <TableRow>
+                <TableCell>Capture</TableCell>
+                <TableCell align="right">Date & Time</TableCell>
+                <TableCell align="right">Distance in M</TableCell>
+                <TableCell align="right">Status</TableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
             {entries.map((entry) => (
@@ -50,7 +53,6 @@ export default function DataTable(){
                 <TableCell component="th" scope="row">
                   {entry.CaptureID}
                 </TableCell>
-
                 <TableCell align="right">{entry.CAP_DATETIME}</TableCell>
                 <TableCell align="right">{entry.DIST_M}</TableCell>
               </TableRow>
@@ -58,6 +60,7 @@ export default function DataTable(){
           </TableBody>
           </Table>
       </TableContainer> 
+            </Paper>
       </div>
     );
   };
