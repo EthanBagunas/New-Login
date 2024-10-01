@@ -14,6 +14,19 @@ import { TabPanel as BaseTabPanel } from '@mui/base/TabPanel';
 import { buttonClasses } from '@mui/base/Button';
 import { Tab as BaseTab, tabClasses } from '@mui/base/Tab';
 
+const red = {
+  50:  '#FFD7BE',
+100: '#FFC6B3',
+200: '#FFB99F',
+300: '#FFA47E',
+400: '#FF8F63',
+500: '#FF3300',
+600: '#C62F00',
+700: '#A52600',
+800: '#7F1E00',
+900: '#5B1600',
+};
+
 const AddDevice = ({lat, lng, setLat, setLng}) => {
 
   const theme =useTheme();
@@ -97,7 +110,7 @@ const AddDevice = ({lat, lng, setLat, setLng}) => {
                     disabled
                     margin= "normal"
                     />
-                  <Button sx={{color:"#000000", backgroundColor: theme.palette.primary.main }} onClick={handleSubmit}>Submit</Button>
+                  <Button sx={{color:"#000000", backgroundColor: red[500] }} onClick={handleSubmit}>Submit</Button>
       </FormControl>
       )
     } 
@@ -121,7 +134,7 @@ const AddDevice = ({lat, lng, setLat, setLng}) => {
                     onChange={handleInputChange}
                     margin= "normal"
                     />
-                  <Button sx={{color:"#000000", backgroundColor: theme.palette.primary.main }} onClick={handleSubmit}>Submit</Button>
+                  <Button sx={{color:"#000000", backgroundColor: red[500] }} onClick={handleSubmit}>Submit</Button>
       </FormControl>
       )
     } 
@@ -183,18 +196,7 @@ const PopupBody = styled('div')(
 `,
 );
 
-const blue = {
-  50: '#F0F7FF',
-  100: '#C2E0FF',
-  200: '#80BFFF',
-  300: '#66B2FF',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  700: '#0059B2',
-  800: '#004C99',
-  900: '#003A75',
-};
+
 
 
 const Tab = styled(BaseTab)`
@@ -213,17 +215,17 @@ const Tab = styled(BaseTab)`
   justify-content: center;
 
   &:hover {
-    background-color: ${blue[400]};
+    background-color: ${red[400]};
   }
 
   &:focus {
     color: #fff;
-    outline: 3px solid ${blue[200]};
+    outline: 3px solid ${red[200]};
   }
 
   &.${tabClasses.selected} {
     background-color: #fff;
-    color: ${blue[600]};
+    color: ${red[600]};
   }
 
   &.${buttonClasses.disabled} {
@@ -247,8 +249,8 @@ const TabPanel = styled(BaseTabPanel)(
 
 const TabsList = styled(BaseTabsList)(
   ({ theme }) => `
-  min-width: 400px;
-  background-color: ${blue[500]};
+  min-width: 100px;
+  background-color: ${red[500]};
   border-radius: 12px;
   margin-bottom: 16px;
   display: flex;
