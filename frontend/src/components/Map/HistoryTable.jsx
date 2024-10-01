@@ -8,11 +8,11 @@ import {Paper} from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 
-import { LogsDataContext } from './Map';
+import { LogsDataContext } from './Drawer';
 
 export default function DataTable(){
 
-  const [logsdata, setLogsData] = useContext(LogsDataContext);
+  const {logsdata} = useContext(LogsDataContext);
 
   useEffect(()=> {
     if (logsdata != ''){

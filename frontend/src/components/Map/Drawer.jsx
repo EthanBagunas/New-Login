@@ -12,9 +12,14 @@ import {Button} from '@mui/material'
 
 
 export const DrawerExtendedContext= createContext();
+export const LogsDataContext = createContext();
+
 
 const TemporaryDrawer = ({ open, level, onClose}) => {
+  
   const [level_list, setLevel_list] = useState('');
+
+  const [logsdata, SetLogsData]= useState('');
   const [drawerstatus, setDrawerStatus] = useState(false);
 
   const handleList= (levels) => {
@@ -43,6 +48,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
   
   return (
     <div>
+      <LogsDataContext.Provider value={{logsdata, SetLogsData}}>
       <Drawer open={open} hideBackdrop={true} 
       PaperProps={{      
         sx: {      
@@ -57,7 +63,6 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
         }}} >
           
             <Grid container justifyContent="center" >
-
               <Grid item xs={10}>
                   <Typography variant="h2" style={{ position:'relative', top:'20px', left:'5%', fontSize: 20 }} color='##000000'>
                     Water Level Station
@@ -68,21 +73,23 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
                   <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative',right:'20px',}} onClick={() => {handleExtend(false)}}/>}
               </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
-                  <DrawerExtendedContext.Provider value={{handleExtend}}>
+                  <DrawerExtendedContext.Provider value={{setDrawerStatus}}>
                     <CardList levels={level_list} theme={level}  /> 
                   </DrawerExtendedContext.Provider>
+                  
               </Grid>
 
               <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '50px'}}>
-              {drawerstatus &&
+                {drawerstatus && 
                   <DataTable />
-              }</Grid>    
+                } </Grid>    
              
             </Grid>
             <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
               <Icon icon='uil:down-arrow' style={{color:'#ffffff', }}/>
             </Button>
       </Drawer>
+                </LogsDataContext.Provider>
                   
     </div>
   );

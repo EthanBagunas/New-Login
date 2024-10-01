@@ -14,7 +14,6 @@ import Dashboard from '../Dashboard/Dashboard';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
-export const LogsDataContext = React.createContext();
 
 const markerIcons = {
   Normal: normalIcon,
@@ -42,7 +41,6 @@ export const MapContainer = (props) => {
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
   
-  const [logsdata, SetLogsData]= useState('');
 
   const handlePosition =(position) => {
     SetLattitude(position.lat());
@@ -65,9 +63,7 @@ export const MapContainer = (props) => {
       }}>   
         <LevelContext.Provider value= {[poptext, setPoptext]}>
             <MarkerContext.Provider value= {[markers, setMarkers]}>
-              <LogsDataContext.Provider value={[logsdata, SetLogsData]}>
                <LevelButtons />
-              </LogsDataContext.Provider>
             </MarkerContext.Provider>
           </LevelContext.Provider>
           {markers.map((marker, index) => (
