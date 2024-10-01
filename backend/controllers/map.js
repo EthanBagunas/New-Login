@@ -39,7 +39,7 @@ const GetPosition = (req, res) => {
 
 const GetHistory = (req, res) => {
   const {deviceId} = req.params;
-  const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M FROM logs WHERE DEVICE_ID = ?;'
+  const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M , status FROM logs WHERE DEVICE_ID = ?;'
   con.query(sql, deviceId, (err, results) => {
     if (err) {
       console.error('error running query:', err);
