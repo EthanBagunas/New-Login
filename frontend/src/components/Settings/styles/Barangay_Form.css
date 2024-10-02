@@ -1,0 +1,90 @@
+.barangay-form-container {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px;
+  }
+  
+  .form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .form-container h2, .form-container h3, .form-container h4 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #4a90e2;
+  }
+  
+  .submit-button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .submit-button:hover {
+    background-color: #357abd;
+  }
+  .Toastify__toast--success {
+    background-color: #4CAF50; /* Green background for success */
+  }
+  
+  .Toastify__toast--error {
+    background-color: #F44336; /* Red background for errors */
+  }
+  
+  
+  @media (max-width: 600px) {
+    .form-row {
+      flex-direction: column;
+    }
+  
+    .form-group {
+      margin-right: 0;
+    }
+  }
+  

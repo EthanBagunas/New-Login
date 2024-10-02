@@ -30,7 +30,17 @@ app.use('/refresh', require('./routes/refresh'));
 app.use(setdeviceRouter);
 app.use(userRouter);
 app.use('/reset', require('./routes/authRes'));
+app.use('/insertLgu',require('./routes/authInsertLgu'));
+app.use('/insertElect',require('./routes/authInsertElect'));
+app.use('/insertBrgy',require('./routes/autInsertbrgy'));
+app.use('/insertBarangay',require('./routes/autInsertOfficial'));
+app.use('/insertPurok',require('./routes/authInsertPurok'));
+
+
+
+
 app.use('/auth', require('./routes/auth'));
+
 
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
 app.use(mapRouter);

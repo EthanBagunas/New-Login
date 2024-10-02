@@ -1,0 +1,108 @@
+.add-lgu-info-container {
+  width: 600px;
+  margin: 100px auto; /* Added 40px margin to push the form down */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.primary-button {
+  background-color: #0073e6;
+  color: white;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+.upload-area {
+  border: 2px dashed #0073e6;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-area:hover {
+  background-color: #f0f0f0;
+}
+
+.upload-area p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.upload-preview {
+  margin-top: 10px;
+  position: relative;
+}
+
+.upload-preview img {
+  max-width: 100px;
+  border-radius: 5px;
+}
+
+.upload-preview button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ff4d4f;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.upload-preview button:hover {
+  background-color: #d43f3f;
+}
+.Toastify__toast {
+  background: #333; /* Change background color */
+  color: white;     /* Change text color */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px;    /* Padding */
+}
+
+.Toastify__toast--success {
+  background-color: #4CAF50; /* Green background for success */
+}
+
+.Toastify__toast--error {
+  background-color: #F44336; /* Red background for errors */
+}

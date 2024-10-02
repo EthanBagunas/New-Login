@@ -10,8 +10,9 @@ const verifyJWT = (req, res, next) => {
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) return res.sendStatus(403); // Invalid token
         console.log('Decoded Token:', decoded);
-        req.user = decoded.email; // Match payload structure
-        req.roles = decoded.roles; // Match payload structure
+        req.id = decoded.id;
+        req.user = decoded.email;
+        req.roles = decoded.roles; 
         next();
     });
 };

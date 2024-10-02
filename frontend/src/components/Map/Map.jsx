@@ -8,7 +8,7 @@ import highIcon from './icons/gps(3).png';
 import extremeIcon from './icons/gps(4).png';
 import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
-import Test from '../Dashboard/AddDevices';
+
 import Dashboard from '../Dashboard/Dashboard';
 
 
@@ -55,7 +55,8 @@ export const MapContainer = (props) => {
     return (
       <div>
         <Navbar/> 
-        <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>
+      
+        {hasRole1994 &&<Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
       <Map style={mapStyles}
       google={props.google}
       zoom={14}
@@ -80,13 +81,6 @@ export const MapContainer = (props) => {
             }}
             />
           ))}
-          {hasRole1994 && < Test lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/> }
-           <Marker
-            position={{ lat: lattitude, lng: longitude }}
-            icon={{
-              url: markerIcons['High'],
-              scaledSize: new window.google.maps.Size(30, 30)
-            }}/>
         </Map>
         </div>
     );

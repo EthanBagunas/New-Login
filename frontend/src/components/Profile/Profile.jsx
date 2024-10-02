@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import './design/Profile.css';
 import defpic from './design/Default.jpg';
 import axios from '../../api/axios';
-import useAuth from '../../hooks/useAuth'; // Import the hook for AuthContext
+import useAuth from '../../hooks/useAuth'; 
 
+import Navbar from '../Navbar';
+<Navbar/> 
 const Profile = () => {
   const { auth } = useAuth(); // Destructure the auth object from the context
   const username = auth?.email; // Assuming the username is stored in auth.user
@@ -75,9 +77,14 @@ const Profile = () => {
   const handleCancel = () => {
     alert('Changes canceled');
   };
-
+  
   return (
+    
+    <div>
+      <Navbar/> 
+
     <div className="account-preferences-page">
+      
       {/* Sidebar */}
       <div className="settings-sidebar">
         <ul>
@@ -162,6 +169,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

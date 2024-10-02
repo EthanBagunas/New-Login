@@ -25,7 +25,11 @@ import MapContainer from './components/Map/Map';
 import RegistrationForm from './components/Register/Signup'; 
 import RegistrationOtp from './components/Register/SignupOTP';
 import './register.css'
-
+import AddLGUInfo from './components/Settings/LGU/AddLGUInfo';
+import Elected_Form from './components/Settings/LGU/Elected_Form';
+import BrgyForm from './components/Settings/Brgy/InsertBrgyInfo';
+import Barangay_Form from './components/Settings/Brgy/insertBrgyOfficial';
+import AddPurokInfo from './components/Settings/Purok/Purok_setup';
 //  import Test from './components/Test';
 // <Route exact path="/test" element={<Test />} /> // Use the correct component name
 
@@ -54,10 +58,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-          <Navbar />
             <div className="content">
             <Routes>
             <Route path="reset" element={<Reset />} />
+            
+            
             <Route path="unauthorized" element={<Unauthorized />} />
             <Route element={<PersistLogin />}>
             <Route element={<RequireNoAuth />}>
@@ -68,7 +73,7 @@ function App() {
                
                 </Route>
 
-
+                
 
                 <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
                 <Route path="/Profile" element={<Profile />} />
@@ -79,7 +84,13 @@ function App() {
                 <Route element={<RequireAuth allowedRoles={[1994]}/>}>
                 <Route path="admin" element={<Admin />} />
                 <Route exact path="/test" element={<Test />} />
-    
+                <Route path="/lgu-setup" element={<AddLGUInfo />} />
+                <Route path="/elected-official" element={<Elected_Form />} />
+                <Route path="/brgy-setup" element={<BrgyForm />} />
+                <Route path="/brgy-official" element={<Barangay_Form />} />
+                <Route path="/purok-setup" element={<AddPurokInfo/>} />
+                
+                
               </Route>
 
 
