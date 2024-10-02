@@ -36,18 +36,10 @@ const PopupBody = styled('div')(
 `,
 );
 
-const FeedPopup = (anchor) => {
+const FeedPopup = () => {
 
-  const open = Boolean(anchor);
-  const id = open ? 'simple-popup' : undefined;
-  
     return(
-      <BasePopup id={id} open={open} anchor={anchor} >
-          <PopupBody>
-            watashi wa FeedPopup from Popup.jsx. edit me senpai 
-          </PopupBody>      
-      </BasePopup>
-    )
+     <h1>watashi wa FeedPopup from Popup.jsx. edit me senpai </h1>)
   }
 
 export default FeedPopup;

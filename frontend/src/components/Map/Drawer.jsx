@@ -7,8 +7,8 @@ import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Icon } from '@iconify/react';
 import DataTable from './HistoryTable';
+import FeedPopup from './FeedPopup';
 import {Button} from '@mui/material'
-
 
 
 export const DrawerExtendedContext= createContext();
@@ -58,7 +58,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
           top: '50%', // Set top to 50% to center the drawer vertically
           left: '20%', // Set left to 50% to center the drawer horizontally13          
           transform: 'translate(10%, -50%)', // Translate the drawer to center it14          
-          width : showhistory || showcamfeed ? 1000 : 350,
+          width : 1000,
           height: 750, // Set the height of the drawer  
           flex:1,
         }}} >
@@ -81,9 +81,9 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               </Grid>
 
               <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '50px'}}>
-                {showhistory && 
-                  <DataTable />
-                } </Grid>    
+              {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <FeedPopup />) : null}
+              </Grid>    
+              
              
             </Grid>
             <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
