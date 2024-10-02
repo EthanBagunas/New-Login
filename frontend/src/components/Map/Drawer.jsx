@@ -20,15 +20,19 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
   const [level_list, setLevel_list] = useState('');
 
   const [logsdata, SetLogsData]= useState('');
-  const [drawerstatus, setDrawerStatus] = useState(false);
+  const [showhistory, setShowHistory] = useState(false);
+  const [showcamfeed, setShowCamfeed]= useState(false);
+
+
+  const handleHide= ()=> {
+    setShowHistory(false);
+    setShowCamfeed(false);
+  }
 
   const handleList= (levels) => {
     setLevel_list(levels);
   }
   
-  const handleExtend = (value) => {
-    setDrawerStatus(value);
-  };
   
   useEffect(() => { 
     if (open) {
@@ -42,10 +46,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
     } 
   }, [open]);
 
-  useEffect(()=> {
-    console.log('status is:', drawerstatus)
-  },[drawerstatus])
-  
+ 
   return (
     <div>
       <LogsDataContext.Provider value={{logsdata, SetLogsData}}>
@@ -57,7 +58,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
           top: '50%', // Set top to 50% to center the drawer vertically
           left: '20%', // Set left to 50% to center the drawer horizontally13          
           transform: 'translate(10%, -50%)', // Translate the drawer to center it14          
-          width : drawerstatus ? 1000 : 350,
+          width : showhistory || showcamfeed ? 1000 : 350,
           height: 750, // Set the height of the drawer  
           flex:1,
         }}} >
@@ -69,18 +70,18 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
                   </Typography>
               </Grid>
               <Grid item xs= {2}>
-                {drawerstatus &&
-                  <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative',right:'20px',}} onClick={() => {handleExtend(false)}}/>}
+                {(showhistory || showcamfeed) &&
+                  <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative',right:'20px',}} onClick={() => {handleHide(false)}}/>}
               </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
-                  <DrawerExtendedContext.Provider value={{setDrawerStatus}}>
+                  <DrawerExtendedContext.Provider value={{setShowHistory, setShowCamfeed}}>
                     <CardList levels={level_list} theme={level}  /> 
                   </DrawerExtendedContext.Provider>
                   
               </Grid>
 
               <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '50px'}}>
-                {drawerstatus && 
+                {showhistory && 
                   <DataTable />
                 } </Grid>    
              

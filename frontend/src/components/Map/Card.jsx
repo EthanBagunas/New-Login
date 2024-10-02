@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
 import { Paper } from '@mui/material';
+import { Icon } from '@iconify/react';
+
 
 import { DrawerExtendedContext, LogsDataContext } from './Drawer';
 
@@ -22,13 +24,19 @@ const themeColors = {
 // design of a single card
 const CardItem= ({theme, items}) => {
   const {SetLogsData} = useContext(LogsDataContext);
-  const {setDrawerStatus} = useContext(DrawerExtendedContext);
+  const {setShowHistory, setShowCamfeed} = useContext(DrawerExtendedContext);
 
   const handleSetLogsTabledata = (value) => {
-    setDrawerStatus(true);
     SetLogsData(value)
+    setShowCamfeed(false);
+    setShowHistory(true);
   }
 
+  const handleFeed = () => {
+    debugger
+    setShowHistory(false);
+    setShowCamfeed(true);
+  }
   return(
         <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 ,  }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
         <Box sx={{ minWidth: 250 }}>
@@ -52,9 +60,12 @@ const CardItem= ({theme, items}) => {
                 </CardContent>
                 <CardActions>
                   <Button size="small" onClick={() => {
-                  handleSetLogsTabledata(items.DEVICE_ID)} 
-                  }>
+                  handleSetLogsTabledata(items.DEVICE_ID)}}>
                     Learn More
+                  </Button>
+                  <Button size="large" onClick={() => {
+                  handleFeed()}}>
+                    <Icon icon="fluent:camera-dome-48-regular"/>
                   </Button>
                 </CardActions>
             </React.Fragment>
