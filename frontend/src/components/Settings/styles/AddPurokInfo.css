@@ -1,0 +1,57 @@
+.add-purok-info-container {
+    width: 600px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0073e6;
+    color: white;
+  }
+  
+
+  .Toastify__toast {
+    background: #333;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .Toastify__toast--success {
+    background-color: #4CAF50;
+  }
+  
+  .Toastify__toast--error {
+    background-color: #F44336;
+  }
+  

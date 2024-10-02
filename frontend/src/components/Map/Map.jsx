@@ -8,7 +8,7 @@ import highIcon from './icons/gps(3).png';
 import extremeIcon from './icons/gps(4).png';
 import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
-import Test from '../Dashboard/AddDevices';
+
 import Dashboard from '../Dashboard/Dashboard';
 
 
@@ -52,6 +52,8 @@ export const MapContainer = (props) => {
 
     return (
       <div>
+        <Navbar/> 
+        <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>
       <Map style={mapStyles}
       google={props.google}
       zoom={14}

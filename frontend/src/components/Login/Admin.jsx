@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom"
 import React from 'react';
-
+import Navbar from '../Navbar';
+<Navbar/> 
 import Users from './Users';
 
 const Admin = () => {
     return (
         <section>
+            <Navbar/> 
             <h1>Admins Page</h1>
             <br />
             <Users />
