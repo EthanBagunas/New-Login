@@ -57,10 +57,9 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
           position: 'absolute', // Set position to absolute    
           top: '50%', // Set top to 50% to center the drawer vertically
           left: '20%', // Set left to 50% to center the drawer horizontally13          
-          transform: 'translate(10%, -50%)', // Translate the drawer to center it14          
-          width : 1000,
+          transform: showhistory || showcamfeed ? 'translate(10%, -50%)': 'translate(-50%, -50%)',
+          width : showhistory || showcamfeed ? 1000 : 450,
           height: 750, // Set the height of the drawer  
-          flex:1,
         }}} >
           
             <Grid container justifyContent="center" >
@@ -71,7 +70,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               </Grid>
               <Grid item xs= {2}>
                 {(showhistory || showcamfeed) &&
-                  <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative',right:'20px',}} onClick={() => {handleHide(false)}}/>}
+                  <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative', top:'10px', left:'54%',}} onClick={() => {handleHide(false)}}/>}
               </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
                   <DrawerExtendedContext.Provider value={{setShowHistory, setShowCamfeed}}>
@@ -87,7 +86,8 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
              
             </Grid>
             <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
-              <Icon icon='uil:down-arrow' style={{color:'#ffffff', }}/>
+              Close Window
+              <Icon icon='uil:down-arrow'/>
             </Button>
       </Drawer>
                 </LogsDataContext.Provider>

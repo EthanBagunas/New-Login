@@ -33,7 +33,6 @@ const CardItem= ({theme, items}) => {
   }
 
   const handleFeed = () => {
-    debugger
     setShowHistory(false);
     setShowCamfeed(true);
   }
@@ -65,7 +64,7 @@ const CardItem= ({theme, items}) => {
                   </Button>
                   <Button size="large" onClick={() => {
                   handleFeed()}}>
-                    <Icon icon="fluent:camera-dome-48-regular"/>
+                    <Icon icon="fluent:camera-dome-48-regular" style={{fontSize:'4em'}}/>
                   </Button>
                 </CardActions>
             </React.Fragment>
