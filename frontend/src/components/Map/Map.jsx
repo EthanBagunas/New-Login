@@ -52,8 +52,6 @@ export const MapContainer = (props) => {
 
     return (
       <div>
-        <Navbar/> 
-        <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>
       <Map style={mapStyles}
       google={props.google}
       zoom={14}
@@ -76,7 +74,7 @@ export const MapContainer = (props) => {
             }}
             />
           ))}
-          {hasRole1994 && < Test lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/> }
+          {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
            <Marker
             position={{ lat: lattitude, lng: longitude }}
             icon={{
