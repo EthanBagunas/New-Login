@@ -72,7 +72,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
                 {(showhistory || showcamfeed) &&
                   <Icon icon='solar:map-arrow-left-bold' style={{fontSize:'2em', color:'#00ccff', position:'relative', top:'10px', left:'54%',}} onClick={() => {handleHide(false)}}/>}
               </Grid>
-              <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
+              <Grid item xs={!(showhistory ^ showcamfeed) ? 12 : 6} sx={{position: 'relative', top:'30px', left: '5%'}}>
                   <DrawerExtendedContext.Provider value={{setShowHistory, setShowCamfeed}}>
                     <CardList levels={level_list} theme={level}  /> 
                   </DrawerExtendedContext.Provider>
