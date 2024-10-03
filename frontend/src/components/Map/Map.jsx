@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import { Map, InfoWindow, GoogleApiWrapper, Marker} from 'google-maps-react';
 import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
@@ -41,14 +41,19 @@ export const MapContainer = (props) => {
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
   
-
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
-    console.log(lattitude, " ", longitude)
   }
-
+  
   const hasRole1994 = auth.roles.includes('1994');
+
+  const [selectedMarker, setSelectedMarker] = useState(null);
+
+  const onMarkerClick = (value) => {
+    setSelectedMarker(value);
+  };
+
 
     return (
       <div>
@@ -64,16 +69,33 @@ export const MapContainer = (props) => {
                <LevelButtons />
             </MarkerContext.Provider>
           </LevelContext.Provider>
+          
           {markers.map((marker, index) => (
-            <Marker
+          <Marker
             key={index}
             position={{ lat: marker.lat, lng: marker.lng }}
             icon={{
               url: markerIcons[poptext],
               scaledSize: new window.google.maps.Size(30, 30)
             }}
+            onClick={() => onMarkerClick(marker)}
             />
           ))}
+          {selectedMarker && ( 
+              <InfoWindow
+              visible={true}
+              position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
+              onCloseClick={() => setSelectedMarker(null)} 
+              >
+              <div>
+                <h3>Marker Information</h3>
+                <p>Latitude: {selectedMarker.lat}</p>
+                <p>Longitude: {selectedMarker.lng}</p>
+                <button>Submit</button>
+              </div>
+              </InfoWindow>
+          )}
+
           {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
            <Marker
             position={{ lat: lattitude, lng: longitude }}
@@ -81,6 +103,8 @@ export const MapContainer = (props) => {
               url: markerIcons['High'],
               scaledSize: new window.google.maps.Size(30, 30)
             }}/>
+              
+  
         </Map>
         </div>
     );

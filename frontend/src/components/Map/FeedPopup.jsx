@@ -39,7 +39,7 @@ const PopupBody = styled('div')(
 const FeedPopup = () => {
 
     return(
-     <h1>watashi wa FeedPopup from Popup.jsx. edit me senpai </h1>)
+     <h1> Backup feed </h1>)
   }
 
 export default FeedPopup;
