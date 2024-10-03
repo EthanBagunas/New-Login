@@ -7,7 +7,7 @@ import Navbar from '../../Navbar';
 import useAuth from '../../../hooks/useAuth';
 import successImage from '../styles/success.png'; // Success image
 import errorImage from '../styles/error.png'; // Error image
-import "../styles/brgyForm.css"; // New CSS file for the class
+import "../styles/BrgyForm.css"; // New CSS file for the class
 
 function BrgyForm() {
   const { auth } = useAuth();

@@ -29,7 +29,7 @@ const UpdateProf = async (req, res) => {
         position = ?, 
         description = ?, 
         profile_pic = ?
-        WHERE username = ?
+        WHERE id = ?
     `;
 
     // Handle the image buffer
