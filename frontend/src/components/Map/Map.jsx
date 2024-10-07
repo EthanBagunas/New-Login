@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
+import axios from 'axios';
 import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
@@ -35,13 +36,34 @@ const initposition = {
 };
 
 export const MapContainer = (props) => {
+  const evac_url= 'https://api.iconify.design/mdi:house-flood.svg?color=%2304dc04'
+
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
   const [markers, setMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
+  
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const onMarkerClick = (value) => {
+    setSelectedMarker(value);
+  };
+  
+  const [evacmarkers, SetEvacMarkers]= useState([]);
+  const handleEvacMarkers= () => {
+    if (evacmarkers.length=== 0){
+      axios.get('http://localhost:7000/evacmarker')
+      .then(response => {
+        SetEvacMarkers(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    } else{
+      SetEvacMarkers([]);
+    }
+  }
+
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
-  
-
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
@@ -52,8 +74,7 @@ export const MapContainer = (props) => {
 
     return (
       <div>
-        <Navbar/> 
-        <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>
+      <Navbar/> 
       <Map style={mapStyles}
       google={props.google}
       zoom={14}
@@ -61,8 +82,8 @@ export const MapContainer = (props) => {
       onClick={(mapProps, map, clickEvent) => {
         handlePosition(clickEvent.latLng)
       }}>   
-        <LevelContext.Provider value= {[poptext, setPoptext]}>
-            <MarkerContext.Provider value= {[markers, setMarkers]}>
+        <LevelContext.Provider value= {{poptext, setPoptext}}>
+            <MarkerContext.Provider value= {{markers, setMarkers}}>
                <LevelButtons />
             </MarkerContext.Provider>
           </LevelContext.Provider>
@@ -76,7 +97,37 @@ export const MapContainer = (props) => {
             }}
             />
           ))}
-          {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
+          {selectedMarker && ( 
+            <InfoWindow
+            visible={true}
+            position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
+            onCloseClick={() => setSelectedMarker(null)} 
+            >
+            <div>
+              <h3>Marker Information</h3>
+              <p>Evac_id: {selectedMarker.idEvacuationCenter}</p>
+              <p>Latitude: {selectedMarker.lat}</p>
+              <p>Longitude: {selectedMarker.lng}</p>
+              <button>Submit</button>
+            </div>
+            </InfoWindow>
+          )}
+
+          {evacmarkers.map((evacmarker, index) => (
+            <Marker
+            key={index}
+            position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
+            icon={{
+              url: evac_url,
+              scaledSize: new window.google.maps.Size(50, 50)
+            }}
+            onClick={() => onMarkerClick(evacmarker)}
+            >
+
+            </Marker>
+          ))}
+
+          {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers}/>}
            <Marker
             position={{ lat: lattitude, lng: longitude }}
             icon={{

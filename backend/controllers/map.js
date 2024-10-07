@@ -36,6 +36,16 @@ const GetPosition = (req, res) => {
   const sql =`SELECT settings.lat, settings.lng FROM latest INNER JOIN settings ON latest.DEVICE_ID= settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ?`;
   getAllLvl(sql, [min, max], res);
 }
+const GetEvacPosition = (req, res) => {
+  const sql ='SELECT idEvacuationCenter, lat, lng FROM EvacuationCenter'
+  con.query(sql, (err, results) => {
+    if (err) {
+      console.error('error running query:', err);
+      return res.status(500).json({ error: err });
+    }
+    return res.json(results);
+  });
+}
 
 const GetHistory = (req, res) => {
   const {deviceId} = req.params;
@@ -50,4 +60,4 @@ const GetHistory = (req, res) => {
 }
 
 
-module.exports= {GetAllDetails, GetPosition, GetHistory}
+module.exports= {GetAllDetails, GetPosition, GetHistory, GetEvacPosition}

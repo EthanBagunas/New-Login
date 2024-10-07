@@ -11,7 +11,7 @@ import { Icon } from '@iconify/react';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
-const Dashboard = ({lat, lng, setLat, setLng}) => {
+const Dashboard = ({lat, lng, setLat, setLng, showEvac}) => {
 
   return (
     <div>
@@ -47,6 +47,11 @@ const Dashboard = ({lat, lng, setLat, setLng}) => {
           <Grid item size={12}>
             <Button>
             <AddLGU lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
+            </Button>
+          </Grid>
+          <Grid item size={12}>
+            <Button>
+              <Icon icon="healthicons:emergency-post"style={{ color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }} onClick={() => showEvac()}/>
             </Button>
           </Grid>
         </Grid>
