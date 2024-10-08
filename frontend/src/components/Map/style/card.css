@@ -1,0 +1,29 @@
+.card {
+    position: relative;
+  }
+  
+  .dark-background {
+    background-color: rgba(0, 0, 0, 0.7); /* Darken the background */
+    transition: background-color 0.3s ease;
+  }
+  
+  .video-container {
+    transition: transform 0.3s ease;
+  }
+  
+  .video-container.highlighted {
+    transform: scale(1.05); /* Slightly enlarge the video */
+    z-index: 1; /* Ensure the video is on top */
+  }
+  
+  .camera-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: white; /* Change to your desired color */
+  }
+  
