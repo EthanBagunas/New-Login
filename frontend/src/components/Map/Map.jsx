@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Map, InfoWindow, GoogleApiWrapper, Marker} from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
@@ -8,12 +8,13 @@ import highIcon from './icons/gps(3).png';
 import extremeIcon from './icons/gps(4).png';
 import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
-import Test from '../Dashboard/AddDevices';
+
 import Dashboard from '../Dashboard/Dashboard';
 
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
+export const LogsDataContext = React.createContext();
 
 const markerIcons = {
   Normal: normalIcon,
@@ -41,22 +42,21 @@ export const MapContainer = (props) => {
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
   
+  const [logsdata, SetLogsData]= useState('');
+
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
+    console.log(lattitude, " ", longitude)
   }
-  
+
   const hasRole1994 = auth.roles.includes('1994');
-
-  const [selectedMarker, setSelectedMarker] = useState(null);
-
-  const onMarkerClick = (value) => {
-    setSelectedMarker(value);
-  };
-
 
     return (
       <div>
+        <Navbar/> 
+      
+        {hasRole1994 &&<Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
       <Map style={mapStyles}
       google={props.google}
       zoom={14}
@@ -66,45 +66,21 @@ export const MapContainer = (props) => {
       }}>   
         <LevelContext.Provider value= {[poptext, setPoptext]}>
             <MarkerContext.Provider value= {[markers, setMarkers]}>
+              <LogsDataContext.Provider value={[logsdata, SetLogsData]}>
                <LevelButtons />
+              </LogsDataContext.Provider>
             </MarkerContext.Provider>
           </LevelContext.Provider>
-          
           {markers.map((marker, index) => (
-          <Marker
+            <Marker
             key={index}
             position={{ lat: marker.lat, lng: marker.lng }}
             icon={{
               url: markerIcons[poptext],
               scaledSize: new window.google.maps.Size(30, 30)
             }}
-            onClick={() => onMarkerClick(marker)}
             />
           ))}
-          {selectedMarker && ( 
-              <InfoWindow
-              visible={true}
-              position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
-              onCloseClick={() => setSelectedMarker(null)} 
-              >
-              <div>
-                <h3>Marker Information</h3>
-                <p>Latitude: {selectedMarker.lat}</p>
-                <p>Longitude: {selectedMarker.lng}</p>
-                <button>Submit</button>
-              </div>
-              </InfoWindow>
-          )}
-
-          {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}/>}
-           <Marker
-            position={{ lat: lattitude, lng: longitude }}
-            icon={{
-              url: markerIcons['High'],
-              scaledSize: new window.google.maps.Size(30, 30)
-            }}/>
-              
-  
         </Map>
         </div>
     );

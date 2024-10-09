@@ -3,7 +3,7 @@ var db = require('../../config/dbconnections');
 const Profile = async (req, res) => {
     const userId = req.params.id;
 
-    const sql = 'SELECT firstname, lastname, description, profile_pic, position FROM login WHERE id = ?';
+    const sql = 'SELECT username, firstname, lastname, description, profile_pic, position FROM login WHERE id = ?';
     db.query(sql, [userId], (err, results) => {
         if (err) {
             console.error('Database error:', err);
@@ -22,6 +22,7 @@ const Profile = async (req, res) => {
         }
 
         res.json({
+            email: user.username,
             firstName: user.firstname,
             lastName: user.lastname,
             description: user.description,

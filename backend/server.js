@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const { exec } = require('child_process');
 var db = require('./config/dbconnections');
 const corsOptions = require('./config/corseOption');
 const cors = require('cors');
@@ -14,49 +15,65 @@ const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
 const updateProfileRouter = require('./routes/authUpdate');
 
-
+// Middleware setup
 app.use(logger);
 app.use(credentials);
-
 app.use(cors(corsOptions));
 app.use(express.json());
-
 app.use(cookieParser());
+
+
+
+
+exec('stream.bat', (err, stdout, stderr) => {
+    if (err) {
+        console.error(`Error starting stream: ${err.message}`);
+        return;
+    }
+    console.log(`Stream started: ${stdout}`);
+    if (stderr) {
+        console.error(`Stream stderr: ${stderr}`);
+    }
+});
 
 app.use('/', express.static(path.join(__dirname, '/public')));
 
+
+// Serve routes
 app.use('/', require('./routes/root'));
 app.use('/refresh', require('./routes/refresh'));
 app.use(setdeviceRouter);
 app.use(userRouter);
 app.use('/reset', require('./routes/authRes'));
-app.use('/auth', require('./routes/auth'));
+app.use('/insertLgu', require('./routes/authInsertLgu'));
+app.use('/insertElect', require('./routes/authInsertElect'));
+app.use('/showLgu', require('./routes/authshowLgu'));
 
+app.use('/insertBrgy', require('./routes/autInsertbrgy'));
+app.use('/getBrgy', require('./routes/authshowBrgy'));
+app.use('/insertBarangay', require('./routes/autInsertOfficial'));
+
+app.use('/insertPurok', require('./routes/authInsertPurok'));
+app.use('/auth', require('./routes/auth'));
+app.use('/brgy-names', require('./routes/authBrgyNames'));
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
 app.use(mapRouter);
 
-
 app.use('/logout', require('./routes/logout'));
-// app.post('/logout', (req, res) => {
-//     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-//     return res.status(200).json({ message: "Logout successful" });
-// });
 
 app.use('/api', updateProfileRouter); // Mount the router
-
 app.use('/ProfilePage', require('./routes/api/authProf'));
 
+// Verify JWT middleware
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users'));
 
-
 app.use('/api/protected-route', verifyJWT, (req, res) => {
     res.json({ message: "You have access to this protected route", user: req.user, roles: req.roles });
 });
-// Define the reset route before app.use(verifyJWT) if you don't want JWT verification for reset.
 
-
+// Handle 404 errors
 app.all('*', (req, res) => {
     res.status(404);
     if (req.accepts('html')) {
@@ -70,10 +87,10 @@ app.all('*', (req, res) => {
 
 app.use(errorHandler);
 
-  
+// Automatically run the stream.bat script when the server starts
 
 
-
-app.listen(7000, ()=>{
+// Start the server
+app.listen(7000, () => {
     console.log("Listening...");
-})
+});

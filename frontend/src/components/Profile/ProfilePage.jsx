@@ -4,6 +4,8 @@ import useAuth from '../../hooks/useAuth';
 import defpic from './design/Default.jpg';
 import './design/ProfilePage.css';
 
+import Navbar from '../Navbar';
+
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState({});
   const axiosPrivate = useAxiosPrivate(); // Use the authenticated axios instance
@@ -25,6 +27,9 @@ const ProfilePage = () => {
   }, [auth?.id, axiosPrivate]);
 
   return (
+    <div>
+      <Navbar/> 
+   
     <div className="profile-page">
       <main className="profile-main-content">
         <div className="profile-container">
@@ -49,6 +54,7 @@ const ProfilePage = () => {
       <footer className="profile-footer">
         <p>&copy; 2024 My Profile Page. All rights reserved.</p>
       </footer>
+    </div>
     </div>
   );
 };

@@ -1,0 +1,117 @@
+.brgy-form-container {
+    width: 600px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  
+  .brgy-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input, 
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form-group input::placeholder {
+  color: #aaa;
+}
+
+.upload-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border: 2px dashed #ddd;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  color: #666;
+  background-color: #f9f9f9;
+}
+
+.upload-area p {
+  margin: 0;
+}
+
+.upload-preview {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.upload-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.upload-preview button {
+  background: #ff4c4c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.upload-preview button:hover {
+  background-color: #ff0000;
+}
+
+.button-group {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+}
+
+.popup-message {
+  background-color: #dff0d8;
+  color: #3c763d;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #d6e9c6;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.Toastify__toast--success {
+    background-color: #4CAF50; /* Green background for success */
+  }
+  
+  .Toastify__toast--error {
+    background-color: #F44336; /* Red background for errors */
+  }
+  

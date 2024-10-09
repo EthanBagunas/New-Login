@@ -3,7 +3,6 @@ import useAuth from "../../hooks/useAuth";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from '../../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import RegistrationForm from '../Register/Signup'
 
 const LOGIN_URL = '/auth';
 
@@ -44,16 +43,17 @@ function Login() {
                 }
             );
 
-            const { accessToken, roles, firstTimeLogin } = response?.data;
+            const { accessToken, roles, firstTimeLogin, id } = response?.data; // Extract ID from response
 
-            setAuth({ user: email, roles: roles, accessToken });
+            // Set auth state including user ID
+            setAuth({ user: email, id, roles, accessToken });
 
             setFirstTimeLogin(firstTimeLogin);
             setEmail('');
             setPassword('');
 
             if (firstTimeLogin) {
-                navigate('/reset', { state: {email}, replace: true });
+                navigate('/reset', { state: { email }, replace: true });
             } else {
                 navigate(from, { replace: true });
             }
@@ -121,15 +121,14 @@ function Login() {
                                 checked={rememberMe} 
                                 onChange={() => setRememberMe(prev => !prev)} 
                             />
-                            <label htmlFor="rememberMe">RememberMe</label>
+                            <label htmlFor="rememberMe">Remember Me</label>
                         </div>
 
-                            <button className="btn btn-success w-100">Login</button>        
-                        
+                        <button className="btn btn-success w-100">Login</button>        
                     </form>
                     <div className="register-forget opacity">
-                        <a href="/signup" >Register  </a>
-                        <a href="" style={{color: 'red'}}>Forgot Password</a>
+                        <a href="/signup">Register</a>
+                        <a href="" style={{ color: 'red' }}>Forgot Password</a>
                     </div>
                 </div>
                 <div className="circle circle-two"></div>

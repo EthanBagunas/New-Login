@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import axios from 'axios';
 import AddDevice from './AddDevices';
+import AddLGU from './LGU';
+
 
 import { Icon } from '@iconify/react';
 
@@ -44,7 +46,7 @@ const Dashboard = ({lat, lng, setLat, setLng}) => {
           </Grid>
           <Grid item size={12}>
             <Button>
-              <Icon icon="ic:round-settings" style={{ color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }} />
+            <AddLGU lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
             </Button>
           </Grid>
         </Grid>

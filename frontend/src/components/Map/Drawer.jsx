@@ -8,6 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Icon } from '@iconify/react';
 import DataTable from './HistoryTable';
 import FeedPopup from './FeedPopup';
+import CameraFeed from './VideoModal';
 import {Button} from '@mui/material'
 
 
@@ -83,6 +84,10 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <FeedPopup />) : null}
               </Grid>    
               
+              <Grid item xs={6} sx={{ position: 'relative', top: '30px', right: '50px' }}>
+              {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <CameraFeed />) : null}
+            </Grid>
+                          
              
             </Grid>
             <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
@@ -97,4 +102,3 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
 };
 
 export default TemporaryDrawer;
-

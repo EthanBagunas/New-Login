@@ -1,0 +1,198 @@
+.add-lgu-info-container {
+  width: 600px;
+  margin: 100px auto; /* Added 40px margin to push the form down */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.primary-button {
+  background-color: #0073e6;
+  color: white;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+.upload-area {
+  border: 2px dashed #0073e6;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-area:hover {
+  background-color: #f0f0f0;
+}
+
+.upload-area p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.upload-preview {
+  margin-top: 10px;
+  position: relative;
+}
+
+.upload-preview img {
+  max-width: 100px;
+  border-radius: 5px;
+}
+
+.upload-preview button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ff4d4f;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.upload-preview button:hover {
+  background-color: #d43f3f;
+}
+.Toastify__toast {
+  background: #333; /* Change background color */
+  color: white;     /* Change text color */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px;    /* Padding */
+}
+
+.Toastify__toast--success {
+  background-color: #4CAF50; /* Green background for success */
+}
+
+.Toastify__toast--error {
+  background-color: #F44336; /* Red background for errors */
+}
+.lgu-data-container {
+  width: 600px; /* Maintain the width */
+  margin: 40px auto; /* Center it with margin */
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9; /* Light gray background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border: 1px solid #e0e0e0; /* Light border */
+}
+
+.lgu-data-container h2 {
+  text-align: center; /* Center the title */
+  color: #333; /* Dark text for better contrast */
+  margin-bottom: 20px; /* Spacing below title */
+}
+
+.lgu-data {
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  align-items: center; /* Center items */
+  padding: 20px;
+  background-color: white; /* White background for data */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.logo-container {
+  display: flex; /* Flexbox for logos */
+  justify-content: center; /* Center logos */
+  margin-bottom: 15px; /* Spacing below logos */
+}
+
+.logo1, .logo2 {
+  width: 80px; /* Set logo width */
+  height: 80px; /* Set logo height */
+  object-fit: contain; /* Maintain aspect ratio */
+  margin: 0 10px; /* Spacing between logos */
+}
+
+.lgu-info {
+  margin-bottom: 20px; /* Spacing below info */
+  text-align: left; /* Align text to the left */
+  color: #555; /* Medium gray text */
+}
+
+.lgu-info p {
+  margin: 5px 0; /* Spacing between paragraphs */
+}
+
+.button-container {
+  display: flex; /* Flexbox for buttons */
+  justify-content: center; /* Center buttons */
+}
+
+button {
+  padding: 10px 15px; /* Padding */
+  margin: 5px; /* Spacing between buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #0073e6; /* Primary button color */
+  color: white; /* Text color */
+  transition: background-color 0.3s; /* Smooth background transition */
+}
+
+button:hover {
+  background-color: #005bb5; /* Darker shade on hover */
+}
+.lgu-info {
+  margin-bottom: 20px; /* Spacing below info */
+  text-align: left; /* Align text to the left */
+  color: #555; /* Medium gray text */
+  padding-left: 20px; /* Add padding to move content to the right */
+}
+
+.lgu-info-row {
+  display: flex; /* Flexbox for alignment */
+  margin-bottom: 10px; /* Space between rows */
+}
+
+.lgu-label {
+  font-weight: bold; /* Make labels bold */
+  color: #0073e6; /* Primary color for labels */
+  width: 150px; /* Fixed width for labels to align nicely */
+}
+
+.lgu-info span {
+  color: #555; /* Color for data */
+  margin-left: 10px; /* Space between label and data */
+}

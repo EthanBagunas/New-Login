@@ -32,15 +32,15 @@ const handleLogin = async (req, res) => {
                 if (isMatch) {
                     const firstTimeLogin = !user.password_changed;
 
-                    // Include user ID in the payload
+                    // Create tokens
                     const accessToken = jwt.sign(
-                        { id: user.id, email: user.username, roles: roles }, // Include user ID here
+                        { id: user.id, email: user.username, roles: roles },
                         secretKey,
                         { expiresIn: '10s' }
                     );
 
                     const refreshToken = jwt.sign(
-                        { id: user.id, email: user.username, roles: roles }, // Include user ID here
+                        { id: user.id, email: user.username, roles: roles },
                         refreshSecretKey,
                         { expiresIn: '1hr' }
                     );
@@ -53,7 +53,7 @@ const handleLogin = async (req, res) => {
                             return res.status(500).json({ message: "Internal Server Error" });
                         }
 
-                        // Send the access token and refresh token as cookies
+                        // Set cookies for tokens
                         res.cookie('accessToken', accessToken, {
                             httpOnly: true,
                             secure: true, // Secure only in production
@@ -68,7 +68,14 @@ const handleLogin = async (req, res) => {
                             maxAge: 1 * 60 * 60 * 1000 // 1 hour
                         });
 
-                        return res.status(200).json({ roles, accessToken, firstTimeLogin });
+                        // Send response with user info
+                        return res.status(200).json({
+                            id: user.id,
+                            email: user.username,
+                            roles,
+                            accessToken,
+                            firstTimeLogin
+                        });
                     });
                 } else {
                     return res.status(401).json({ message: "Invalid email or password" });
