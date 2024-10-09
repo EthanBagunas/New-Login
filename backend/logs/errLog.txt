@@ -7,3 +7,5 @@
 20240907	21:09:21	64dddc9b-946e-4de6-a97a-33e9a34846d1	Error: Not allowed by CORS
 20240911	08:13:34	ee489a8e-0680-4b7b-9204-b0267208b436	ReferenceError: con is not defined
 20240912	11:09:41	476bc252-dc7f-49f8-9451-8b0651d9be83	ReferenceError: con is not defined
+20240930	00:51:04	0b843beb-06e3-4cd9-9fdd-307f09713f48	TypeError: Cannot read properties of undefined (reading 'logo1')
+20241001	22:11:03	1fb594e6-73f5-438d-a602-0ea1976e33bb	ReferenceError: type is not defined

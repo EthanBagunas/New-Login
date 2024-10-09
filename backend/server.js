@@ -45,15 +45,19 @@ app.use('/refresh', require('./routes/refresh'));
 app.use(setdeviceRouter);
 app.use(userRouter);
 app.use('/reset', require('./routes/authRes'));
-app.use('/insertLgu', require('./routes/authInsertLgu'));
-app.use('/insertElect', require('./routes/authInsertElect'));
+app.use('/getBrgy', require('./routes/authshowBrgy'));
+app.use('/insertLgu',require('./routes/authInsertLgu'));
+app.use('/insertElect',require('./routes/authInsertElect'));
+app.use('/insertBrgy',require('./routes/autInsertbrgy'));
+app.use('/insertBarangay',require('./routes/autInsertOfficial'));
+app.use('/insertPurok',require('./routes/authInsertPurok'));
+
 app.use('/showLgu', require('./routes/authshowLgu'));
 
-app.use('/insertBrgy', require('./routes/autInsertbrgy'));
-app.use('/getBrgy', require('./routes/authshowBrgy'));
-app.use('/insertBarangay', require('./routes/autInsertOfficial'));
 
-app.use('/insertPurok', require('./routes/authInsertPurok'));
+
+
+
 app.use('/auth', require('./routes/auth'));
 app.use('/brgy-names', require('./routes/authBrgyNames'));
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
