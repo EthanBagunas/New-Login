@@ -5,11 +5,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import HouseboatIcon from '@mui/icons-material/Houseboat';
 import Divider from '@mui/material/Divider';
 import { Paper } from '@mui/material';
-
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { DrawerExtendedContext, LogsDataContext } from './Drawer';
+import { Icon } from '@iconify/react';
 
 const themeColors = {
   Normal: "#04dc04", // Green
@@ -30,25 +30,35 @@ const CardItem= ({theme, items}) => {
   }
 
   return(
-        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 ,  }} height={300} width={250} my={4} display="flex" alignItems="center" gap={4} p={2}>
+        <Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, borderColor: themeColors[theme], boxShadow: 7 ,  }} height={300} width={250} my={4} display="flex" alignItems="center" gap={2} p={2}>
         <Box sx={{ minWidth: 250 }}>
           <React.Fragment>
                 <CardContent style={{color: themeColors[theme]}}>
-                  <HouseboatIcon style={{width: '20%', height: '20%', color: "inherit"}}/>
-                  <Typography variant="h1" sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
-                    {items.DEVICE_ID}
-                  </Typography>
-                  <Typography variant= "subtitle2" color="text.secondary">
-                   {parseFloat(items.LATTITUDE).toFixed(6)}, {parseFloat(items.LONGITUDE).toFixed(6)} 
-                    <br/>
-                  {items.LOCATION}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    Water Level: {items.DIST_M}
-                  </Typography>
-                  <Typography variant="body2">
-                    {items.CAP_DATETIME}
-                  </Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                      <Icon icon= "material-symbols:flood-outline-rounded" style={{height: '70px', width: '70px' , color: "inherit"}}/>
+                    </Grid>
+                    <Grid item xs={5}>
+                      <Typography variant="h3" sx={{ fontSize: 30, top: '70px' }} color="text.primary" gutterBottom>
+                        {items.DEVICE_ID}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant= "subtitle2" color="text.secondary">
+                        {parseFloat(items.lat).toFixed(6)}, {parseFloat(items.lng).toFixed(6)} 
+                        <br/>
+                        {items.LOCATION}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h5" component="div">
+                        Water Level: {items.DIST_M}
+                      </Typography>
+                      <Typography variant="body2">
+                        {items.CAP_DATETIME}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </CardContent>
                 <CardActions>
                   <Button size="small" onClick={() => {

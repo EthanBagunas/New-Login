@@ -52,7 +52,7 @@ export const MapContainer = (props) => {
   const [evacmarkers, SetEvacMarkers]= useState([]);
   const handleEvacMarkers= () => {
     if (evacmarkers.length === 0){
-      axios.get('http://localhost:7000/evacmarker')
+      axios.get('http://localhost:7000/evacmarker/all')
       .then(response => {
         SetEvacMarkers(response.data);
       })
@@ -64,9 +64,6 @@ export const MapContainer = (props) => {
     }
   }
   
-  useEffect(()=> {
-    console.log(selectedMarker)
-  }, [selectedMarker])
 
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
@@ -106,15 +103,13 @@ export const MapContainer = (props) => {
 
 
             {selectedMarker && ( 
-
-            <InfoWindow
-            visible={evacmarkers.length === 0 ? false : true}
-            position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
-            onCloseClick={() => setSelectedMarker({})} 
-            >
-             <EvacInfoPopup anchoredmarker={selectedMarker}/>
-            </InfoWindow>
-          )}
+              <InfoWindow
+              visible={evacmarkers.length === 0 ? false : true}
+              position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
+              onCloseClick={() => setSelectedMarker({})}>
+                <EvacInfoPopup anchoredmarker={selectedMarker.idEvacuationCenter}/>
+              </InfoWindow>
+            )}
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
               icon={{

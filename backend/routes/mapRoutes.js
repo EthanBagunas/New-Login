@@ -6,7 +6,7 @@ const {GetPosition, GetAllDetails, GetHistory, GetEvacPosition}= require('../con
 
 router.get('/list/:level', GetAllDetails);
 router.get('/marker/:level', GetPosition);
-router.get('/evacmarker', GetEvacPosition);
+router.get('/evacmarker/:list', GetEvacPosition);
 
 router.get('/history/:deviceId', GetHistory)
 

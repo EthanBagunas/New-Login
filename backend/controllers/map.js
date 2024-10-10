@@ -37,7 +37,13 @@ const GetPosition = (req, res) => {
   getAllLvl(sql, [min, max], res);
 }
 const GetEvacPosition = (req, res) => {
-  const sql ='SELECT idEvacuationCenter, lat, lng FROM EvacuationCenter'
+  const {list} = req.params;
+  let sql
+  if (list == 'all') {
+    sql='SELECT idEvacuationCenter, lat, lng FROM EvacuationCenter'
+  } else {
+    sql =`SELECT status, current_capacity, max_capacity, LOCATION from EvacuationCenter WHERE idEvacuationCenter=${list}`;
+  }
   con.query(sql, (err, results) => {
     if (err) {
       console.error('error running query:', err);
