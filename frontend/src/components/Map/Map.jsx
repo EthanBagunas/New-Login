@@ -46,6 +46,7 @@ export const MapContainer = (props) => {
   
   const [selectedMarker, setSelectedMarker] = useState({});
   const onEvacMarkerClick = (value) => {
+    
     setSelectedMarker(value);
   };
   
@@ -70,7 +71,6 @@ export const MapContainer = (props) => {
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
-    console.log(lattitude, " ", longitude)
   }
 
   const hasRole1994 = auth.roles.includes('1994');
@@ -107,7 +107,7 @@ export const MapContainer = (props) => {
               visible={evacmarkers.length === 0 ? false : true}
               position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
               onCloseClick={() => setSelectedMarker({})}>
-                <EvacInfoPopup anchoredmarker={selectedMarker.idEvacuationCenter}/>
+                <EvacInfoPopup anchoredmarker={selectedMarker}/>
               </InfoWindow>
             )}
             {evacmarkers.map((evacmarker, index) => (
@@ -119,8 +119,7 @@ export const MapContainer = (props) => {
               onClick={() =>
                 onEvacMarkerClick(evacmarker)
               }
-              >
-              </Marker>
+              />
             ))}
 
 
