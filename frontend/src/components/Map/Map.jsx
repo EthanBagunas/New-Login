@@ -9,7 +9,7 @@ import highIcon from './icons/gps(3).png';
 import extremeIcon from './icons/gps(4).png';
 import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
-
+import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
 
 import EvacInfoPopup from './ShowEvacInfo';
@@ -36,7 +36,9 @@ const initposition = {
   lng: 123.89366616608562
 };
 
+
 export const MapContainer = (props) => {
+ 
 
   const evac_url= 'https://api.iconify.design/healthicons:emergency-post.svg?color=%23ff3300'
   
@@ -46,7 +48,7 @@ export const MapContainer = (props) => {
   
   const [selectedMarker, setSelectedMarker] = useState({});
   const onEvacMarkerClick = (value) => {
-    
+    console.log('im working')
     setSelectedMarker(value);
   };
   
@@ -74,6 +76,15 @@ export const MapContainer = (props) => {
   }
 
   const hasRole1994 = auth.roles.includes('1994');
+
+  const [showevacinsert, setShowEvacInsert]= useState(false)
+  const handleInsertEvacClick = () => {
+    setShowEvacInsert(true)
+  };
+
+  useEffect(() => {
+    alert('wasnt me')
+  }, [showevacinsert])
   
   return (
       <div>
@@ -106,10 +117,16 @@ export const MapContainer = (props) => {
               <InfoWindow
               visible={evacmarkers.length === 0 ? false : true}
               position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
-              onCloseClick={() => setSelectedMarker({})}>
-                <EvacInfoPopup anchoredmarker={selectedMarker}/>
+              onCloseClick={() => setSelectedMarker({})}
+              onOpen={() => {
+                const button = document.querySelector('#button');
+                if (button) {
+                  button.addEventListener('click', handleInsertEvacClick);
+                }}}>
+                <EvacInfoPopup anchoredmarker={selectedMarker} openInsert={showevacinsert}/>
               </InfoWindow>
             )}
+            {console.log(showevacinsert)}
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
               icon={{

@@ -51,6 +51,10 @@ const GetEvacPosition = (req, res) => {
   });
 }
 
+const InsertOccupant= (req, res) => {
+  
+}
+
 const GetHistory = (req, res) => {
   const {deviceId} = req.params;
   const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M , status FROM logs WHERE DEVICE_ID = ?;'
