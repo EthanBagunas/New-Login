@@ -24,6 +24,10 @@ function BrgyForm() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [places, setPlaces] = useState([]); 
   const [isViewing, setIsViewing] = useState(false); // Add viewing state
+  const [dateViewing, setDateViewing] = useState(false);
+  const [date, setDates] = useState([]); 
+  const [officialData, setOfficialData] = useState(null);
+  
 
   const logo1InputRef = useRef(null);
   const logo2InputRef = useRef(null);
@@ -124,6 +128,7 @@ function BrgyForm() {
   };
 
   const toggleDrawer = async () => {
+    setDateViewing(false);
     setDrawerOpen(!drawerOpen);
     if (!drawerOpen) {
       await fetchBarangayNames(); // Fetch barangay names when opening the drawer
@@ -142,10 +147,38 @@ function BrgyForm() {
       toast.error(<CustomToast message="Failed to fetch barangay names." image={errorImage} />);
     }
   };
+  const toggleDateViewing = async (place) => {
+    setDrawerOpen(false); 
+    if (dateViewing) {
+      setOfficialData(null); // Clear official barangay information
+  } else {
+      await fetchBarangayOfficial(place); // Fetch barangay names when opening the drawer
+  }
+
+ 
+  setDateViewing(!dateViewing);
+};
+
+const fetchBarangayOfficial = async (place) => {
+  try {
+    const response = await axios.get(`/brgy-date/${place}`, {
+      headers: {
+        'Authorization': `Bearer ${auth?.accessToken}`,
+      },
+    });
+
+    setDates(response.data); // Update the places state with fetched 
+  } catch (error) {
+    console.error("Error fetching Official Date:", error);
+    toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
+  }
+};
 
   const toggleViewMode = () => {
     setIsViewing(!isViewing);
   };
+ 
+  
 
 
   const handlePlaceClick = async (place) => {
@@ -176,6 +209,28 @@ function BrgyForm() {
     }
   };
 
+  
+  const handleDateClick = async (selectedDate) => {
+    try {
+      const response = await axios.get(`/getbrgyOfficial/${selectedDate}`, {
+        headers: {
+          'Authorization': `Bearer ${auth?.accessToken}`,
+        }
+      });
+      const data = response.data;
+      console.log(data);
+  
+      setOfficialData(data);
+      
+  
+      setIsViewing(true); // Switch to date view mode
+      setDrawerOpen(false);   // Close drawer if open
+    } catch (error) {
+      console.error("Error fetching barangay info by date:", error);
+      toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
+    }
+  };
+  
   const resetForm = () => {
     setBrgyName("");
     setLguType("City");
@@ -190,6 +245,7 @@ function BrgyForm() {
     setDrawerOpen(false); // Close drawer after selection
     setIsViewing(false); // Switch to view mode after fetching
   };
+ 
 
  
 
@@ -200,56 +256,75 @@ function BrgyForm() {
         <h2>{brgyName ? `Edit ${brgyName} Information` : "Add Barangay Information"}</h2>
 
         <ToastContainer />
+        
 
         {successMessage && (
           <div className="popup-message">
             <p>Success! Barangay Information Added.</p>
           </div>
         )}
-          {isViewing ? (
-                        
-              <div className="brgy-form-view card">
-                  <div className="centered-logo">
-                  <img 
-                    src={logo1 || "../styles/map-icon.png"} 
-                    alt="Logo 1" 
-                    className="logo-preview" 
-                  />
-                </div>
-                <div className="brgy-view-fields">
-                <div className="brgy-view-field">
-                  <strong>Barangay Name:</strong>
-                  <p>{brgyName}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Type:</strong>
-                  <p>{lguType}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Province:</strong>
-                  <p>{province}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Region:</strong>
-                  <p>{region}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Contact Number:</strong>
-                  <p>{contactNumber}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Email:</strong>
-                  <p>{email}</p>
-                </div>
-                <div className="brgy-view-field">
-                  <strong>Website:</strong>
-                  <p>{website || "N/A"}</p>
-                </div>
-              </div>
-              
+                {isViewing ? (
+        <div className="brgy-form-view card">
+          <div className="centered-logo">
+            <img 
+              src={logo1 || "../styles/map-icon.png"} 
+              alt="Logo 1" 
+              className="logo-preview" 
+            />
+          </div>
+          <div className="brgy-view-fields">
+            {/* Barangay Information Fields */}
+            <div className="brgy-view-field">
+              <strong>Barangay Name:</strong>
+              <p>{brgyName}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Type:</strong>
+              <p>{lguType}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Province:</strong>
+              <p>{province}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Region:</strong>
+              <p>{region}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Contact Number:</strong>
+              <p>{contactNumber}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Email:</strong>
+              <p>{email}</p>
+            </div>
+            <div className="brgy-view-field">
+              <strong>Website:</strong>
+              <p>{website || "N/A"}</p>
+            </div>
+          </div>
 
-                 <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
+          <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
+          <button onClick={()=> toggleDateViewing(brgyName)}>
+            {dateViewing ? "Hide Dates" : "Show Dates"}
+          </button>
+        
+          {dateViewing && (
+            <div className={`drawer ${dateViewing ? 'open' : ''}`}>
+                <h2>Available Dates</h2>
+                <ul>
+                {date.map((date) => (
+                <li key={date.period_from} onClick={() => handleDateClick(date.period_from)}>
+                  {date.period_from} - {date.period_to} 
+                </li>
+              ))}
+                </ul>
+                <div className="button-group">
+                    <button onClick={resetForm}>Insert Form</button>
                 </div>
+            </div>
+        )}
+        </div>
               ) : (
                 <div className="brgy-form-grid">
                   {/* Barangay Name */}
@@ -381,8 +456,14 @@ function BrgyForm() {
                 <button onClick={handleAddBrgyInfo}>
                   {brgyName ? "Update Barangay Info" : "Add Barangay Info"}
                 </button>
-                <button onClick={toggleDrawer}>Toggle Places</button>
+                <button onClick={toggleDrawer}>
+                {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
+                
+                  </button>
+               
               </div>
+              
+              
 
        
 
@@ -399,11 +480,65 @@ function BrgyForm() {
             </ul>
             <div className="button-group">
               <button onClick={resetForm}>Insert Form</button>
-              <button onClick={toggleDrawer}>Close Drawer</button>
             </div>
           </div>
         )}
+               
       </div>
+      
+          {/* Official Info Card */}
+          {dateViewing && officialData && (
+            <div className="brgy-official-container">
+            <div className="official-info card">
+              <h3>{officialData.brgyName} Official Information</h3>
+              <div className="official-view-fields">
+                <div className="official-view-field">
+                  <strong>Period From:</strong>
+                  <p>{officialData.period_from}</p>
+                </div>
+                <div className="official-view-field">
+                  <strong>Period To:</strong>
+                  <p>{officialData.period_to}</p>
+                </div>
+                <div className="official-view-field">
+                  <strong>Barangay Chair:</strong>
+                  <p>{officialData.brgy_chair}</p>
+                </div>
+                <div className="official-view-field">
+                  <strong>Barangay Secretary:</strong>
+                  <p>{officialData.brgy_sec}</p>
+                </div>
+                <div className="official-view-field">
+                  <strong>Barangay Treasurer:</strong>
+                  <p>{officialData.bryg_Treas}</p>
+                </div>
+                <div className="official-view-field">
+                  <strong>Councilors:</strong>
+                  <p>
+                    {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
+                    {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
+                    {officialData.brgy_councilor7}
+                  </p>
+                </div>
+                <div className="official-view-field">
+                  <strong>SK Chairs:</strong>
+                  <p>
+                    {officialData.sk_chair1}, {officialData.sk_chair2}
+                  </p>
+                </div>
+                <div className="official-view-field">
+                  <strong>SK Members:</strong>
+                  <p>
+                    {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
+                    {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
+                    {officialData.sk_mem7}
+                  </p>
+                </div>
+              </div>
+            </div>
+            </div>
+          )}
+
     </div>
   );
 }

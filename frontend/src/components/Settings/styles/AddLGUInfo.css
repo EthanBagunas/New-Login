@@ -196,3 +196,9 @@ button:hover {
   color: #555; /* Color for data */
   margin-left: 10px; /* Space between label and data */
 }
+.lgu-official-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}

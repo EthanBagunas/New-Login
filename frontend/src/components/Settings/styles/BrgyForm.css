@@ -1,16 +1,18 @@
 .brgy-form-container {
-    width: 600px;
-    margin: 100px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-  }
+  width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
   
-  .brgy-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
+}
+
+
+.brgy-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
 }
 
 .form-group {
@@ -108,10 +110,99 @@
 }
 
 .Toastify__toast--success {
-    background-color: #4CAF50; /* Green background for success */
-  }
-  
-  .Toastify__toast--error {
-    background-color: #F44336; /* Red background for errors */
-  }
-  
+  background-color: #4CAF50; /* Green background for success */
+}
+
+.Toastify__toast--error {
+  background-color: #F44336; /* Red background for errors */
+}
+
+.drawer, .dates-sidebar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 300px; /* Match width */
+  height: 100%; /* Same height */
+  background-color: #fff; /* Same background color */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  z-index: 1000; /* Ensure it's on top */
+  transform: translateX(100%); /* Hide initially */
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.drawer.open, .dates-sidebar.open {
+  transform: translateX(0); /* Show when open */
+}
+
+.drawer h2, .dates-sidebar h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.drawer ul, .dates-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.drawer li, .dates-sidebar li {
+  margin: 10px 0;
+  cursor: pointer;
+  color: #007bff; /* Link color */
+}
+
+.drawer li:hover, .dates-sidebar li:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+.brgy-form-view {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space between the cards */
+  width: 100%; /* Full width */
+}
+
+.brgy-official-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+
+.official-info.card {
+  background-color: #ffffff; /* White background for the card */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  padding: 20px; /* Padding inside the card */
+  width: 100%; /* Full width */
+  max-width: 600px; /* Maximum width of the card */
+
+}
+
+.official-info.card h3 {
+  color: #333; /* Darker color for the heading */
+  margin-bottom: 20px; /* Space below the heading */
+  text-align: center; /* Center align the heading */
+}
+
+.official-view-fields {
+  display: grid; /* Use grid layout */
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 15px; /* Space between grid items */
+}
+
+.official-view-field {
+  display: flex;
+  flex-direction: column; /* Stack label and value vertically */
+  background-color: #f9f9f9; /* Light gray background for fields */
+  border-radius: 5px; /* Slightly rounded corners for fields */
+  padding: 10px; /* Padding for fields */
+}
+
+.official-view-field strong {
+  color: #555; /* Dark gray for labels */
+}
+
+.official-view-field p {
+  color: #777; /* Lighter gray for text */
+  margin: 0; /* Remove default margin */
+}

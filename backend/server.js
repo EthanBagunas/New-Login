@@ -25,6 +25,8 @@ app.use(cookieParser());
 
 
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 exec('stream.bat', (err, stdout, stderr) => {
     if (err) {
         console.error(`Error starting stream: ${err.message}`);
@@ -36,26 +38,35 @@ exec('stream.bat', (err, stdout, stderr) => {
     }
 });
 
-app.use('/', express.static(path.join(__dirname, '/public')));
+app.get('/stream.m3u8', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'stream.m3u8'));
+  });
 
 
-// Serve routes
-app.use('/', require('./routes/root'));
+
 app.use('/refresh', require('./routes/refresh'));
 app.use(setdeviceRouter);
 app.use(userRouter);
 app.use('/reset', require('./routes/authRes'));
+
 app.use('/insertLgu', require('./routes/authInsertLgu'));
 app.use('/insertElect', require('./routes/authInsertElect'));
 app.use('/showLgu', require('./routes/authshowLgu'));
+app.use('/lgu-date', require('./routes/authLguDate'));
+app.use('/getelectedofficial', require('./routes/authElectedOfficial'));
+
 
 app.use('/insertBrgy', require('./routes/autInsertbrgy'));
 app.use('/getBrgy', require('./routes/authshowBrgy'));
 app.use('/insertBarangay', require('./routes/autInsertOfficial'));
+app.use('/brgy-names', require('./routes/authBrgyNames'));
+app.use('/brgy-date', require('./routes/authDateOfficial'));
+app.use('/getbrgyOfficial', require('./routes/authshowbrgyOfficial'));
+
 
 app.use('/insertPurok', require('./routes/authInsertPurok'));
 app.use('/auth', require('./routes/auth'));
-app.use('/brgy-names', require('./routes/authBrgyNames'));
+
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
 app.use(mapRouter);
 

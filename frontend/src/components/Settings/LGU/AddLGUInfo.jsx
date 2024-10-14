@@ -21,8 +21,13 @@ function AddLGUInfo() {
   const [contactNumber, setContactNumber] = useState("");
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
-  const [showForm, setShowForm] = useState(true); // To toggle form visibility
-  const [lguData, setLguData] = useState(null); // To store fetched LGU data
+  const [showForm, setShowForm] = useState(true); 
+  const [lguData, setLguData] = useState(null);
+  const [dateViewing, setDateViewing] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [date, setDates] = useState([]); 
+  const [officialData, setOfficialData] = useState(null);
+  
 
   const logo1InputRef = useRef(null);
   const logo2InputRef = useRef(null);
@@ -150,6 +155,55 @@ function AddLGUInfo() {
     setWebsite(lguData.Website); // Populate Website
     setShowForm(true); // Show the form
   };
+
+
+  const toggleDateViewing = async () => {
+    setDrawerOpen(false); 
+    if (dateViewing) {
+      setOfficialData(null); // Clear official barangay information
+  } else {
+      await fetchElectedOfficial(); // Fetch barangay names when opening the drawer
+  }
+
+ 
+  setDateViewing(!dateViewing);
+};
+
+const fetchElectedOfficial = async (place) => {
+  try {
+    const response = await axios.get(`/lgu-date/`, {
+      headers: {
+        'Authorization': `Bearer ${auth?.accessToken}`,
+      },
+    });
+
+    setDates(response.data); // Update the places state with fetched 
+  } catch (error) {
+    console.error("Error fetching Official Date:", error);
+    toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
+  }
+};
+ 
+  const handleDateClick = async (selectedDate) => {
+    try {
+      const response = await axios.get(`/getelectedofficial/${selectedDate}`, {
+        headers: {
+          'Authorization': `Bearer ${auth?.accessToken}`,
+        }
+      });
+      const data = response.data;
+      console.log(data);
+  
+      setOfficialData(data);
+      
+
+      setDrawerOpen(false);   // Close drawer if open
+    } catch (error) {
+      console.error("Error fetching barangay info by date:", error);
+      toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
+    }
+  };
+  
 
   return (
     <div>
@@ -331,10 +385,70 @@ function AddLGUInfo() {
                 <div className="button-container">
                   <button onClick={handleEditLGUInfo}>Edit LGU Info</button>
                 </div>
+                <button onClick={toggleDateViewing}>
+            {dateViewing ? "Hide Dates" : "Show Dates"}
+          </button>
+        
+          {dateViewing && (
+            <div className={`drawer ${dateViewing ? 'open' : ''}`}>
+                <h2>Available Dates</h2>
+                <ul>
+                {date.map((date) => (
+                <li key={date.period_from} onClick={() => handleDateClick(date.period_from)}>
+                  {date.period_from} - {date.period_to} 
+                </li>
+              ))}
+                </ul>
+            </div>
+        )}
               </div>
             )}
           </div>
       )}
+      
+                    {/* Official Info Card */}
+          {dateViewing && officialData && (
+            <div className="lgu-official-container">
+              <div className="official-info card">
+                <h3>{officialData.lguName} Official Information</h3>
+                <div className="official-view-fields">
+                  <div className="official-view-field">
+                    <strong>Period From:</strong>
+                    <p>{officialData.period_from}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Period To:</strong>
+                    <p>{officialData.period_to}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Mayor:</strong>
+                    <p>{officialData.mayor}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Vice Mayor:</strong>
+                    <p>{officialData.vice_mayor}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Councilors:</strong>
+                    <p>
+                      {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, 
+                      {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}, 
+                      {officialData.councilor_7}
+                    </p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>ABC President:</strong>
+                    <p>{officialData.abc_president}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK President:</strong>
+                    <p>{officialData.sk_president}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
     </div>
   );
 }

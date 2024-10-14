@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import axios from '../../api/axios';
@@ -32,28 +32,27 @@ const PopupBody = styled('div')(({ theme }) => ({
   fontWeight: 500,
   fontSize: '0.875rem',
   zIndex: 1,
+  display: 'flex',
+  flexDirection: 'column', // Align children vertically
+  alignItems: 'center', // Center the video and canvas
 }));
 
 const FeedPopup = () => {
   const { auth } = useAuth();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-
-  const frameRef = useRef();
-  const hsvFrameRef = useRef();
-  const yellowMaskRef = useRef();
-  const redMaskRef = useRef();
-  const greenMaskRef = useRef();
+  const [isOpenCVLoaded, setIsOpenCVLoaded] = useState(false);
 
   useEffect(() => {
     const loadOpenCV = async () => {
       try {
         const response = await axios.get('/opencv.js', {
           headers: {
-            'Authorization': `Bearer ${auth?.accessToken}`, // Pass the access token for authorization
+            'Authorization': `Bearer ${auth?.accessToken}`,
           },
           responseType: 'blob'
         });
+
         if (response.status !== 200) {
           throw new Error(`Failed to load OpenCV: ${response.status}`);
         }
@@ -65,8 +64,11 @@ const FeedPopup = () => {
 
         return new Promise((resolve, reject) => {
           script.onload = () => {
-            if (cv) {
-              cv.onRuntimeInitialized = resolve; // Ensure OpenCV is fully loaded
+            if (window.cv) {
+              window.cv.onRuntimeInitialized = () => {
+                setIsOpenCVLoaded(true);
+                resolve();
+              };
             } else {
               reject(new Error('OpenCV is not defined'));
             }
@@ -80,13 +82,14 @@ const FeedPopup = () => {
       }
     };
 
-    const processVideo = async () => {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
+    loadOpenCV().catch(console.error);
+  }, [auth]);
 
-      if (!video || !canvas) return;
+  useEffect(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
 
-      // Set video and canvas dimensions
+    if (video && canvas) {
       const videoWidth = 640;
       const videoHeight = 360;
       video.width = videoWidth;
@@ -94,15 +97,11 @@ const FeedPopup = () => {
       canvas.width = videoWidth;
       canvas.height = videoHeight;
 
-      // Initialize HLS.js
-      let hls;
+      const ctx = canvas.getContext('2d');
+
       if (Hls.isSupported()) {
-        hls = new Hls({
-          liveSyncDurationCount: 5,
-          maxBufferLength: 4,
-          liveMaxLatencyDurationCount: 6,
-        });
-        hls.loadSource('http://localhost:7000/stream.m3u8'); // Point to your video stream
+        const hls = new Hls();
+        hls.loadSource('http://localhost:7000/stream.m3u8');
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           video.play();
@@ -114,104 +113,98 @@ const FeedPopup = () => {
         });
       }
 
-      // Wait for OpenCV to be ready
-      await loadOpenCV();
-
-      // Initialize matrices for color detection
-      const cap = new cv.VideoCapture(video);
-      const frame = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC4);
-      const hsvFrame = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC3);
-      const yellowMask = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC1);
-      const redMask = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC1);
-      const greenMask = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC1);
-
-      // Define color ranges
-      const lowerYellow = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(20, 100, 100));
-      const upperYellow = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(30, 255, 255));
-      
-      const lowerRed1 = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(160, 50, 50));
-      const upperRed1 = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(190, 255, 255));
-
-      const lowerGreen1 = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(35, 52, 72));
-      const upperGreen1 = new cv.Mat(hsvFrame.rows, hsvFrame.cols, cv.CV_8UC3, new cv.Scalar(85, 255, 255));
-
       const processFrame = () => {
-        if (video.paused || video.ended) {
-          frame.delete();
-          hsvFrame.delete();
-          yellowMask.delete();
-          redMask.delete();
-          greenMask.delete();
-          lowerYellow.delete();
-          upperYellow.delete();
-          lowerRed1.delete();
-          upperRed1.delete();
-          lowerGreen1.delete();
-          upperGreen1.delete();
-          return;
+        if (video.paused || video.ended) return;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // Create an empty array to hold green pixels
+        let greenPixels = [];
+
+        // Loop through the pixel data
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];     // Red channel
+          const g = data[i + 1]; // Green channel
+          const b = data[i + 2]; // Blue channel
+
+          // Convert RGB to HSV
+          const [h, s, v] = rgbToHsv(r, g, b);
+
+          // Define lower and upper green thresholds in HSV
+          const lowerGreen = { h: 35, s: 52, v: 72 }; // Lower threshold
+          const upperGreen = { h: 85, s: 255, v: 255 }; // Upper threshold
+
+          // Check if the pixel falls within the green range
+          if (
+            h >= lowerGreen.h && h <= upperGreen.h &&
+            s >= lowerGreen.s && s <= upperGreen.s &&
+            v >= lowerGreen.v && v <= upperGreen.v
+          ) {
+            const x = (i / 4) % canvas.width;
+            const y = Math.floor((i / 4) / canvas.width);
+            greenPixels.push({ x, y });
+          }
         }
 
-        cap.read(frame);
-        cv.cvtColor(frame, hsvFrame, cv.COLOR_RGBA2RGB);
-        cv.cvtColor(hsvFrame, hsvFrame, cv.COLOR_RGB2HSV);
+        if (greenPixels.length > 0) {
+          const xMin = Math.min(...greenPixels.map(p => p.x));
+          const xMax = Math.max(...greenPixels.map(p => p.x));
+          const yMin = Math.min(...greenPixels.map(p => p.y));
+          const yMax = Math.max(...greenPixels.map(p => p.y));
 
-        cv.inRange(hsvFrame, lowerYellow, upperYellow, yellowMask);
-        cv.inRange(hsvFrame, lowerRed1, upperRed1, redMask);
-        cv.inRange(hsvFrame, lowerGreen1, upperGreen1, greenMask);
+          ctx.strokeStyle = 'red'; // Set bounding box color
+          ctx.lineWidth = 2; // Set line width
+          ctx.strokeRect(xMin, yMin, xMax - xMin, yMax - yMin); // Draw bounding box
 
-        detectAndLabelColor(frame, yellowMask, 'yellow', new cv.Scalar(0, 255, 0, 255));
-        detectAndLabelColor(frame, redMask, 'red', new cv.Scalar(0, 0, 255, 255));
-        detectAndLabelColor(frame, greenMask, 'green', new cv.Scalar(0, 255, 0, 255));
+          // Draw "Color Green" label beside the bounding box
+          ctx.fillStyle = 'red';
+          ctx.font = '16px Arial';
+          ctx.fillText('Color Yellow', xMax + 5, yMin + 20); // Adjust position as needed
+        }
 
-        cv.imshow(canvas, frame);
         requestAnimationFrame(processFrame);
       };
 
-      const detectAndLabelColor = (frame, mask, label, color) => {
-        const contours = new cv.MatVector();
-        const hierarchy = new cv.Mat();
-        cv.findContours(mask, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+      // Function to convert RGB to HSV
+      const rgbToHsv = (r, g, b) => {
+        r /= 255, g /= 255, b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, v = max;
 
-        for (let i = 0; i < contours.size(); ++i) {
-          const rect = cv.boundingRect(contours.get(i));
-          cv.rectangle(frame, new cv.Point(rect.x, rect.y), new cv.Point(rect.x + rect.width, rect.y + rect.height), color, 2);
-          cv.putText(frame, label, new cv.Point(rect.x, rect.y - 10), cv.FONT_HERSHEY_SIMPLEX, 0.6, color, 2);
+        const d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if (max === min) {
+          h = 0; // Achromatic
+        } else {
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h /= 6;
         }
 
-        contours.delete();
-        hierarchy.delete();
+        return [h * 360, s * 255, v * 255]; // Scale h to [0, 360] and s, v to [0, 255]
       };
 
-      requestAnimationFrame(processFrame);
-    };
-
-    processVideo().catch(console.error);
-
-    return () => {
-      const video = videoRef.current;
-      if (video) video.pause();
-
-        // Clean up OpenCV resources
-        const matrices = [
-          frameRef.current,
-          hsvFrameRef.current,
-          yellowMaskRef.current,
-          redMaskRef.current,
-          greenMaskRef.current,
-          // Add any other matrices created
-        ];
-  
-        matrices.forEach((mat) => {
-          if (mat) mat.delete();
-        });
-    };
-  }, [auth]);
+      video.addEventListener('play', processFrame);
+    }
+  }, [videoRef, canvasRef, isOpenCVLoaded]);
 
   return (
     <PopupBody>
-      <h1>Backup Feed with OpenCV Processing</h1>
-      <video ref={videoRef} controls style={{ width: '500px', marginTop: '8px' }} />
-      <canvas ref={canvasRef} style={{ display: 'block', marginTop: '8px' }}></canvas>
+      <h1>Backup Feed with OpenCV</h1>
+      {isOpenCVLoaded ? (
+        <p>OpenCV is loaded successfully!</p>
+      ) : (
+        <p>Loading OpenCV...</p>
+      )}
+      <video ref={videoRef} controls style={{ width: '500px', marginTop: '8px' }} /><br></br>
+      <h1>WITH FILTER</h1>
+      <canvas ref={canvasRef} style={{ width: '500px', marginTop: '20px', display: 'block' }} />
     </PopupBody>
   );
 };
