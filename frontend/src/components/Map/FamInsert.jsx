@@ -1,7 +1,8 @@
 
 
-import React from "react"
-import { Box, Button, Modal, FormControl, FormLabel, Radio, RadioGroup, Typography} from '@mui/material';
+import React, {useState} from "react"
+import { Box, Button, Modal, FormControl, FormLabel,FormControlLabel, Checkbox} from '@mui/material';
+import QuantityInput from "../BaseMUI/NumberInput";
 
 const style = {
     position: 'absolute',
@@ -14,25 +15,67 @@ const style = {
     boxShadow: 24,
     p: 4,
   };
-const FamInsert =({open}) => {
-    return(
 
+
+const FamInsert =({open, onClose, occlocation}) => {
+    return(
         <Modal
         open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        
+        onClose={onClose}
         >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <label></label>
+          <InsertOccupant location = {occlocation}/>
         </Box>
       </Modal>
         )
 }
 
 export default FamInsert;
+
+const InsertOccupant= ({location}) => {
+  const [formData, setFormData] = useState({
+    occupant_location: useState(location),
+    Under_4ps: false,
+    Infants:0,
+    Toddlers:0,
+    Preschoolers:0,
+    SchoolAge:  0,
+    Teenage: 0,
+    Adult:0,
+    Senior_Citizen:0,
+    Pregnant_women: 0,
+    Lactating_mothers: 0,
+    Solo_Parent:0,
+  });
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const numberinputs=[
+
+
+  ]
+
+  return(
+    
+    <FormControl>
+      <FormLabel>Add New Occupants</FormLabel>
+        <FormControlLabel control={<Checkbox />} label="Under 4ps" />
+
+
+      <label>
+        
+      </label>
+
+       <QuantityInput/>
+
+        <Button>Submit</Button>
+  </FormControl>
+  )
+}
+
+

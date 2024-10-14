@@ -13,7 +13,9 @@ import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
 
 // evacuation feat
+// evacuation feat
 import EvacInfoPopup from './ShowEvacInfo';
+import FamInsert from './FamInsert';
 import FamInsert from './FamInsert';
 
 export const MarkerContext = React.createContext();
@@ -54,8 +56,8 @@ export const MapContainer = (props) => {
   };
 
   const [addocc, setAddOcc]= useState(false)
-  function handleAddOcc(){
-    setAddOcc(!addocc)
+  function handleAddOcc(value){
+    setAddOcc(value)
   }
   
   const [evacmarkers, SetEvacMarkers]= useState([]);
@@ -117,13 +119,13 @@ export const MapContainer = (props) => {
               onOpen={() => {
                 const button = document.querySelector('#button');
                 if (button) {
-                  button.addEventListener('click', handleAddOcc);
+                  button.addEventListener('click', () => handleAddOcc(true));
                 }}}
              >
                 <EvacInfoPopup anchoredmarker={selectedMarker}/>
               </InfoWindow>
             )}
-            <FamInsert open={addocc}/>  
+            {selectedMarker && <FamInsert open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedMarker.LOCATION}/>  }
 
 
             {evacmarkers.map((evacmarker, index) => (
