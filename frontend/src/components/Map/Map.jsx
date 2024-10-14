@@ -12,7 +12,9 @@ import Navbar from '../Navbar';
 import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
 
+// evacuation feat
 import EvacInfoPopup from './ShowEvacInfo';
+import FamInsert from './FamInsert';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
@@ -48,9 +50,13 @@ export const MapContainer = (props) => {
   
   const [selectedMarker, setSelectedMarker] = useState({});
   const onEvacMarkerClick = (value) => {
-    console.log('im working')
     setSelectedMarker(value);
   };
+
+  const [addocc, setAddOcc]= useState(false)
+  function handleAddOcc(){
+    setAddOcc(!addocc)
+  }
   
   const [evacmarkers, SetEvacMarkers]= useState([]);
   const handleEvacMarkers= () => {
@@ -76,16 +82,6 @@ export const MapContainer = (props) => {
   }
 
   const hasRole1994 = auth.roles.includes('1994');
-
-  const [showevacinsert, setShowEvacInsert]= useState(false)
-  const handleInsertEvacClick = () => {
-    setShowEvacInsert(true)
-  };
-
-  useEffect(() => {
-    alert('wasnt me')
-  }, [showevacinsert])
-  
   return (
       <div>
         <Navbar/> 
@@ -121,12 +117,15 @@ export const MapContainer = (props) => {
               onOpen={() => {
                 const button = document.querySelector('#button');
                 if (button) {
-                  button.addEventListener('click', handleInsertEvacClick);
-                }}}>
-                <EvacInfoPopup anchoredmarker={selectedMarker} openInsert={showevacinsert}/>
+                  button.addEventListener('click', handleAddOcc);
+                }}}
+             >
+                <EvacInfoPopup anchoredmarker={selectedMarker}/>
               </InfoWindow>
             )}
-            {console.log(showevacinsert)}
+            <FamInsert open={addocc}/>  
+
+
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
               icon={{

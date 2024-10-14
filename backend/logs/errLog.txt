@@ -9,3 +9,5 @@
 20240912	11:09:41	476bc252-dc7f-49f8-9451-8b0651d9be83	ReferenceError: con is not defined
 20240930	00:51:04	0b843beb-06e3-4cd9-9fdd-307f09713f48	TypeError: Cannot read properties of undefined (reading 'logo1')
 20241001	22:11:03	1fb594e6-73f5-438d-a602-0ea1976e33bb	ReferenceError: type is not defined
+20241010	15:43:30	62d670cb-16a7-40a8-a80d-761b14d58c7d	ReferenceError: sql is not defined
+20241010	15:44:54	1265f0fa-cf5b-4593-a8d4-0b59f9d083c7	TypeError: Assignment to constant variable.

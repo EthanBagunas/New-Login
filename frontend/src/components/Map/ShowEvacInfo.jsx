@@ -1,31 +1,31 @@
 import React,{ useState, useEffect} from 'react';
 import axios from 'axios';
-import { Button, Modal, FormControl, FormLabel, Radio, RadioGroup} from '@mui/material';
+import { Box, Button, Modal, FormControl, FormLabel, Radio, RadioGroup, Typography} from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_NumberInput';
-import { styled } from '@mui/system';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
-import Drawer from '@mui/material/Drawer';
+import {
+  Unstable_NumberInput as BaseNumberInput,
+  numberInputClasses,
+} from '@mui/base/Unstable_NumberInput';
+import { useTheme } from '@mui/system';
 
-const EvacInfoPopup = ({anchoredmarker}, openInsert)=> {
-  const [evacInfo, setEvacInfo] = useState(anchoredmarker);
 
-  return(
-    <div>
-        <p>Evac center Information</p>
-        <p>Evacuation Center: {evacInfo.EvacName}</p>
-        <p>Location: {evacInfo.LOCATION}</p>
-        <p>Status: {evacInfo.status}</p>
-        <p>Max Capacity: {evacInfo.max_capacity}</p>
-        <p>Current Capacity: {evacInfo.current_capacity}</p>
-        <Button id='button'>Add Occupants</Button>
-        <Drawer open={openInsert}>
-          <InsertOccupant/>
-        </Drawer>
-    </div>
-    )
-  } 
+  const EvacInfoPopup = ({anchoredmarker, handleAddOcc})=> {
+    const [evacInfo, setEvacInfo] = useState(anchoredmarker);
+   
+
+    return(
+      <div>
+          <p>Evac center Information</p>
+          <p>Evacuation Center: {evacInfo.EvacName}</p>
+          <p>Location: {evacInfo.LOCATION}</p>
+          <p>Status: {evacInfo.status}</p>
+          <p>Max Capacity: {evacInfo.max_capacity}</p>
+          <p>Current Capacity: {evacInfo.current_capacity}</p>
+          <Button id='button' >Add Occupants</Button>
+          
+      </div>
+      )
+    } 
   
   export default EvacInfoPopup; 
   
@@ -49,65 +49,65 @@ const EvacInfoPopup = ({anchoredmarker}, openInsert)=> {
       const { name, value } = event.target;
       setFormData({ ...formData, [name]: value });
     };
-    return(
 
+  
+
+    return(
       
       <FormControl>
-    <FormLabel>Click on the map to add device positions</FormLabel>
-      <TextField
-        id="familyname" label="Family Name"
-        name="familyname" variant="outlined"
-        onChange={handleInputChange} margin= "normal"/>
-      <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="female"
-          name="radio-buttons-group"
-          >
-          <FormControlLabel value="female" control={<Radio />} label="Yes" />
-          <FormControlLabel value="male" control={<Radio />} label="No" />
-        </RadioGroup>
-        <NumberInput aria-label="Quantity Input" min={1} max={99}/>
-      <Button sx={{color:"#000000", backgroundColor: red[500] }} >Submit</Button>
-</FormControl>
-)
+        <FormLabel>Click on the map to add device positions</FormLabel>
+          <TextField
+            id="familyname" label="Family Name"
+            name="familyname" variant="outlined"
+            onChange={handleInputChange} margin= "normal"/>
+          <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="female"
+              name="radio-buttons-group"
+              >
+              <FormControlLabel value="female" control={<Radio />} label="Yes" />
+              <FormControlLabel value="male" control={<Radio />} label="No" />
+            </RadioGroup>
+            <NumberInput aria-label="Quantity Input" min={1} max={99}/>
+          <Button sx={{color:"#000000", backgroundColor: red[500] }} >Submit</Button>
+    </FormControl>
+    )
 }
 
-const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
+
+
+
+function NumberInputBasic() {
+  
   return (
-    <BaseNumberInput
-    slots={{
-      root: StyledInputRoot,
-      input: StyledInput,
-        incrementButton: StyledButton,
-        decrementButton: StyledButton,
-      }}
-      slotProps={{
-        incrementButton: {
-          children: <AddIcon fontSize="small" />,
-          className: 'increment',
-        },
-        decrementButton: {
-          children: <RemoveIcon fontSize="small" />,
-        },
-      }}
-      {...props}
-      ref={ref}
-    />
+    <React.Fragment>
+      <BaseNumberInput
+        slotProps={{
+          root: { className: 'CustomNumberInput' },
+          input: { className: 'input' },
+          decrementButton: { className: 'btn decrement', children: '▾' },
+          incrementButton: { className: 'btn increment', children: '▴' },
+        }}
+        aria-label="Demo number input"
+        placeholder="Type a number…"
+      />
+      <Styles />
+    </React.Fragment>
   );
-});
+}
 
-
-
-const blue = {
-  100: '#daecff',
-  200: '#b6daff',
-  300: '#66b2ff',
-  400: '#3399ff',
-  500: '#007fff',
-  600: '#0072e5',
-  700: '#0059B2',
-  800: '#004c99',
+const cyan = {
+  50: '#E9F8FC',
+  100: '#BDEBF4',
+  200: '#99D8E5',
+  300: '#66BACC',
+  400: '#1F94AD',
+  500: '#0D5463',
+  600: '#094855',
+  700: '#063C47',
+  800: '#043039',
+  900: '#022127',
 };
 
 const grey = {
@@ -123,87 +123,126 @@ const grey = {
   900: '#1C2025',
 };
 
-const StyledInputRoot = styled('div')(
-  ({ theme }) => `
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 400;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[500]};
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-`,
-);
+function useIsDarkMode() {
+  const theme = useTheme();
+  return theme.palette.mode === 'dark';
+}
 
-const StyledInput = styled('input')(
-  ({ theme }) => `
-  font-size: 0.875rem;
-  font-family: inherit;
-  font-weight: 400;
-  line-height: 1.375;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
-  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-  box-shadow: 0px 2px 4px ${
-    theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.5)' : 'rgba(0,0,0, 0.05)'
-  };
-  border-radius: 8px;
-  margin: 0 8px;
-  padding: 10px 12px;
-  outline: 0;
-  min-width: 0;
-  width: 4rem;
-  text-align: center;
+function Styles() {
+  // Replace this with your app logic for determining dark mode
+  const isDarkMode = useIsDarkMode();
 
-  &:hover {
-    border-color: ${blue[400]};
-  }
+  return (
+    <style>
+      {`
+      .CustomNumberInput {
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-weight: 400;
+        border-radius: 8px;
+        color: ${isDarkMode ? grey[300] : grey[900]};
+        background: ${isDarkMode ? grey[900] : '#fff'};
+        border: 1px solid ${isDarkMode ? grey[700] : grey[200]};
+        box-shadow: 0px 2px 2px ${isDarkMode ? grey[900] : grey[50]};
+        display: grid;
+        grid-template-columns: 1fr 19px;
+        grid-template-rows: 1fr 1fr;
+        overflow: hidden;
+        column-gap: 8px;
+        padding: 4px;
+      }
 
-  &:focus {
-    border-color: ${blue[400]};
-    box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[700] : blue[200]};
-  }
+      .CustomNumberInput:hover {
+        border-color: ${cyan[400]};
+      }
 
-  &:focus-visible {
-    outline: 0;
-  }
-`,
-);
+      .CustomNumberInput.${numberInputClasses.focused} {
+        border-color: ${cyan[400]};
+        box-shadow: 0 0 0 3px ${isDarkMode ? cyan[600] : cyan[200]};
+      }
 
-const StyledButton = styled('button')(
-  ({ theme }) => `
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.875rem;
-  box-sizing: border-box;
-  line-height: 1.5;
-  border: 1px solid;
-  border-radius: 999px;
-  border-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[200]};
-  background: ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
-  color: ${theme.palette.mode === 'dark' ? grey[200] : grey[900]};
-  width: 32px;
-  height: 32px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 120ms;
+      .CustomNumberInput .input {
+        font-size: 0.875rem;
+        font-family: inherit;
+        font-weight: 400;
+        line-height: 1.5;
+        grid-column: 1/2;
+        grid-row: 1/3;
+        color: ${isDarkMode ? grey[300] : grey[900]};
+        background: inherit;
+        border: none;
+        border-radius: inherit;
+        padding: 8px 12px;
+        outline: 0;
+      }
 
-  &:hover {
-    cursor: pointer;
-    background: ${theme.palette.mode === 'dark' ? blue[700] : blue[500]};
-    border-color: ${theme.palette.mode === 'dark' ? blue[500] : blue[400]};
-    color: ${grey[50]};
-  }
+      .CustomNumberInput .input:focus-visible {
+        outline: 0;
+      }
 
-  &:focus-visible {
-    outline: 0;
-  }
+      .CustomNumberInput .btn {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        appearance: none;
+        padding: 0;
+        width: 19px;
+        height: 19px;
+        font-family: system-ui, sans-serif;
+        font-size: 0.875rem;
+        line-height: 1;
+        box-sizing: border-box;
+        background: ${isDarkMode ? grey[900] : '#fff'};
+        border: 0;
+        color: ${isDarkMode ? grey[300] : grey[900]};
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 120ms;
+      }
 
-  &.increment {
-    order: 1;
-  }
-`,
-);
+      .CustomNumberInput .btn:hover {
+        background: ${isDarkMode ? grey[800] : grey[50]};
+        border-color: ${isDarkMode ? grey[600] : grey[300]};
+        cursor: pointer;
+      }
+
+      .CustomNumberInput .btn.increment {
+        grid-column: 2/3;
+        grid-row: 1/2;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border: 1px solid;
+        border-bottom: 0;
+        &:hover {
+          cursor: pointer;
+          background: ${cyan[400]};
+          color: ${grey[50]};
+        }
+        border-color: ${isDarkMode ? grey[800] : grey[200]};
+        background: ${isDarkMode ? grey[900] : grey[50]};
+        color: ${isDarkMode ? grey[200] : grey[900]};
+      }
+
+      .CustomNumberInput .btn.decrement {
+        grid-column: 2/3;
+        grid-row: 2/3;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border: 1px solid;
+        &:hover {
+          cursor: pointer;
+          background: ${cyan[400]};
+          color: ${grey[50]};
+        }
+        border-color: ${isDarkMode ? grey[800] : grey[200]};
+        background: ${isDarkMode ? grey[900] : grey[50]};
+        color: ${isDarkMode ? grey[200] : grey[900]};
+        }
+
+      & .arrow {
+        transform: translateY(-1px);
+      }
+      `}
+    </style>
+  );
+}
