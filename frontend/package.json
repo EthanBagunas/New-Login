@@ -18,7 +18,7 @@
     "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
     "google-maps-react": "^2.0.6",
-    "hls.js": "^1.5.15",
+    "hls.js": "^1.5.16",
     "mui-one-time-password-input": "^2.0.3",
     "opencv-react": "^0.0.6",
     "opencv.js": "^1.2.1",
