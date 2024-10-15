@@ -7,7 +7,11 @@ import axios from '../../../api/axios';
 import successImage from '../styles/success.png';
 import errorImage from '../styles/error.png';
 import mapIcon from '../styles/map-icon.png';
-import "../styles/BrgyForm.css";
+import "../styles/brgyForm.css";
+import IconButton from '@mui/material/IconButton';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 
 function BrgyForm() {
   const { auth } = useAuth();
@@ -23,10 +27,11 @@ function BrgyForm() {
   const [successMessage, setSuccessMessage] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [places, setPlaces] = useState([]); 
-  const [isViewing, setIsViewing] = useState(false); // Add viewing state
+  const [isViewing, setIsViewing] = useState(false); 
   const [dateViewing, setDateViewing] = useState(false);
   const [date, setDates] = useState([]); 
   const [officialData, setOfficialData] = useState(null);
+  const [hiddenContainerOpen, setHiddenContainerOpen] = useState(false); // State for hidden container
   
 
   const logo1InputRef = useRef(null);
@@ -130,10 +135,14 @@ function BrgyForm() {
   const toggleDrawer = async () => {
     setDateViewing(false);
     setDrawerOpen(!drawerOpen);
+    setHiddenContainerOpen(false);
     if (!drawerOpen) {
+      setOfficialData(null); 
       await fetchBarangayNames(); // Fetch barangay names when opening the drawer
     }
   };
+
+   
   const fetchBarangayNames = async () => {
     try {
       const response = await axios.get('/brgy-names', {
@@ -149,11 +158,8 @@ function BrgyForm() {
   };
   const toggleDateViewing = async (place) => {
     setDrawerOpen(false); 
-    if (dateViewing) {
-      setOfficialData(null); // Clear official barangay information
-  } else {
-      await fetchBarangayOfficial(place); // Fetch barangay names when opening the drawer
-  }
+    
+    fetchBarangayOfficial(place); // Fetch barangay names when opening the drawer
 
  
   setDateViewing(!dateViewing);
@@ -221,7 +227,9 @@ const fetchBarangayOfficial = async (place) => {
       console.log(data);
   
       setOfficialData(data);
-      
+      if (!hiddenContainerOpen) {
+        setHiddenContainerOpen(true); // Open the hidden container
+      }
   
       setIsViewing(true); // Switch to date view mode
       setDrawerOpen(false);   // Close drawer if open
@@ -244,8 +252,12 @@ const fetchBarangayOfficial = async (place) => {
     setSuccessMessage(false);
     setDrawerOpen(false); // Close drawer after selection
     setIsViewing(false); // Switch to view mode after fetching
+    setHiddenContainerOpen(false);
   };
- 
+  const toggleHiddenContainer = () => {
+    
+    setHiddenContainerOpen(!hiddenContainerOpen);
+  };  
 
  
 
@@ -264,7 +276,20 @@ const fetchBarangayOfficial = async (place) => {
           </div>
         )}
                 {isViewing ? (
-        <div className="brgy-form-view card">
+        <div className="brgy-form-view card" style={{ position: 'relative' }}>
+          <IconButton
+        style={{ 
+          position: 'absolute', 
+          left: '-50px',  // Adjust this to position the button to the left
+          top: '50%', 
+          transform: 'translateY(-50%)',
+          backgroundColor: 'white',  // Optional, adds visibility
+          border: '1px solid #ccc',  // Optional, adds a border for better visibility
+        }}
+        onClick={toggleHiddenContainer}
+      >
+        <ArrowBackIosIcon /> {/* Left-facing arrow icon */}
+      </IconButton>
           <div className="centered-logo">
             <img 
               src={logo1 || "../styles/map-icon.png"} 
@@ -460,13 +485,9 @@ const fetchBarangayOfficial = async (place) => {
                 {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
                 
                   </button>
+                  
                
               </div>
-              
-              
-
-       
-
                 {drawerOpen && (
           <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
             <img src={mapIcon} alt="Map Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
@@ -483,62 +504,102 @@ const fetchBarangayOfficial = async (place) => {
             </div>
           </div>
         )}
+           {hiddenContainerOpen && (
+          <div className="brgy-official-container">
+            {officialData ? (
+              <div className="official-info card">
+                <h3>{officialData.brgyName} Official Information</h3>
+                <div className="official-view-fields">
+                  <div className="official-view-field">
+                    <strong>Period From:</strong>
+                    <p>{officialData.period_from}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Period To:</strong>
+                    <p>{officialData.period_to}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Chair:</strong>
+                    <p>{officialData.brgy_chair}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Secretary:</strong>
+                    <p>{officialData.brgy_sec}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Treasurer:</strong>
+                    <p>{officialData.brgy_Treas}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Councilors:</strong>
+                    <p>
+                      {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
+                      {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
+                      {officialData.brgy_councilor7}
+                    </p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Chairs:</strong>
+                    <p>
+                      {officialData.sk_chair1}, {officialData.sk_chair2}
+                    </p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Members:</strong>
+                    <p>
+                      {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
+                      {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
+                      {officialData.sk_mem7}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="official-info card empty-data">
+                <h2>Please Select A Date</h2>
+                <h3>Official Information</h3>
+                <div className="official-view-fields">
+                  <div className="official-view-field">
+                    <strong>Period From:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Period To:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Chair:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Secretary:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Treasurer:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Councilors:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Chairs:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Members:</strong>
+                    <p>empty</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
                
       </div>
       
-          {/* Official Info Card */}
-          {dateViewing && officialData && (
-            <div className="brgy-official-container">
-            <div className="official-info card">
-              <h3>{officialData.brgyName} Official Information</h3>
-              <div className="official-view-fields">
-                <div className="official-view-field">
-                  <strong>Period From:</strong>
-                  <p>{officialData.period_from}</p>
-                </div>
-                <div className="official-view-field">
-                  <strong>Period To:</strong>
-                  <p>{officialData.period_to}</p>
-                </div>
-                <div className="official-view-field">
-                  <strong>Barangay Chair:</strong>
-                  <p>{officialData.brgy_chair}</p>
-                </div>
-                <div className="official-view-field">
-                  <strong>Barangay Secretary:</strong>
-                  <p>{officialData.brgy_sec}</p>
-                </div>
-                <div className="official-view-field">
-                  <strong>Barangay Treasurer:</strong>
-                  <p>{officialData.bryg_Treas}</p>
-                </div>
-                <div className="official-view-field">
-                  <strong>Councilors:</strong>
-                  <p>
-                    {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
-                    {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
-                    {officialData.brgy_councilor7}
-                  </p>
-                </div>
-                <div className="official-view-field">
-                  <strong>SK Chairs:</strong>
-                  <p>
-                    {officialData.sk_chair1}, {officialData.sk_chair2}
-                  </p>
-                </div>
-                <div className="official-view-field">
-                  <strong>SK Members:</strong>
-                  <p>
-                    {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
-                    {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
-                    {officialData.sk_mem7}
-                  </p>
-                </div>
-              </div>
-            </div>
-            </div>
-          )}
-
+           
     </div>
   );
 }

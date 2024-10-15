@@ -1,10 +1,10 @@
 .add-lgu-info-container {
-  width: 600px;
-  margin: 100px auto; /* Added 40px margin to push the form down */
+  width: 600px; /* Fixed width for content */
+  margin: 100px auto; /* Center the container with margin */
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: #fff; /* White background */
 }
 
 .form-grid {
@@ -38,8 +38,8 @@ button {
 }
 
 button.primary-button {
-  background-color: #0073e6;
-  color: white;
+  background-color: #0073e6; /* Primary button color */
+  color: white; /* Text color */
 }
 
 .button-group {
@@ -47,7 +47,6 @@ button.primary-button {
   justify-content: space-between;
   margin-top: 20px;
 }
-
 
 .upload-area {
   border: 2px dashed #0073e6;
@@ -59,7 +58,7 @@ button.primary-button {
 }
 
 .upload-area:hover {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Light gray on hover */
 }
 
 .upload-area p {
@@ -82,7 +81,7 @@ button.primary-button {
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: #ff4d4f;
+  background-color: #ff4d4f; /* Red background for close button */
   border: none;
   color: white;
   border-radius: 50%;
@@ -90,25 +89,27 @@ button.primary-button {
 }
 
 .upload-preview button:hover {
-  background-color: #d43f3f;
+  background-color: #d43f3f; /* Darker red on hover */
 }
+
 .Toastify__toast {
-  background: #333; /* Change background color */
-  color: white;     /* Change text color */
+  background: #333; /* Dark background */
+  color: white; /* Text color */
   border-radius: 5px; /* Rounded corners */
-  padding: 10px;    /* Padding */
+  padding: 10px; /* Padding */
 }
 
 .Toastify__toast--success {
-  background-color: #4CAF50; /* Green background for success */
+  background-color: #4CAF50; /* Green for success */
 }
 
 .Toastify__toast--error {
-  background-color: #F44336; /* Red background for errors */
+  background-color: #F44336; /* Red for errors */
 }
+
 .lgu-data-container {
-  width: 600px; /* Maintain the width */
-  margin: 40px auto; /* Center it with margin */
+  width: 600px; /* Maintain width */
+  margin: 40px auto; /* Center it */
   padding: 20px;
   border-radius: 10px;
   background-color: #f9f9f9; /* Light gray background */
@@ -118,7 +119,7 @@ button.primary-button {
 
 .lgu-data-container h2 {
   text-align: center; /* Center the title */
-  color: #333; /* Dark text for better contrast */
+  color: #333; /* Dark text */
   margin-bottom: 20px; /* Spacing below title */
 }
 
@@ -168,17 +169,11 @@ button {
   cursor: pointer;
   background-color: #0073e6; /* Primary button color */
   color: white; /* Text color */
-  transition: background-color 0.3s; /* Smooth background transition */
+  transition: background-color 0.3s; /* Smooth transition */
 }
 
 button:hover {
   background-color: #005bb5; /* Darker shade on hover */
-}
-.lgu-info {
-  margin-bottom: 20px; /* Spacing below info */
-  text-align: left; /* Align text to the left */
-  color: #555; /* Medium gray text */
-  padding-left: 20px; /* Add padding to move content to the right */
 }
 
 .lgu-info-row {
@@ -196,9 +191,22 @@ button:hover {
   color: #555; /* Color for data */
   margin-left: 10px; /* Space between label and data */
 }
+
 .lgu-official-container {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px;
+}
+
+.hidden-container {
+  position: absolute;
+  right: 660px; /* Adjust this value to move it further right */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+}
+
+.hidden-container.open {
+  left: 0; /* Show when toggled */
 }

@@ -8,6 +8,10 @@ import Navbar from '../../Navbar';
 import useAuth from '../../../hooks/useAuth'; 
 import successImage from '../styles/success.png'; // Import your success image
 import errorImage from '../styles/error.png'; // Import your error image
+import IconButton from '@mui/material/IconButton';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 
 function AddLGUInfo() {
   const { auth } = useAuth(); 
@@ -24,9 +28,10 @@ function AddLGUInfo() {
   const [showForm, setShowForm] = useState(true); 
   const [lguData, setLguData] = useState(null);
   const [dateViewing, setDateViewing] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [date, setDates] = useState([]); 
   const [officialData, setOfficialData] = useState(null);
+  const [hiddenContainerOpen, setHiddenContainerOpen] = useState(false); // State for hidden container
   
 
   const logo1InputRef = useRef(null);
@@ -154,19 +159,13 @@ function AddLGUInfo() {
     setEmail(lguData.Email_Address); // Populate Email
     setWebsite(lguData.Website); // Populate Website
     setShowForm(true); // Show the form
+    setHiddenContainerOpen(false);
   };
 
 
   const toggleDateViewing = async () => {
-    setDrawerOpen(false); 
-    if (dateViewing) {
-      setOfficialData(null); // Clear official barangay information
-  } else {
-      await fetchElectedOfficial(); // Fetch barangay names when opening the drawer
-  }
-
- 
   setDateViewing(!dateViewing);
+  fetchElectedOfficial(); 
 };
 
 const fetchElectedOfficial = async (place) => {
@@ -193,17 +192,29 @@ const fetchElectedOfficial = async (place) => {
       });
       const data = response.data;
       console.log(data);
-  
-      setOfficialData(data);
-      
 
-      setDrawerOpen(false);   // Close drawer if open
+      setOfficialData(data);
+      setDateViewing(false)
+      if (!hiddenContainerOpen) {
+        setHiddenContainerOpen(true); // Open the hidden container
+      }
     } catch (error) {
       console.error("Error fetching barangay info by date:", error);
       toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
     }
   };
-  
+  const toggleHiddenContainer = () => {
+    
+  setHiddenContainerOpen(!hiddenContainerOpen);
+};  
+const ClearContainer = () => {
+  setOfficialData(null); 
+};  
+
+
+
+
+
 
   return (
     <div>
@@ -341,116 +352,158 @@ const fetchElectedOfficial = async (place) => {
             </div>
           </div>
 
-          <button onClick={handleAddLGUInfo}>Add LGU Info</button>
-        </div>
-      ) : (
-        <div className="lgu-data-container">
-            <h2>Existing LGU Information</h2>
-            {lguData && (
-              <div className="lgu-data">
-                <div className="logo-container">
-                  <img src={lguData.Logo1} alt="Logo 1" className="logo1" />
-                  <img src={lguData.Logo2} alt="Logo 2" className="logo2" />
-                </div>
-                <div className="lgu-info">
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">LGU Name:</label>
-                    <span>{lguData.LGU_Name}</span>
+                      <button onClick={handleAddLGUInfo}>Add LGU Info</button>
+                    </div>
+                  ) : (
+                <div className="lgu-data-container" style={{ position: 'relative' }}>
+                  <IconButton
+                    style={{ 
+                      position: 'absolute', 
+                      left: '-50px',  // Adjust this to position the button to the left
+                      top: '50%', 
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'white',  // Optional, adds visibility
+                      border: '1px solid #ccc',  // Optional, adds a border for better visibility
+                    }}
+                    onClick={toggleHiddenContainer}
+                  >
+                    <ArrowBackIosIcon /> {/* Left-facing arrow icon */}
+                  </IconButton>
+                  
+                  <h2>Existing LGU Information</h2>
+                  {lguData && (
+                    <div className="lgu-data">
+                      <div className="logo-container">
+                        <img src={lguData.Logo1} alt="Logo 1" className="logo1" />
+                        <img src={lguData.Logo2} alt="Logo 2" className="logo2" />
+                      </div>
+                      <div className="lgu-info">
+                        <div className="lgu-info">
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">LGU Name:</label>
+                            <span>{lguData.LGU_Name}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Type:</label>
+                            <span>{lguData.Type}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Province:</label>
+                            <span>{lguData.Province}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Region:</label>
+                            <span>{lguData.Region}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Contact Number:</label>
+                            <span>{lguData.Contact_Number}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Email:</label>
+                            <span>{lguData.Email_Address}</span>
+                          </div>
+                          <div className="lgu-info-row">
+                            <label className="lgu-label">Website:</label>
+                            <span>{lguData.Website}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="button-container">
+                        <button onClick={handleEditLGUInfo}>Edit LGU Info</button>
+                        <button onClick={toggleDateViewing}>
+                        {dateViewing ? "Hide Dates" : "Show Dates"}
+                      </button>
+                      </div>
+                      
+                      
+                      {dateViewing && (
+                        <div className={`drawer ${dateViewing ? 'open' : ''}`}>
+                          <h2>Available Dates</h2>
+                          <ul>
+                            {date.map((date) => (
+                              <li key={date.period_from} onClick={() => handleDateClick(date.period_from)}>
+                                {date.period_from} - {date.period_to}
+                              </li>
+                            ))}
+                          </ul>
+                          <button onClick={ClearContainer}>Clear Official Information</button>
+                        
+                        </div>
+                      )}
+                    </div>
+                  )}
+                   {/* Official Info Card */}
+            {hiddenContainerOpen && (
+              <div className="hidden-container">
+                {officialData ? (
+                  <div className="lgu-official-container">
+                    <div className="official-info card">
+                      <h3>{officialData.lguName} Official Information</h3>
+                      <div className="official-view-fields">
+                        <div className="official-view-field">
+                          <strong>Period From:</strong>
+                          <p>{officialData.period_from}</p>
+                        </div>
+                        <div className="official-view-field">
+                          <strong>Period To:</strong>
+                          <p>{officialData.period_to}</p>
+                        </div>
+                        <div className="official-view-field">
+                          <strong>Mayor:</strong>
+                          <p>{officialData.mayor}</p>
+                        </div>
+                        <div className="official-view-field">
+                          <strong>Vice Mayor:</strong>
+                          <p>{officialData.vice_mayor}</p>
+                        </div>
+                        <div className="official-view-field">
+                          <strong>Councilors:</strong>
+                          <p>
+                            {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Type:</label>
-                    <span>{lguData.Type}</span>
+                ) : (
+                  // Now outside the hidden-container
+                  <div className="official-info card empty-data1">
+                    <h2>Please Select A Date</h2>
+                    <h3>Official Information</h3>
+                    <div className="official-view-fields">
+                      <div className="official-view-field">
+                        <strong>Period From:</strong>
+                        <p>empty</p>
+                      </div>
+                      <div className="official-view-field">
+                        <strong>Period To:</strong>
+                        <p>empty</p>
+                      </div>
+                      <div className="official-view-field">
+                        <strong>Mayor:</strong>
+                        <p>empty</p>
+                      </div>
+                      <div className="official-view-field">
+                        <strong>Vice Mayor:</strong>
+                        <p>empty</p>
+                      </div>
+                      <div className="official-view-field">
+                        <strong>Councilors:</strong>
+                        <p>empty</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Province:</label>
-                    <span>{lguData.Province}</span>
-                  </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Region:</label>
-                    <span>{lguData.Region}</span>
-                  </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Contact Number:</label>
-                    <span>{lguData.Contact_Number}</span>
-                  </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Email:</label>
-                    <span>{lguData.Email_Address}</span>
-                  </div>
-                  <div className="lgu-info-row">
-                    <label className="lgu-label">Website:</label>
-                    <span>{lguData.Website}</span>
-                  </div>
-                </div>
-                <div className="button-container">
-                  <button onClick={handleEditLGUInfo}>Edit LGU Info</button>
-                </div>
-                <button onClick={toggleDateViewing}>
-            {dateViewing ? "Hide Dates" : "Show Dates"}
-          </button>
-        
-          {dateViewing && (
-            <div className={`drawer ${dateViewing ? 'open' : ''}`}>
-                <h2>Available Dates</h2>
-                <ul>
-                {date.map((date) => (
-                <li key={date.period_from} onClick={() => handleDateClick(date.period_from)}>
-                  {date.period_from} - {date.period_to} 
-                </li>
-              ))}
-                </ul>
-            </div>
-        )}
+                )}
               </div>
             )}
-          </div>
-      )}
-      
-                    {/* Official Info Card */}
-          {dateViewing && officialData && (
-            <div className="lgu-official-container">
-              <div className="official-info card">
-                <h3>{officialData.lguName} Official Information</h3>
-                <div className="official-view-fields">
-                  <div className="official-view-field">
-                    <strong>Period From:</strong>
-                    <p>{officialData.period_from}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Period To:</strong>
-                    <p>{officialData.period_to}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Mayor:</strong>
-                    <p>{officialData.mayor}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Vice Mayor:</strong>
-                    <p>{officialData.vice_mayor}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Councilors:</strong>
-                    <p>
-                      {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, 
-                      {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}, 
-                      {officialData.councilor_7}
-                    </p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>ABC President:</strong>
-                    <p>{officialData.abc_president}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK President:</strong>
-                    <p>{officialData.sk_president}</p>
-                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+                
+              )}
 
-    </div>
-  );
-}
+           
+            </div>
+              );
+            }
 
 export default AddLGUInfo;

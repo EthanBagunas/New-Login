@@ -162,11 +162,21 @@
 }
 
 .brgy-official-container {
+  position: absolute;
+  right: 1330px; /* Adjust this value to move it further right */
+  top: 65%;
+  transform: translateY(-50%);
+  width: 500px;
+
+}
+.empty-data {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px;
+  left: 20px; /* Adjust this value to move it further right */
 }
+
 
 .official-info.card {
   background-color: #ffffff; /* White background for the card */
