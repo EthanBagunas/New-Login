@@ -1,6 +1,7 @@
 
 
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
+import axios from 'axios'
 import { Box, Button, Modal, FormControl, FormLabel,FormControlLabel, Checkbox} from '@mui/material';
 import QuantityInput from "../BaseMUI/NumberInput";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
@@ -53,9 +54,16 @@ const InsertOccupant= ({location}) => {
     Solo_Parent:0,
     occupant_location: useState(location),
   });
+
+  useEffect(() => {
+    setFormData((prevState) => ({
+      ...prevState,
+      occupant_location: location,
+    }));
+  }, [location]);
+
   const handleSubmit = () => {
-    debugger
-    axios.get('http://localhost:7000/insertoccupant', formData)
+    axios.post('http://localhost:7000/insertoccupant', formData)
       .then(response => {
         console.log(response.data);
         return { message: 'Successfully added device' };

@@ -52,8 +52,19 @@ const GetEvacPosition = (req, res) => {
 }
 
 const InsertOccupant= (req, res) => {
-  
-}
+  const occupantData = req.body; // Assuming the occupant data is sent in the request body
+  // Construct the SQL query without the DEVICE_ID column
+  const sql = `INSERT INTO Occupants (Infants, Toddlers, Preschoolers, SchoolAge, Teenage, Adult, Senior_Citizen, Pregnant_women, Lactating_mothers, Solo_Parent, occupant_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  // Execute the query using only the occupant data values
+  con.query(sql, [occupantData.Infants, occupantData.Toddlers, occupantData.Preschoolers, occupantData.SchoolAge, occupantData.Teenage, occupantData.Adult, occupantData.Senior_Citizen, occupantData.Pregnant_women, occupantData.Lactating_mothers, occupantData.Solo_Parent, occupantData.occupant_location], (err, result) => {
+    if (err) {
+      console.error('error running query:', err);
+      return res.status(500).json({ error: err });
+    }
+    return res.status(201).json({ message: 'Occupant data inserted successfully' });
+  });
+};
 
 const GetHistory = (req, res) => {
   const {deviceId} = req.params;
@@ -68,4 +79,4 @@ const GetHistory = (req, res) => {
 }
 
 
-module.exports= {GetAllDetails, GetPosition, GetHistory, GetEvacPosition}
+module.exports= {GetAllDetails, GetPosition, GetHistory, GetEvacPosition, InsertOccupant}

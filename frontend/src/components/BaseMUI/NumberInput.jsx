@@ -13,10 +13,9 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
   const {formData, setFormData}= React.useContext(FormContext)
 
   const handleForm= () => {
-    console.log(Object.values(inputid)[0], value);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [inputid.value]: value,
+      [Object.values(inputid)[0]]: value,
     }))
   }
   const handleValue = (event) => {
