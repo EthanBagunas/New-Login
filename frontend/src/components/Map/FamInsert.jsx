@@ -3,6 +3,10 @@
 import React, {useState} from "react"
 import { Box, Button, Modal, FormControl, FormLabel,FormControlLabel, Checkbox} from '@mui/material';
 import QuantityInput from "../BaseMUI/NumberInput";
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
+export const FormContext= React.createContext()
+
 
 const style = {
     position: 'absolute',
@@ -24,9 +28,9 @@ const FamInsert =({open, onClose, occlocation}) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         onClose={onClose}
+        PaperProps={{borderRadius: 4}}
         >
         <Box sx={style}>
-          <label></label>
           <InsertOccupant location = {occlocation}/>
         </Box>
       </Modal>
@@ -37,8 +41,6 @@ export default FamInsert;
 
 const InsertOccupant= ({location}) => {
   const [formData, setFormData] = useState({
-    occupant_location: useState(location),
-    Under_4ps: false,
     Infants:0,
     Toddlers:0,
     Preschoolers:0,
@@ -49,31 +51,69 @@ const InsertOccupant= ({location}) => {
     Pregnant_women: 0,
     Lactating_mothers: 0,
     Solo_Parent:0,
+    occupant_location: useState(location),
   });
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+  const handleSubmit = () => {
+    debugger
+    axios.get('http://localhost:7000/insertoccupant', formData)
+      .then(response => {
+        console.log(response.data);
+        return { message: 'Successfully added device' };
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
-  const numberinputs=[
-
-
+  const keys= Object.keys(formData);
+  const labels=[  
+    "Infants(0-11months)" ,
+    "Toddlers(1-3yrs)" ,
+    "Preschoolers (4-5yrs)",
+    "School Age (6-12yrs)",
+    "Teenage (13-19yrs)",
+    "Adult (20-59yrs)",
+    "Senior Citizen (60yrs above)",
+    "Pregnant Women",
+    "Lactating mothers",
+    "Solo Parents",
   ]
+    
+    
+
+  
 
   return(
-    
     <FormControl>
+      <FormContext.Provider value= {{formData, setFormData}}>
       <FormLabel>Add New Occupants</FormLabel>
-        <FormControlLabel control={<Checkbox />} label="Under 4ps" />
-
-
-      <label>
-        
-      </label>
-
-       <QuantityInput/>
-
-        <Button>Submit</Button>
+        <Grid container spacing={6} >
+          <Grid item xs={6}>
+            {labels.slice(0,4).map((data, index)=> {
+              return(
+                <label>
+                {data}
+                  <QuantityInput inputid ={keys[index]}/>
+                </label>
+              );
+            })
+            }
+            
+          
+          </Grid>
+          <Grid item xs={6}>
+          {labels.slice(5).map((data, index)=> {
+              return(
+                <label>
+                {data}
+                <QuantityInput inputid= {keys[index+5]}/>
+                </label>
+              );
+            })}
+          </Grid>
+        </Grid>
+        <Button onClick={handleSubmit}>Submit</Button>
+        </FormContext.Provider> 
   </FormControl>
   )
 }

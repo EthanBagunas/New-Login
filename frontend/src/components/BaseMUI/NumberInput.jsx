@@ -3,12 +3,36 @@ import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_Numb
 import { styled } from '@mui/system';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { Form } from 'react-router-dom';
+import { FormContext } from '../Map/FamInsert';
 
 const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
+  const {inputid} = props;
 
-  
+  const [value, setValue] =React.useState(0);
+  const {formData, setFormData}= React.useContext(FormContext)
+
+  const handleForm= () => {
+    console.log(Object.values(inputid)[0], value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [inputid.value]: value,
+    }))
+  }
+  const handleValue = (event) => {
+    let newValue= Number(event.target.value)
+    setValue(newValue)
+  }
+  const handleInc= () => {
+    setValue(value + 1)
+  }
+  const handleDec= () => {
+    setValue(value - 1)
+  }
   return (
       <BaseNumberInput
+      id= {inputid}
+      value= {value}
       slots={{
         root: StyledInputRoot,
         input: StyledInput,
@@ -17,21 +41,23 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
       }}
       slotProps={{
         incrementButton: {
-          children: <AddIcon fontSize="small" />,
+          children: <AddIcon fontSize="small" onClick= {handleInc}/>,
           className: 'increment',
         },
         decrementButton: {
-          children: <RemoveIcon fontSize="small" />,
+          children: <RemoveIcon fontSize="small" onClick= {handleDec}/>,
         },
       }}
+      onInputChange={(e)=>{handleValue(e)}}
+      onChange={handleForm}
       {...props}
       ref={ref}
   />
   );
 });
 
-export default function QuantityInput() {
-  return <NumberInput aria-label="Quantity Input" min={1} max={99} />;
+export default function QuantityInput(inputid) {
+  return <NumberInput aria-label="Quantity Input" min={0} max={99} inputid= {inputid}/>;
 }
 
 const blue = {
