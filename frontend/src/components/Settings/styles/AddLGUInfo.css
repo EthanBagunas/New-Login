@@ -110,6 +110,7 @@ button.primary-button {
 .lgu-data-container {
   width: 600px; /* Maintain width */
   margin: 40px auto; /* Center it */
+  left: 120px;
   padding: 20px;
   border-radius: 10px;
   background-color: #f9f9f9; /* Light gray background */

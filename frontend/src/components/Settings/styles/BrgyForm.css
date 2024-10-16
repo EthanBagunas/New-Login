@@ -1,18 +1,67 @@
 .brgy-form-container {
   width: 600px;
-  margin: 100px auto;
+  margin: 50px 0 200px 530px; /* Adjust the left margin to move it right */
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
   background-color: #fff;
   
 }
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+drawer-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px; /* Width of the drawer */
+  height: 100%; /* Full height */
+  background-color: white; /* Background color */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow effect */
+  padding: 20px; /* Padding inside the drawer */
+  z-index: 1000; /* Ensure it's on top */
+  transition: transform 0.3s ease; /* Smooth transition for showing/hiding */
+  transform: translateX(100%); /* Initially hidden */
+}
 
+.drawer-container.open {
+  transform: translateX(0); /* Slide in when open */
+}
+
+.drawer-content {
+  margin-top: 20px; /* Space from top */
+}
+
+.drawer-container h3 {
+  margin-top: 0; /* Remove margin from top */
+}
+
+.drawer-container button {
+  background-color: #4a90e2; /* Button color */
+  color: white; /* Button text color */
+  border: none; /* Remove border */
+  padding: 10px 15px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+}
+
+.drawer-container button:hover {
+  background-color: #357abd; /* Darker button color on hover */
+}
 
 .brgy-form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
+  
 }
 
 .form-group {
@@ -155,26 +204,73 @@
   text-decoration: underline; /* Underline on hover */
 }
 
-.brgy-form-view {
-  display: flex; /* Use flexbox for layout */
-  justify-content: space-between; /* Space between the cards */
-  width: 100%; /* Full width */
-}
 
 .brgy-official-container {
   position: absolute;
-  right: 1330px; /* Adjust this value to move it further right */
-  top: 65%;
+  right: 1010px; /* Adjust this value to move it further right */
+  top: 80%;
   transform: translateY(-50%);
   width: 500px;
 
 }
+/* View Mode - Card Design */
+.brgy-form-container.view-mode {
+  background-color: #f0f0f5;
+  border: 2px solid #d1d1e0;
+  padding: 40px;
+  border-radius: 15px;
+}
+
+.brgy-form-view {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.brgy-view-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: auto; /* Allows scrolling if content exceeds the container */
+  max-height: 400px; /* Set a max height to control the view */
+}
+
+.brgy-view-field {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  justify-content: space-between; /* Aligns label and value */
+  overflow-wrap: break-word; /* Prevents overflow of long text */
+  word-wrap: break-word; /* Fallback for older browsers */
+  max-width: 100%; /* Ensures it doesn't overflow the container */
+}
+
+.brgy-view-field strong {
+  color: #4a90e2;
+  font-weight: 600;
+  flex: 0 0 30%; /* Fixed width for label */
+}
+
+.brgy-view-field p {
+  margin: 0;
+  color: #333;
+  font-size: 17px;
+  flex: 1; /* Allows value to take the remaining space */
+  overflow-wrap: break-word; /* Prevents overflow of long text */
+}
+
+
 .empty-data {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px;
-  left: 20px; /* Adjust this value to move it further right */
+  left: -10px; /* Adjust this value to move it further right */
 }
 
 
