@@ -9,9 +9,9 @@ import useAuth from '../../../hooks/useAuth';
 import successImage from '../styles/success.png'; // Import your success image
 import errorImage from '../styles/error.png'; // Import your error image
 import IconButton from '@mui/material/IconButton';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
 
 function AddLGUInfo() {
   const { auth } = useAuth(); 
@@ -220,6 +220,15 @@ const ClearContainer = () => {
     <div>
       <Navbar />
       <ToastContainer /> {/* Ensure ToastContainer is at the top level */}
+      <Backdrop
+        sx={{ 
+          color: '#fff', 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)' // Darken the backdrop
+        }}
+        open={dateViewing} // Show when date viewing is enabled
+        onClick={() => setDateViewing(false)} // Close when clicking on the backdrop
+      />
 
       {showForm ? (
         <div className="add-lgu-info-container">
@@ -418,7 +427,10 @@ const ClearContainer = () => {
                       
                       
                       {dateViewing && (
-                        <div className={`drawer ${dateViewing ? 'open' : ''}`}>
+                         <div
+                         className={`drawer ${dateViewing ? 'open' : ''}`}
+                         style={{ zIndex: 1301 }} // Add the z-index here
+                       >
                           <h2>Available Dates</h2>
                           <ul>
                             {date.map((date) => (
@@ -434,67 +446,67 @@ const ClearContainer = () => {
                     </div>
                   )}
                    {/* Official Info Card */}
-            {hiddenContainerOpen && (
-              <div className="hidden-container">
-                {officialData ? (
-                  <div className="lgu-official-container">
-                    <div className="official-info card">
-                      <h3>{officialData.lguName} Official Information</h3>
-                      <div className="official-view-fields">
-                        <div className="official-view-field">
-                          <strong>Period From:</strong>
-                          <p>{officialData.period_from}</p>
-                        </div>
-                        <div className="official-view-field">
-                          <strong>Period To:</strong>
-                          <p>{officialData.period_to}</p>
-                        </div>
-                        <div className="official-view-field">
-                          <strong>Mayor:</strong>
-                          <p>{officialData.mayor}</p>
-                        </div>
-                        <div className="official-view-field">
-                          <strong>Vice Mayor:</strong>
-                          <p>{officialData.vice_mayor}</p>
-                        </div>
-                        <div className="official-view-field">
-                          <strong>Councilors:</strong>
-                          <p>
-                            {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  // Now outside the hidden-container
-                  <div className="official-info card empty-data1">
-                    <h2>Please Select A Date</h2>
-                    <h3>Official Information</h3>
-                    <div className="official-view-fields">
-                      <div className="official-view-field">
-                        <strong>Period From:</strong>
-                        <p>empty</p>
-                      </div>
-                      <div className="official-view-field">
-                        <strong>Period To:</strong>
-                        <p>empty</p>
-                      </div>
-                      <div className="official-view-field">
-                        <strong>Mayor:</strong>
-                        <p>empty</p>
-                      </div>
-                      <div className="official-view-field">
-                        <strong>Vice Mayor:</strong>
-                        <p>empty</p>
-                      </div>
-                      <div className="official-view-field">
-                        <strong>Councilors:</strong>
-                        <p>empty</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    {hiddenContainerOpen && (
+                      <div className="hidden-container">
+                        {officialData ? (
+                          <div className="lgu-official-container">
+                            <div className="official-info card">
+                              <h3>{officialData.lguName} Official Information</h3>
+                              <div className="official-view-fields">
+                                <div className="official-view-field">
+                                  <strong>Period From:</strong>
+                                  <p>{officialData.period_from}</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Period To:</strong>
+                                  <p>{officialData.period_to}</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Mayor:</strong>
+                                  <p>{officialData.mayor}</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Vice Mayor:</strong>
+                                  <p>{officialData.vice_mayor}</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Councilors:</strong>
+                                  <p>
+                                    {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          ) : (
+                            // Now outside the hidden-container
+                            <div className="official-info card empty-data1">
+                              <h2>Please Select A Date</h2>
+                              <h3>Official Information</h3>
+                              <div className="official-view-fields">
+                                <div className="official-view-field">
+                                  <strong>Period From:</strong>
+                                  <p>empty</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Period To:</strong>
+                                  <p>empty</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Mayor:</strong>
+                                  <p>empty</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Vice Mayor:</strong>
+                                  <p>empty</p>
+                                </div>
+                                <div className="official-view-field">
+                                  <strong>Councilors:</strong>
+                                  <p>empty</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
               </div>
             )}
                 </div>

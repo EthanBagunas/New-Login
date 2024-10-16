@@ -9,8 +9,11 @@ import errorImage from '../styles/error.png';
 import mapIcon from '../styles/map-icon.png';
 import "../styles/brgyForm.css";
 import IconButton from '@mui/material/IconButton';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
+import { drawerClasses } from "@mui/material";
+
 
 
 function BrgyForm() {
@@ -258,6 +261,12 @@ const fetchBarangayOfficial = async (place) => {
     
     setHiddenContainerOpen(!hiddenContainerOpen);
   };  
+  const ClearContainer = () => {
+    setOfficialData(null); 
+    setDateViewing(false);
+  };  
+  
+  
 
  
 
@@ -267,75 +276,94 @@ const fetchBarangayOfficial = async (place) => {
       <div className={`brgy-form-container ${isViewing ? 'view-mode' : ''}`}>
         <h2>{brgyName ? `Edit ${brgyName} Information` : "Add Barangay Information"}</h2>
 
-        <ToastContainer />
-        
-
-        {successMessage && (
-          <div className="popup-message">
-            <p>Success! Barangay Information Added.</p>
-          </div>
-        )}
-                {isViewing ? (
-        <div className="brgy-form-view card" style={{ position: 'relative' }}>
-          <IconButton
-        style={{ 
-          position: 'absolute', 
-          left: '-50px',  // Adjust this to position the button to the left
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          backgroundColor: 'white',  // Optional, adds visibility
-          border: '1px solid #ccc',  // Optional, adds a border for better visibility
-        }}
-        onClick={toggleHiddenContainer}
-      >
-        <ArrowBackIosIcon /> {/* Left-facing arrow icon */}
-      </IconButton>
-          <div className="centered-logo">
-            <img 
-              src={logo1 || "../styles/map-icon.png"} 
-              alt="Logo 1" 
-              className="logo-preview" 
-            />
-          </div>
-          <div className="brgy-view-fields">
-            {/* Barangay Information Fields */}
-            <div className="brgy-view-field">
-              <strong>Barangay Name:</strong>
-              <p>{brgyName}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Type:</strong>
-              <p>{lguType}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Province:</strong>
-              <p>{province}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Region:</strong>
-              <p>{region}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Contact Number:</strong>
-              <p>{contactNumber}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Email:</strong>
-              <p>{email}</p>
-            </div>
-            <div className="brgy-view-field">
-              <strong>Website:</strong>
-              <p>{website || "N/A"}</p>
-            </div>
-          </div>
+                <ToastContainer />
+                <Backdrop
+                      sx={{ 
+                        color: '#fff', 
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)' // Darken the backdrop
+                      }}
+                      open={dateViewing} // Show when date viewing is enabled
+                      onClick={() => setDateViewing(false)} // Close when clicking on the backdrop
+                    />
+                     <Backdrop
+                      sx={{ 
+                        color: '#fff', 
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)' // Darken the backdrop
+                      }}
+                      open={drawerOpen} // Show when date viewing is enabled
+                      onClick={() => setDrawerOpen(false)} // Close when clicking on the backdrop
+                    />
+                {successMessage && (
+                  <div className="popup-message">
+                    <p>Success! Barangay Information Added.</p>
+                  </div>
+                )}
+                        {isViewing ? (
+                <div className="brgy-form-view card" style={{ position: 'relative' }}>
+                  <IconButton
+                style={{ 
+                  position: 'absolute', 
+                  left: '-50px',  // Adjust this to position the button to the left
+                  top: '50%', 
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'white',  // Optional, adds visibility
+                  border: '1px solid #ccc',  // Optional, adds a border for better visibility
+                }}
+                onClick={toggleHiddenContainer}
+              >
+                <ArrowBackIosIcon /> {/* Left-facing arrow icon */}
+              </IconButton>
+                  <div className="centered-logo">
+                    <img 
+                      src={logo1 || "../styles/map-icon.png"} 
+                      alt="Logo 1" 
+                      className="logo-preview" 
+                    />
+                  </div>
+                  <div className="brgy-view-fields">
+                    {/* Barangay Information Fields */}
+                    <div className="brgy-view-field">
+                      <strong>Barangay Name:</strong>
+                      <p>{brgyName}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Type:</strong>
+                      <p>{lguType}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Province:</strong>
+                      <p>{province}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Region:</strong>
+                      <p>{region}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Contact Number:</strong>
+                      <p>{contactNumber}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Email:</strong>
+                      <p>{email}</p>
+                    </div>
+                    <div className="brgy-view-field">
+                      <strong>Website:</strong>
+                      <p>{website || "N/A"}</p>
+                    </div>
+                  </div>
 
           <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
           <button onClick={()=> toggleDateViewing(brgyName)}>
             {dateViewing ? "Hide Dates" : "Show Dates"}
           </button>
         
-          {dateViewing && (
-            <div className={`drawer ${dateViewing ? 'open' : ''}`}>
+                    {dateViewing && (
+                       <div
+                         className={`drawer ${dateViewing ? 'open' : ''}`}
+                         style={{ zIndex: 1301 }} // Add the z-index here
+                       >
                 <h2>Available Dates</h2>
                 <ul>
                 {date.map((date) => (
@@ -346,8 +374,103 @@ const fetchBarangayOfficial = async (place) => {
                 </ul>
                 <div className="button-group">
                     <button onClick={resetForm}>Insert Form</button>
+                    <button onClick={ClearContainer}>Clear Offical</button>
+                   
                 </div>
             </div>
+            
+        )}
+         {hiddenContainerOpen && (
+          <div className="brgy-official-container">
+            {officialData ? (
+              <div className="official-info card">
+                <h3>{officialData.brgyName} Official Information</h3>
+                <div className="official-view-fields">
+                  <div className="official-view-field">
+                    <strong>Period From:</strong>
+                    <p>{officialData.period_from}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Period To:</strong>
+                    <p>{officialData.period_to}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Chair:</strong>
+                    <p>{officialData.brgy_chair}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Secretary:</strong>
+                    <p>{officialData.brgy_sec}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Treasurer:</strong>
+                    <p>{officialData.brgy_Treas}</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Councilors:</strong>
+                    <p>
+                      {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
+                      {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
+                      {officialData.brgy_councilor7}
+                    </p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Chairs:</strong>
+                    <p>
+                      {officialData.sk_chair1}, {officialData.sk_chair2}
+                    </p>
+                  </div>
+                  <div className="official-viezw-field">
+                    <strong>SK Members:</strong>
+                    <p>
+                      {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
+                      {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
+                      {officialData.sk_mem7}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="official-info card empty-data">
+                <h2>Please Select A Date</h2>
+                <h3>Official Information</h3>
+                <div className="official-view-fields">
+                  <div className="official-view-field">
+                    <strong>Period From:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Period To:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Chair:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Secretary:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Barangay Treasurer:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>Councilors:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Chairs:</strong>
+                    <p>empty</p>
+                  </div>
+                  <div className="official-view-field">
+                    <strong>SK Members:</strong>
+                    <p>empty</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         )}
         </div>
               ) : (
@@ -488,8 +611,12 @@ const fetchBarangayOfficial = async (place) => {
                   
                
               </div>
+              
                 {drawerOpen && (
-          <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+                  <div
+                  className={`drawer ${drawerOpen ? 'open' : ''}`}
+                  style={{ zIndex: 1301 }} // Add the z-index here
+                >
             <img src={mapIcon} alt="Map Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
             <h2>BARANGAY</h2>
             <ul>
@@ -504,98 +631,7 @@ const fetchBarangayOfficial = async (place) => {
             </div>
           </div>
         )}
-           {hiddenContainerOpen && (
-          <div className="brgy-official-container">
-            {officialData ? (
-              <div className="official-info card">
-                <h3>{officialData.brgyName} Official Information</h3>
-                <div className="official-view-fields">
-                  <div className="official-view-field">
-                    <strong>Period From:</strong>
-                    <p>{officialData.period_from}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Period To:</strong>
-                    <p>{officialData.period_to}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Chair:</strong>
-                    <p>{officialData.brgy_chair}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Secretary:</strong>
-                    <p>{officialData.brgy_sec}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Treasurer:</strong>
-                    <p>{officialData.brgy_Treas}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Councilors:</strong>
-                    <p>
-                      {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
-                      {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
-                      {officialData.brgy_councilor7}
-                    </p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Chairs:</strong>
-                    <p>
-                      {officialData.sk_chair1}, {officialData.sk_chair2}
-                    </p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Members:</strong>
-                    <p>
-                      {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
-                      {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
-                      {officialData.sk_mem7}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="official-info card empty-data">
-                <h2>Please Select A Date</h2>
-                <h3>Official Information</h3>
-                <div className="official-view-fields">
-                  <div className="official-view-field">
-                    <strong>Period From:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Period To:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Chair:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Secretary:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Treasurer:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Councilors:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Chairs:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Members:</strong>
-                    <p>empty</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+          
                
       </div>
       

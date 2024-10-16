@@ -1,6 +1,6 @@
 .brgy-form-container {
   width: 600px;
-  margin: 50px 0 200px 530px; /* Adjust the left margin to move it right */
+  margin: 50px 0 200px 600px; /* Adjust the left margin to move it right */
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -207,8 +207,8 @@ drawer-container {
 
 .brgy-official-container {
   position: absolute;
-  right: 1010px; /* Adjust this value to move it further right */
-  top: 80%;
+  right: 620px; /* Adjust this value to move it further right */
+  top: 50%;
   transform: translateY(-50%);
   width: 500px;
 
