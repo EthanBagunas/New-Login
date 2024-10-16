@@ -40,7 +40,7 @@ const GetEvacPosition = (req, res) => {
   const {list} = req.params;
   let sql
   if (list == 'all') {
-    sql='SELECT idEvacuationCenter, lat, lng, status, current_capacity, max_capacity, LOCATION FROM EvacuationCenter'
+    sql='SELECT idEvacuationCenter,Evac_Name, lat, lng, status, current_capacity, max_capacity, LOCATION FROM EvacuationCenter'
   } 
   con.query(sql, (err, results) => {
     if (err) {

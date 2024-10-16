@@ -16,7 +16,6 @@ import Dashboard from '../Dashboard/Dashboard';
 // evacuation feat
 import EvacInfoPopup from './ShowEvacInfo';
 import FamInsert from './FamInsert';
-import FamInsert from './FamInsert';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
