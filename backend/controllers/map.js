@@ -54,7 +54,23 @@ const GetEvacPosition = (req, res) => {
 const InsertOccupant= (req, res) => {
   const occupantData = req.body; // Assuming the occupant data is sent in the request body
   // Construct the SQL query without the DEVICE_ID column
-  const sql = `INSERT INTO Occupants (Infants, Toddlers, Preschoolers, SchoolAge, Teenage, Adult, Senior_Citizen, Pregnant_women, Lactating_mothers, Solo_Parent, occupant_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `
+  INSERT INTO Occupants (
+    Infants_M, Toddlers_M, Preschoolers_M, SchoolAge_M, Teenage_M, Adult_M, Senior_Citizen_M, 
+    Pregnant_women, Lactating_mothers, Solo_Parent, occupant_location
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ON DUPLICATE KEY UPDATE 
+  Infants_M = Infants_M + VALUES(Infants_M), 
+  Toddlers_M = Toddlers_M + VALUES(Toddlers_M), 
+  Preschoolers_M = Preschoolers_M + VALUES(Preschoolers_M), 
+  SchoolAge_M = SchoolAge_M + VALUES(SchoolAge_M), 
+  Teenage_M = Teenage_M + VALUES(Teenage_M), 
+  Adult_M = Adult_M + VALUES(Adult_M), 
+  Senior_Citizen_M = Senior_Citizen_M + VALUES(Senior_Citizen_M), 
+  Pregnant_women = Pregnant_women + VALUES(Pregnant_women), 
+  Lactating_mothers = Lactating_mothers + VALUES(Lactating_mothers), 
+  Solo_Parent = Solo_Parent + VALUES(Solo_Parent)
+`;
 
   // Execute the query using only the occupant data values
   con.query(sql, [occupantData.Infants, occupantData.Toddlers, occupantData.Preschoolers, occupantData.SchoolAge, occupantData.Teenage, occupantData.Adult, occupantData.Senior_Citizen, occupantData.Pregnant_women, occupantData.Lactating_mothers, occupantData.Solo_Parent, occupantData.occupant_location], (err, result) => {
