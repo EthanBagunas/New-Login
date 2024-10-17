@@ -1,7 +1,7 @@
 import React, {useState, useEffect, createContext} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import CardList from './Card'
 import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
@@ -16,7 +16,7 @@ export const LogsDataContext = createContext();
 
 
 const TemporaryDrawer = ({ open, level, onClose}) => {
-  
+  const axiosPrivate = useAxiosPrivate();
   const [level_list, setLevel_list] = useState('');
 
   const [logsdata, SetLogsData]= useState('');
@@ -32,7 +32,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
   
   useEffect(() => { 
     if (open) {
-      axios.get(`http://localhost:7000/list/${level}`)
+      axiosPrivate.get(`/list/${level}`)
       .then(response => {
         handleList(response.data);
       })
