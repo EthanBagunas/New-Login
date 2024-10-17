@@ -13,15 +13,14 @@ import { useTheme } from '@mui/system';
   const EvacInfoPopup = ({anchoredmarker})=> {
     const [evacInfo, setEvacInfo] = useState(anchoredmarker);
     return(
-      <div>
+      <div >
           <p style={{fontWeight: 'bold'}}>EVACUATION CENTER INFORMATION</p>
           <p>Evacuation Center: {evacInfo.Evac_Name}</p>
           <p>Location: {evacInfo.LOCATION}</p>
           <p>Status: {evacInfo.status}</p>
           <p>Max Capacity: {evacInfo.max_capacity}</p>
           <p>Current Capacity: {evacInfo.current_capacity}</p>
-          <Button id='button' >Add Occupants</Button>
-          
+          <Button id='button' >Add/Remove Occupants</Button>
       </div>
       )
     } 

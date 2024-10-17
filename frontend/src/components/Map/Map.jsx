@@ -14,8 +14,8 @@ import Dashboard from '../Dashboard/Dashboard';
 
 // evacuation feat
 // evacuation feat
-import EvacInfoPopup from './ShowEvacInfo';
-import FamInsert from './FamInsert';
+import EvacInfoPopup from '../EvacuationInfo/ShowEvacInfo';
+import FamInsert from '../EvacuationInfo/FamInsert';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
@@ -39,19 +39,18 @@ const initposition = {
   lng: 123.89366616608562
 };
 
-
 export const MapContainer = (props) => {
- 
-
+  
   const evac_url= 'https://api.iconify.design/healthicons:emergency-post.svg?color=%23ff3300'
   
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
   const [markers, setMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
   
-  const [selectedMarker, setSelectedMarker] = useState({});
+  //! cant instant update selectedevacmarker when new occupant
+  const [selectedevacMarker, setSelectedevacMarker] = useState(null); 
   const onEvacMarkerClick = (value) => {
-    setSelectedMarker(value);
+    setSelectedevacMarker(value);
   };
 
   const [addocc, setAddOcc]= useState(false)
@@ -60,7 +59,7 @@ export const MapContainer = (props) => {
   }
   
   const [evacmarkers, SetEvacMarkers]= useState([]);
-  const handleEvacMarkers= () => {
+  const handleEvacMarkers=() => {
     if (evacmarkers.length === 0){
       axios.get('http://localhost:7000/evacmarker/all')
       .then(response => {
@@ -108,40 +107,34 @@ export const MapContainer = (props) => {
               }}
               />
             ))}
-
-
-            {selectedMarker && ( 
+            {selectedevacMarker && ( 
               <InfoWindow
-              visible={evacmarkers.length === 0 ? false : true}
-              position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
-              onCloseClick={() => setSelectedMarker({})}
+              visible={evacmarkers.length === 0  ? false : true}
+              position={{ lat: selectedevacMarker.lat, lng: selectedevacMarker.lng }}
+              onCloseClick={() => setSelectedevacMarker(null)}
               onOpen={() => {
                 const button = document.querySelector('#button');
                 if (button) {
                   button.addEventListener('click', () => handleAddOcc(true));
-                }}}
-             >
-                <EvacInfoPopup anchoredmarker={selectedMarker}/>
+                }}}>
+                <EvacInfoPopup anchoredmarker={selectedevacMarker}/>
               </InfoWindow>
             )}
-            {selectedMarker && <FamInsert open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedMarker.LOCATION}/>  }
-
+            {selectedevacMarker && <FamInsert open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
 
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
-              icon={{
+              icon= {{
                 url: evac_url,
                 scaledSize: new window.google.maps.Size(50, 50)
               }}
-              onClick={() =>
-                onEvacMarkerClick(evacmarker)
-              }
+              onClick={() => onEvacMarkerClick(evacmarker)}
               />
             ))}
 
 
 
-            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers}/>}
+            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} />}
 
             <Marker
               position={{ lat: lattitude, lng: longitude }}

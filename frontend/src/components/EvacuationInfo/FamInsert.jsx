@@ -22,7 +22,7 @@ const style = {
   };
 
 
-const FamInsert =({open, onClose, occlocation}) => {
+const FamInsert =({open, onClose, occlocation, setEvac, closeSelectedmarker}) => {
     return(
         <Modal
         open={open}
@@ -32,7 +32,7 @@ const FamInsert =({open, onClose, occlocation}) => {
         PaperProps={{borderRadius: 4}}
         >
         <Box sx={style}>
-          <InsertOccupant location = {occlocation}/>
+          <InsertOccupant location = {occlocation} setCapacity={setEvac} closeSelectmarker2={closeSelectedmarker} />
         </Box>
       </Modal>
         )
@@ -40,7 +40,7 @@ const FamInsert =({open, onClose, occlocation}) => {
 
 export default FamInsert;
 
-const InsertOccupant= ({location}) => {
+const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
   const [formData, setFormData] = useState({
     Infants:0,
     Toddlers:0,
@@ -65,12 +65,20 @@ const InsertOccupant= ({location}) => {
   const handleSubmit = () => {
     axios.post('http://localhost:7000/insertoccupant', formData)
       .then(response => {
-        console.log(response.data);
+        axios.get('http://localhost:7000/evacmarker/all')
+        .then(response => {
+          setCapacity(response.data);
+          closeSelectmarker2();
+        })
+        .catch(error => {
+          console.error(error);
+        });
         return { message: 'Successfully added device' };
       })
       .catch(error => {
         console.error(error);
       });
+    
   };
 
   const keys= Object.keys(formData);

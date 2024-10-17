@@ -9,7 +9,6 @@ const ranges = {
 
 };
 
-
 function getAllLvl(sql, [min,max] ,res){
     con.query(sql, [min, max], (err, results) => {
       if (err) {
@@ -19,7 +18,6 @@ function getAllLvl(sql, [min,max] ,res){
       return res.json(results);
     });
   }
-
 
 const GetAllDetails = (req, res) => {
     const {level} = req.params;
@@ -60,16 +58,11 @@ const InsertOccupant= (req, res) => {
     Pregnant_women, Lactating_mothers, Solo_Parent, occupant_location
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   ON DUPLICATE KEY UPDATE 
-  Infants_M = Infants_M + VALUES(Infants_M), 
-  Toddlers_M = Toddlers_M + VALUES(Toddlers_M), 
-  Preschoolers_M = Preschoolers_M + VALUES(Preschoolers_M), 
-  SchoolAge_M = SchoolAge_M + VALUES(SchoolAge_M), 
-  Teenage_M = Teenage_M + VALUES(Teenage_M), 
-  Adult_M = Adult_M + VALUES(Adult_M), 
-  Senior_Citizen_M = Senior_Citizen_M + VALUES(Senior_Citizen_M), 
-  Pregnant_women = Pregnant_women + VALUES(Pregnant_women), 
-  Lactating_mothers = Lactating_mothers + VALUES(Lactating_mothers), 
-  Solo_Parent = Solo_Parent + VALUES(Solo_Parent)
+  Infants_M = Infants_M + VALUES(Infants_M), Toddlers_M = Toddlers_M + VALUES(Toddlers_M), 
+  Preschoolers_M = Preschoolers_M + VALUES(Preschoolers_M), SchoolAge_M = SchoolAge_M + VALUES(SchoolAge_M), 
+  Teenage_M = Teenage_M + VALUES(Teenage_M), Adult_M = Adult_M + VALUES(Adult_M), 
+  Senior_Citizen_M = Senior_Citizen_M + VALUES(Senior_Citizen_M), Pregnant_women = Pregnant_women + VALUES(Pregnant_women), 
+  Lactating_mothers = Lactating_mothers + VALUES(Lactating_mothers), Solo_Parent = Solo_Parent + VALUES(Solo_Parent)
 `;
 
   // Execute the query using only the occupant data values
