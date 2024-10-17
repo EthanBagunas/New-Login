@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios'
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Button from '@mui/material/Button';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
@@ -28,7 +28,7 @@ const red = {
 };
 
 const AddDevice = ({lat, lng, setLat, setLng}) => {
-
+  const axiosPrivate = useAxiosPrivate();
   const theme =useTheme();
   const [anchor, setAnchor] = React.useState(null);
   
@@ -61,7 +61,7 @@ const AddDevice = ({lat, lng, setLat, setLng}) => {
     };
     const handleSubmit = (event) => {
       event.preventDefault();
-      axios.post(`http://localhost:7000/setdevices`, formData)
+      axiosPrivate.post(`/setdevices`, formData)
         .then(response => {
           console.log(response.data);
           return { message: 'Successfully added device' };

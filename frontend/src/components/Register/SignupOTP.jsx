@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Grid, Paper } from "@mui/material";
 import Button from '@mui/material/Button';
 import OtpTimer from 'otp-timer';
@@ -14,8 +14,9 @@ const toast_style= {
   pauseOnHover: true
 }
 const validateOtp = async (otp, form, nav) => {
+  const axiosPrivate = useAxiosPrivate();
   try {
-    const response = await axios.post(`http://localhost:7000/validateotp/${otp}`, form);
+    const response = await axiosPrivate.post(`/validateotp/${otp}`, form);
     if (response.status === 200) {
       toast.success(response.data.message, toast_style);
        setTimeout(() => { nav('/', { replace: true });}, 2000);
@@ -49,12 +50,13 @@ const RegistrationOtp = () => {
 
   // TODO: just call the handleFormSubmit in ./Signup
   const handleResend = (status) => {
+    const axiosPrivate = useAxiosPrivate();
     setShowTimer(status);
     if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
     }
-    axios.post(`http://localhost:7000/sendotp`, formData)
+    axiosPrivate.post(`/sendotp`, formData)
       .then(response => {
         toast.success('OTP sent successfully! Redirecting...');
       })
