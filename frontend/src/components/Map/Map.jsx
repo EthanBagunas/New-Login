@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
@@ -45,6 +45,11 @@ export const MapContainer = (props) => {
   
   const [logsdata, SetLogsData]= useState('');
 
+  const [selecteddevmarker, setSelectedDevMarker] = useState(null); 
+  const onDeviceMarkerClick = (value) => {
+    setSelectedDevMarker(value);
+  };
+
   const handlePosition =(position) => {
     SetLattitude(position.lat());
     SetLongitude(position.lng());
@@ -80,8 +85,17 @@ export const MapContainer = (props) => {
               url: markerIcons[poptext],
               scaledSize: new window.google.maps.Size(30, 30)
             }}
+            onClick={() => onDeviceMarkerClick(marker)}
             />
           ))}
+          {selecteddevmarker && ( 
+              <InfoWindow
+              visible={true}
+              position={{ lat: selecteddevmarker.lat, lng: selecteddevmarker.lng }}
+              onCloseClick={() => setSelectedDevMarker(null)}
+              >
+              </InfoWindow>
+            )}
         </Map>
         </div>
     );

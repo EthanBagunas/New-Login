@@ -7,7 +7,7 @@ import axios from '../../../api/axios';
 import successImage from '../styles/success.png';
 import errorImage from '../styles/error.png';
 import mapIcon from '../styles/map-icon.png';
-import "../styles/brgyForm.css";
+import "../styles/BrgyForm.css";
 import IconButton from '@mui/material/IconButton';
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
