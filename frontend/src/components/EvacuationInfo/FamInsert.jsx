@@ -5,7 +5,8 @@ import axios from 'axios'
 import { Box, Button, Modal, FormControl, FormLabel,FormControlLabel, Checkbox} from '@mui/material';
 import QuantityInput from "../BaseMUI/NumberInput";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { axiosPrivate } from "../../api/axios";
 export const FormContext= React.createContext()
 
 
@@ -23,6 +24,7 @@ const style = {
 
 
 const FamInsert =({open, onClose, occlocation, setEvac, closeSelectedmarker}) => {
+    const axiosPrivate= useAxiosPrivate();
     return(
         <Modal
         open={open}
@@ -63,9 +65,9 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
   }, [location]);
 
   const handleSubmit = () => {
-    axios.post('http://localhost:7000/insertoccupant', formData)
+    axiosPrivate.post('/insertoccupant', formData)
       .then(response => {
-        axios.get('http://localhost:7000/evacmarker/all')
+        axiosPrivate.get('/evacmarker/all')
         .then(response => {
           setCapacity(response.data);
           closeSelectmarker2();

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
-import axios from 'axios';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import LevelButtons from './levelButtons';
 import normalIcon from './icons/gps.png';
 import lowIcon from './icons/gps(1).png';
@@ -40,7 +40,7 @@ const initposition = {
 };
 
 export const MapContainer = (props) => {
-  
+  const axiosPrivate = useAxiosPrivate();
   const evac_url= 'https://api.iconify.design/healthicons:emergency-post.svg?color=%23ff3300'
   
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
@@ -61,7 +61,7 @@ export const MapContainer = (props) => {
   const [evacmarkers, SetEvacMarkers]= useState([]);
   const handleEvacMarkers=() => {
     if (evacmarkers.length === 0){
-      axios.get('http://localhost:7000/evacmarker/all')
+      axiosPrivate.get('/evacmarker/all')
       .then(response => {
         SetEvacMarkers(response.data);
       })
