@@ -11,7 +11,8 @@ import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
 import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
-
+import { DevPopup } from '../BaseMUI/MarkerPopup'
+import ModalView from '../BaseMUI/BasicModal';
 // evacuation feat
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/ShowEvacInfo';
@@ -44,18 +45,22 @@ export const MapContainer = (props) => {
   const evac_url= 'https://api.iconify.design/healthicons:emergency-post.svg?color=%23ff3300'
   
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
-  const [markers, setMarkers] = useState([]);
+  const [devmarkers, setDevMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
   
-  //! cant instant update selectedevacmarker when new occupant
-  const [selectedevacMarker, setSelectedevacMarker] = useState(null); 
-  const onEvacMarkerClick = (value) => {
-    setSelectedevacMarker(value);
+  
+  
+  const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
+  const onDevMarkerClick = (value) => {
+    setSelectedDevmarker(value);
   };
 
-  const [addocc, setAddOcc]= useState(false)
-  function handleAddOcc(value){
-    setAddOcc(value)
+  
+
+  const [showcam, setShowcam]= useState(false)
+  function handleCam(value){
+    
+    setShowcam(value)
   }
   
   const [evacmarkers, SetEvacMarkers]= useState([]);
@@ -71,6 +76,15 @@ export const MapContainer = (props) => {
     } else{
       SetEvacMarkers([]);
     }
+  }
+  //! cant instant update selectedevacmarker when new occupant
+  const [selectedevacMarker, setSelectedevacMarker] = useState(null); 
+  const onEvacMarkerClick = (value) => {
+    setSelectedevacMarker(value);
+  };
+  const [addocc, setAddOcc]= useState(false)
+  function handleAddOcc(value){
+    setAddOcc(value)
   }
   
 
@@ -93,11 +107,12 @@ export const MapContainer = (props) => {
             handlePosition(clickEvent.latLng)
           }}>   
           <LevelContext.Provider value= {{poptext, setPoptext}}>
-              <MarkerContext.Provider value= {{markers, setMarkers}}>
+              <MarkerContext.Provider value= {{devmarkers, setDevMarkers}}>
                 <LevelButtons />
               </MarkerContext.Provider>
             </LevelContext.Provider>
-            {markers.map((marker, index) => (
+
+            {devmarkers.map((marker, index) => (
               <Marker
               key={index}
               position={{ lat: marker.lat, lng: marker.lng }}
@@ -105,6 +120,35 @@ export const MapContainer = (props) => {
                 url: markerIcons[poptext],
                 scaledSize: new window.google.maps.Size(30, 30)
               }}
+              onClick={() => onDevMarkerClick(marker)}
+              />
+            ))}
+
+            {selectedDevmarker && ( 
+              <InfoWindow
+              visible={true}
+              position={{ lat: selectedDevmarker.lat, lng: selectedDevmarker.lng }}
+              onCloseClick={() => setSelectedDevmarker(null)}
+              onOpen={() => {
+                const devbutton = document.querySelector('#devbutton');
+                if (devbutton) {
+                  devbutton.addEventListener('click', () => handleCam(true));
+                }}}
+              >
+                  <Button id='devbutton'onClick={(e) => handleCam(e)}>Show Camerafeed</Button>
+              </InfoWindow>
+            )}
+            
+            {selectedDevmarker && <ModalView open={showcam} onClose={() => handleCam(false)} /> }
+            
+
+            {evacmarkers.map((evacmarker, index) => (
+              <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
+              icon= {{
+                url: evac_url,
+                scaledSize: new window.google.maps.Size(50, 50)
+              }}
+              onClick={() => onEvacMarkerClick(evacmarker)}
               />
             ))}
             {selectedevacMarker && ( 
@@ -120,20 +164,9 @@ export const MapContainer = (props) => {
                 <EvacInfoPopup anchoredmarker={selectedevacMarker}/>
               </InfoWindow>
             )}
+
             {selectedevacMarker && <FamInsert open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
-
-            {evacmarkers.map((evacmarker, index) => (
-              <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
-              icon= {{
-                url: evac_url,
-                scaledSize: new window.google.maps.Size(50, 50)
-              }}
-              onClick={() => onEvacMarkerClick(evacmarker)}
-              />
-            ))}
-
-
-
+      
             {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} />}
 
             <Marker

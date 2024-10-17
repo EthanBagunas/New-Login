@@ -53,10 +53,10 @@ const usePopupState = () => {
   };
 
 
-const {markers, setMarkers} = useContext(MarkerContext)
+const {devmarkers, setDevMarkers} = useContext(MarkerContext)
 
 const handleMarkers = (positions) => {
-  setMarkers(positions);
+  setDevMarkers(positions);
 };
 
   useEffect(() => {
