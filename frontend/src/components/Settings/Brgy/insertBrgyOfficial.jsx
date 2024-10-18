@@ -90,7 +90,7 @@ const Barangay_Form = () => {
     <div>
     <Navbar />
     <ToastContainer />
-    <div className="barangay-form-container">
+    <div className="barangay-form-container1">
   
       
       <div className="form-container">

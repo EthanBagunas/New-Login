@@ -1,66 +1,21 @@
 .brgy-form-container {
   width: 600px;
-  margin: 50px 0 200px 600px; /* Adjust the left margin to move it right */
+  margin: 40px auto; /* Adjust the left margin to move it right */
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
   background-color: #fff;
   
 }
-.drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 300px;
-  height: 100%;
-  background-color: white;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  transition: transform 0.3s ease;
-}
-drawer-container {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 300px; /* Width of the drawer */
-  height: 100%; /* Full height */
-  background-color: white; /* Background color */
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow effect */
-  padding: 20px; /* Padding inside the drawer */
-  z-index: 1000; /* Ensure it's on top */
-  transition: transform 0.3s ease; /* Smooth transition for showing/hiding */
-  transform: translateX(100%); /* Initially hidden */
-}
 
-.drawer-container.open {
-  transform: translateX(0); /* Slide in when open */
-}
-
-.drawer-content {
-  margin-top: 20px; /* Space from top */
-}
-
-.drawer-container h3 {
-  margin-top: 0; /* Remove margin from top */
-}
-
-.drawer-container button {
-  background-color: #4a90e2; /* Button color */
-  color: white; /* Button text color */
-  border: none; /* Remove border */
-  padding: 10px 15px; /* Padding */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor */
-}
-
-.drawer-container button:hover {
-  background-color: #357abd; /* Darker button color on hover */
-}
 
 .brgy-form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
+  width: 600px;
+  margin: 40px auto; /* Adjust the left margin to move it right */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
   
 }
 
@@ -166,51 +121,13 @@ drawer-container {
   background-color: #F44336; /* Red background for errors */
 }
 
-.drawer, .dates-sidebar {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 300px; /* Match width */
-  height: 100%; /* Same height */
-  background-color: #fff; /* Same background color */
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  z-index: 1000; /* Ensure it's on top */
-  transform: translateX(100%); /* Hide initially */
-  transition: transform 0.3s ease-in-out; /* Smooth transition */
-}
-
-.drawer.open, .dates-sidebar.open {
-  transform: translateX(0); /* Show when open */
-}
-
-.drawer h2, .dates-sidebar h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.drawer ul, .dates-sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.drawer li, .dates-sidebar li {
-  margin: 10px 0;
-  cursor: pointer;
-  color: #007bff; /* Link color */
-}
-
-.drawer li:hover, .dates-sidebar li:hover {
-  text-decoration: underline; /* Underline on hover */
-}
 
 
 .brgy-official-container {
-  position: absolute;
-  right: 620px; /* Adjust this value to move it further right */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 500px;
+  width: 600px; /* Fixed width for content */
+
+  margin: 50px auto; /* Center the container with margin */
+  padding: 20px;
 
 }
 /* View Mode - Card Design */
