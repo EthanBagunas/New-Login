@@ -9,7 +9,6 @@ import extremeIcon from './icons/gps(4).png';
 import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
 
-
 import Dashboard from '../Dashboard/Dashboard';
 
 
@@ -65,9 +64,9 @@ export const MapContainer = (props) => {
       onClick={(mapProps, map, clickEvent) => {
         handlePosition(clickEvent.latLng)
       }}>   
-        <LevelContext.Provider value= {{poptext, setPoptext}}>
-            <MarkerContext.Provider value= {{markers, setMarkers}}>
-              <LogsDataContext.Provider value={{logsdata, SetLogsData}}>
+        <LevelContext.Provider value= {[poptext, setPoptext]}>
+            <MarkerContext.Provider value= {[markers, setMarkers]}>
+              <LogsDataContext.Provider value={[logsdata, SetLogsData]}>
                <LevelButtons />
               </LogsDataContext.Provider>
             </MarkerContext.Provider>

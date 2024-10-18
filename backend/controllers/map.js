@@ -25,7 +25,7 @@ const GetAllDetails = (req, res) => {
     const {level} = req.params;
     const { min, max } = ranges[level];
     
-    const sql = `SELECT latest.DEVICE_ID, latest.CAP_DATETIME, latest.DIST_M, settings.lat, settings.lng, settings.LOCATION FROM latest INNER JOIN settings ON latest.DEVICE_ID = settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ? `;
+    const sql = `SELECT latest.DEVICE_ID, latest.CAP_DATETIME, latest.DIST_M, settings.lat, settings.lng, settings.LOCATION FROM latest INNER JOIN settings ON latest.DEVICE_ID = settings.DEVICE_ID WHERE DIST_M BETWEEN ? AND ? `;
     getAllLvl(sql, [min, max], res);
 
 };
@@ -33,7 +33,7 @@ const GetAllDetails = (req, res) => {
 const GetPosition = (req, res) => {
     const {level} = req.params;
   const { min, max } = ranges[level];
-  const sql =`SELECT settings.lat, settings.lng FROM latest INNER JOIN settings ON latest.DEVICE_ID= settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ?`;
+  const sql =`SELECT settings.lat, settings.lng FROM latest INNER JOIN settings ON latest.DEVICE_ID= settings.DEVICE_ID WHERE DIST_M BETWEEN ? AND ?`;
   getAllLvl(sql, [min, max], res);
 }
 

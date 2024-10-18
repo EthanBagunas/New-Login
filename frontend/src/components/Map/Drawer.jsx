@@ -84,6 +84,9 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <FeedPopup />) : null}
               </Grid>    
               
+              <Grid item xs={6} sx={{ position: 'relative', top: '30px', right: '50px' }}>
+              {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <CameraFeed />) : null}
+            </Grid>
                           
              
             </Grid>

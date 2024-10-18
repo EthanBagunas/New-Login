@@ -7,9 +7,10 @@ import axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth'; 
 
 import Navbar from '../Navbar';
+<Navbar/> 
 const Profile = () => {
   const { auth } = useAuth(); // Destructure the auth object from the context
-  const username = auth?.id; // Assuming the username is stored in auth.user
+  const username = auth?.email; // Assuming the username is stored in auth.user
   const navigate = useNavigate(); // Import the custom axios hook
 
   const [firstName, setFirstName] = useState('');
@@ -78,16 +79,12 @@ const Profile = () => {
     alert('Changes canceled');
   };
   
-  
   return (
-    
-
     
     <div>
       <Navbar/> 
 
     <div className="account-preferences-page">
-      
       
       {/* Sidebar */}
       <div className="settings-sidebar">
@@ -174,7 +171,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-          </div>
+    </div>
   );
 };
 
