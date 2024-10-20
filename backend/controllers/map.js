@@ -31,7 +31,7 @@ const GetAllDetails = (req, res) => {
 const GetPosition = (req, res) => {
     const {level} = req.params;
   const { min, max } = ranges[level];
-  const sql =`SELECT settings.lat, settings.lng FROM latest INNER JOIN settings ON latest.DEVICE_ID= settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ?`;
+  const sql =`SELECT settings.DEVICE_NAME, settings.lat, settings.lng FROM latest INNER JOIN settings ON latest.DEVICE_ID= settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ?`;
   getAllLvl(sql, [min, max], res);
 }
 const GetEvacPosition = (req, res) => {

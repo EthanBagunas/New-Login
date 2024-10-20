@@ -48,18 +48,13 @@ export const MapContainer = (props) => {
   const [devmarkers, setDevMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
   
-  
-  
   const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
   const onDevMarkerClick = (value) => {
+    console.log(value)
     setSelectedDevmarker(value);
   };
-
-  
-
   const [showcam, setShowcam]= useState(false)
   function handleCam(value){
-    
     setShowcam(value)
   }
   
@@ -139,7 +134,7 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}
             
-            {selectedDevmarker && <ModalView open={showcam} onClose={() => handleCam(false)} /> }
+            {selectedDevmarker && <ModalView open={showcam} onClose={() => handleCam(false)} marker={selectedDevmarker.DEVICE_NAME}/> }
             
 
             {evacmarkers.map((evacmarker, index) => (
