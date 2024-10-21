@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import { Button, Modal, Box } from "@mui/material";
 
@@ -15,10 +15,11 @@ const style = {
     p: 4,
   };
 
-const ModalView = ({open, onClose}) => {
+const DevInfoModal = ({open, onClose}) => {
+
     return(
         <div>
-            <Modal
+          <Modal
             open={open}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
@@ -31,5 +32,7 @@ const ModalView = ({open, onClose}) => {
           </Modal>
      </div>
     )
+    
 }
-export default ModalView;
+
+export default DevInfoModal;

@@ -23,7 +23,7 @@ const style = {
   };
 
 
-const FamInsert =({open, onClose, occlocation, setEvac, closeSelectedmarker}) => {
+const EvacInsertModal =({open, onClose, occlocation, setEvac, closeSelectedmarker}) => {
     const axiosPrivate= useAxiosPrivate();
     return(
         <Modal
@@ -37,10 +37,10 @@ const FamInsert =({open, onClose, occlocation, setEvac, closeSelectedmarker}) =>
           <InsertOccupant location = {occlocation} setCapacity={setEvac} closeSelectmarker2={closeSelectedmarker} />
         </Box>
       </Modal>
-        )
+    )
 }
 
-export default FamInsert;
+export default EvacInsertModal;
 
 const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
   const [formData, setFormData] = useState({

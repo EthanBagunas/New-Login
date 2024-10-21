@@ -11,12 +11,14 @@ import useAuth from '../../hooks/useAuth';
 import Navbar from '../Navbar';
 import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
-import { DevPopup } from '../BaseMUI/MarkerPopup'
-import ModalView from '../BaseMUI/BasicModal';
+
+//device feat
+import { DevPopup } from '../DevInfo/DevPopup'
+import DevInfoModal  from '../DevInfo/DevInfoModal';
 // evacuation feat
-// evacuation feat
-import EvacInfoPopup from '../EvacuationInfo/ShowEvacInfo';
-import FamInsert from '../EvacuationInfo/FamInsert';
+import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
+import EvacInsertModal from '../EvacuationInfo/EvacInsertModal';
+
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
@@ -72,6 +74,7 @@ export const MapContainer = (props) => {
       SetEvacMarkers([]);
     }
   }
+
   //! cant instant update selectedevacmarker when new occupant
   const [selectedevacMarker, setSelectedevacMarker] = useState(null); 
   const onEvacMarkerClick = (value) => {
@@ -82,7 +85,6 @@ export const MapContainer = (props) => {
     setAddOcc(value)
   }
   
-
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
   const handlePosition =(position) => {
@@ -125,16 +127,16 @@ export const MapContainer = (props) => {
               position={{ lat: selectedDevmarker.lat, lng: selectedDevmarker.lng }}
               onCloseClick={() => setSelectedDevmarker(null)}
               onOpen={() => {
-                const devbutton = document.querySelector('#devbutton');
+                const devbutton = document.getElementById('devbutton');
                 if (devbutton) {
                   devbutton.addEventListener('click', () => handleCam(true));
                 }}}
               >
-                  <Button id='devbutton'onClick={(e) => handleCam(e)}>Show Camerafeed</Button>
+                <DevPopup marker={selectedDevmarker.DEVICE_NAME}/>
               </InfoWindow>
             )}
             
-            {selectedDevmarker && <ModalView open={showcam} onClose={() => handleCam(false)} marker={selectedDevmarker.DEVICE_NAME}/> }
+            {selectedDevmarker && <DevInfoModal open={showcam} onClose={() => handleCam(false)} marker={selectedDevmarker.DEVICE_NAME}/> }
             
 
             {evacmarkers.map((evacmarker, index) => (
@@ -160,7 +162,7 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}
 
-            {selectedevacMarker && <FamInsert open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
+            {selectedevacMarker && <EvacInsertModal open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
       
             {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} />}
 
