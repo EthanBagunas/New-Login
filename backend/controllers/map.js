@@ -28,6 +28,18 @@ const GetAllDetails = (req, res) => {
 
 };
 
+const getDeviceInfoByName = (req, res) => {
+  const {name} = req.params;
+  const sql = 'SELECT * FROM settings WHERE settings.DEVICE_NAME = ?';
+
+  con.query(sql, name, (err, results) => {
+    if (err) {
+      console.error('error running query:', err);
+      return res.status(500).json({ error: err });
+    }
+    return res.json(results);
+  });
+}
 const GetPosition = (req, res) => {
     const {level} = req.params;
   const { min, max } = ranges[level];
@@ -88,4 +100,4 @@ const GetHistory = (req, res) => {
 }
 
 
-module.exports= {GetAllDetails, GetPosition, GetHistory, GetEvacPosition, InsertOccupant}
+module.exports= {GetAllDetails, GetPosition, GetHistory, GetEvacPosition, getDeviceInfoByName, InsertOccupant}

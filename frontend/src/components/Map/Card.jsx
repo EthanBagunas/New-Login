@@ -20,7 +20,7 @@ const themeColors = {
 };
 
 // design of a single card
-const CardItem= ({theme, items}) => {
+const CardItem= ({theme, items}, drawershow) => {
   const {SetLogsData} = useContext(LogsDataContext);
   const {setDrawerStatus} = useContext(DrawerExtendedContext);
 
@@ -60,12 +60,15 @@ const CardItem= ({theme, items}) => {
                     </Grid>
                   </Grid>
                 </CardContent>
-                <CardActions>
+                {drawershow && (
                   <Button size="small" onClick={() => {
-                  handleSetLogsTabledata(items.DEVICE_ID)} 
-                  }>
-                    Learn More
-                  </Button>
+                    handleSetLogsTabledata(items.DEVICE_ID)} 
+                    }>
+                      Learn More
+                    </Button>
+                  )}
+                <CardActions>
+                  
                 </CardActions>
             </React.Fragment>
           </Box>
@@ -73,13 +76,15 @@ const CardItem= ({theme, items}) => {
     )
 };
   
-
 // for each of the unique entries
- const CardList= (list, theme)=> {
+ const CardList= (list, theme, drawershow)=> {
+
   const [cardlist, setCardList] =useState('');
   const handleCardlist= ()=> {
     setCardList(list);
   }
+
+  
   useEffect(() => {
 
     if (list && list.levels !== "") {
@@ -91,7 +96,7 @@ const CardItem= ({theme, items}) => {
   return(
       <Paper sx={{ height:600, width: 350, overflow: 'auto' }} elevation={4} role="presentation" >
       {cardlist && cardlist.levels.map((item, index) => (
-        <CardItem key={index} items= {item} theme={cardlist.theme}/>
+        <CardItem key={index} items= {item} theme={cardlist.theme} drawershow={drawershow}/>
       ))}
       <Divider />
       </Paper>
@@ -99,3 +104,4 @@ const CardItem= ({theme, items}) => {
 }
 
 export default CardList;
+export {CardItem}

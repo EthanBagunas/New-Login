@@ -74,7 +74,7 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               </Grid>
               <Grid item xs={6} sx={{position: 'relative', top:'30px', left: '5%'}}>
                   <DrawerExtendedContext.Provider value={{setDrawerStatus}}>
-                    <CardList levels={level_list} theme={level}  /> 
+                    <CardList levels={level_list} theme={level} drawershow={true} /> 
                   </DrawerExtendedContext.Provider>
                   
               </Grid>

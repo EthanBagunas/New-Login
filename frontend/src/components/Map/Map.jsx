@@ -52,9 +52,12 @@ export const MapContainer = (props) => {
   
   const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
   const onDevMarkerClick = (value) => {
-    console.log(value)
     setSelectedDevmarker(value);
+    console.log(value)
   };
+
+  //? do i need this???
+
   const [showcam, setShowcam]= useState(false)
   function handleCam(value){
     setShowcam(value)
@@ -132,7 +135,7 @@ export const MapContainer = (props) => {
                   devbutton.addEventListener('click', () => handleCam(true));
                 }}}
               >
-                <DevPopup marker={selectedDevmarker.DEVICE_NAME}/>
+                <DevPopup selected={selectedDevmarker.DEVICE_NAME}/>
               </InfoWindow>
             )}
             
@@ -148,6 +151,7 @@ export const MapContainer = (props) => {
               onClick={() => onEvacMarkerClick(evacmarker)}
               />
             ))}
+
             {selectedevacMarker && ( 
               <InfoWindow
               visible={evacmarkers.length === 0  ? false : true}

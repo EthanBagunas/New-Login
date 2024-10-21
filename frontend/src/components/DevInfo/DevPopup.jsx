@@ -3,46 +3,34 @@ import React, {Component, useEffect, useState} from "react";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import { Button, Modal, Box } from "@mui/material";
 import ModalView from "./DevInfoModal";
-
-class DevPopup extends Component {
-    constructor(props) {
-        super(props);
-        this.state= {
-            openmodal: false,
-        };
-    }
-
-    handleCam= (value)=> {
-        this.setState({openmodal: value})
-    }
-    
-    render() {
-        useEffect()
-        return(
-            <div>
-                <ModalView open={this.state.openmodal} onClose={() => handleCam(false)} />
-                <Button id='devbutton' >Show Camerafeed</Button>
-            </div>
-        )
-    }
-}
+import { CardItem } from "../Map/Card";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { axiosPrivate } from "../../api/axios";
 
 
-class EvacPopup extends Component{
-    constructor(props) {
-        super(props);
-        this.state= {
+const DevPopup = ({selected}) => {
 
-        }
-    }
-    render() {
-        <div>
-            
-        </div>
-    
-    }
-}
+    const [selectedMarker, setSelectedMarker] = useState(null);
+
+    useEffect(() => {
+        const axiosPrivate= useAxiosPrivate();
+        axiosPrivate.get(`/devmarker/${selected}`)
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+  
+    }, [selected]);
+  
+    return (
+      <div>
+        <Button id='devbutton'>Show Camerafeed</Button>
+      </div>
+    );
+  };
 
 
 
-export {EvacPopup, DevPopup}
+export {DevPopup}

@@ -15,7 +15,7 @@ const style = {
     p: 4,
   };
 
-const DevInfoModal = ({open, onClose}) => {
+const DevInfoModal = ({open, onClose, marker}) => {
 
     return(
         <div>
@@ -27,7 +27,7 @@ const DevInfoModal = ({open, onClose}) => {
             PaperProps={{borderRadius: 4}}
             >
             <Box sx={style}>
-
+              <p>{marker}</p>
             </Box>
           </Modal>
      </div>
