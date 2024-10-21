@@ -15,6 +15,7 @@ import Dashboard from '../Dashboard/Dashboard';
 //device feat
 import { DevPopup } from '../DevInfo/DevPopup'
 import DevInfoModal  from '../DevInfo/DevInfoModal';
+import DevModal from '../BaseMUI/ModalView'
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
 import EvacInsertModal from '../EvacuationInfo/EvacInsertModal';
@@ -53,7 +54,7 @@ export const MapContainer = (props) => {
   const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
   const onDevMarkerClick = (value) => {
     setSelectedDevmarker(value);
-    console.log(value)
+    console.log(value.DEVICE_NAME)
   };
 
   //? do i need this???
@@ -139,7 +140,7 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}
             
-            {selectedDevmarker && <DevInfoModal open={showcam} onClose={() => handleCam(false)} marker={selectedDevmarker.DEVICE_NAME}/> }
+            {selectedDevmarker && <DevModal open={showcam} onClose={() => handleCam(false)} devicename={selectedDevmarker.DEVICE_NAME}/> }
             
 
             {evacmarkers.map((evacmarker, index) => (
