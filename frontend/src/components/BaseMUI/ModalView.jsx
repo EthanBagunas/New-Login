@@ -46,6 +46,7 @@ class DevModal extends ModalView{
         if (prevProps.open !== this.props.open) {
             this.setState({ 
                 open: this.props.open ,
+                devicename: this.props.devicename,
             });
         }
     }
