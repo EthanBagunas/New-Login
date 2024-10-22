@@ -7,19 +7,23 @@ class ModalView extends React.Component {
     constructor(props) {
         super(props);
         this.state= {
-            open:props.open,
-            onClose:props.onClose,
+            open:props.open || false,
         }
     }
+
+    handleClose = () => {
+        this.setState({open: false});
+        this.props.onClose();
+    }
     
-    BaseModal(content){
+    BaseModal= ({content, openModal})=> {
         return(
             <div>
                 <Modal
-                open={this.state.open}
+                open={openModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                onClose={this.state.onClose}
+                onClose={this.handleClose}
                 PaperProps={{borderRadius: 4}}>
                     <Box sx={style}>
                         {content}
@@ -38,7 +42,15 @@ class DevModal extends ModalView{
         }
     }
 
-    DevInfoModal() {
+    componentDidUpdate(prevProps) {
+        if (prevProps.open !== this.props.open) {
+            this.setState({ 
+                open: this.props.open ,
+            });
+        }
+    }
+
+    CamView= ()=> {
         return(
             <div>
                 <p>{this.state.devicename}</p>
@@ -46,7 +58,7 @@ class DevModal extends ModalView{
         );_
     }
     render () {
-        return this.BaseModal(this.DevInfoModal)
+        return this.BaseModal({content: <this.CamView/>, openModal: this.state.open})
     }
 }
 
