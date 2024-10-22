@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { Button, Modal, Box } from "@mui/material";
 
-
-
 class ModalView extends React.Component {
     constructor(props) {
         super(props);
@@ -63,7 +61,8 @@ class DevModal extends ModalView{
     }
 }
 
-export default DevModal;
+export default ModalView;
+export {DevModal}
 
 const style = {
     position: 'absolute',

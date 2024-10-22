@@ -3,24 +3,16 @@ import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_Numb
 import { styled } from '@mui/system';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { Form } from 'react-router-dom';
-import { FormContext } from '../EvacuationInfo/EvacInsertModal';
 
 const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
-  const {inputid} = props;
+  const {inputid, updateForm} = props;
 
   const [value, setValue] =React.useState(0);
-  const {formData, setFormData}= React.useContext(FormContext)
 
-  const handleForm= () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [Object.values(inputid)[0]]: value,
-    }))
-  }
   const handleValue = (event) => {
     let newValue= Number(event.target.value)
     setValue(newValue)
+    
   }
   const handleInc= () => {
     setValue(value + 1)
@@ -48,15 +40,16 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
         },
       }}
       onInputChange={(e)=>{handleValue(e)}}
-      onChange={handleForm}
-      {...props}
+      onChange={()=> updateForm(inputid, value)}
+      min={props.min}
+      max={props.max}
       ref={ref}
   />
   );
 });
 
-export default function QuantityInput(inputid) {
-  return <NumberInput aria-label="Quantity Input" min={-99} max={99} inputid= {inputid}/>;
+export default function QuantityInput({inputid,  updateform}) {
+  return <NumberInput aria-label="Quantity Input" min={-99} max={99} inputid={inputid} updateForm={updateform}/>;
 }
 
 const blue = {

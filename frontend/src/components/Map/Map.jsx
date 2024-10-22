@@ -14,11 +14,12 @@ import Dashboard from '../Dashboard/Dashboard';
 
 //device feat
 import { DevPopup } from '../DevInfo/DevPopup'
-import DevInfoModal  from '../DevInfo/DevInfoModal';
-import DevModal from '../BaseMUI/ModalView'
+import {DevModal} from '../BaseMUI/ModalView'
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
 import EvacInsertModal from '../EvacuationInfo/EvacInsertModal';
+import InsertFamModal from '../EvacuationInfo/FamInsertModal';
+
 
 
 export const MarkerContext = React.createContext();
@@ -46,24 +47,22 @@ const initposition = {
 export const MapContainer = (props) => {
   const axiosPrivate = useAxiosPrivate();
   const evac_url= 'https://api.iconify.design/healthicons:emergency-post.svg?color=%23ff3300'
-  
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
-  const [devmarkers, setDevMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
   
-  const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
-  const onDevMarkerClick = (value) => {
-    setSelectedDevmarker(value);
-    console.log(value.DEVICE_NAME)
-  };
-
-  //? do i need this???
-
-  const [showcam, setShowcam]= useState(false)
-  function handleCam(value){
-    setShowcam(value)
+  const [lattitude, SetLattitude]=useState();
+  const [longitude, SetLongitude]=useState();
+  const handlePosition =(position) => {
+    SetLattitude(position.lat());
+    SetLongitude(position.lng());
   }
-  
+
+
+  const [showModal, setShowModal]= useState('')
+  function handleModal(value){
+    setShowModal(value)
+  }
+
   const [evacmarkers, SetEvacMarkers]= useState([]);
   const handleEvacMarkers=() => {
     if (evacmarkers.length === 0){
@@ -78,23 +77,20 @@ export const MapContainer = (props) => {
       SetEvacMarkers([]);
     }
   }
-
   //! cant instant update selectedevacmarker when new occupant
   const [selectedevacMarker, setSelectedevacMarker] = useState(null); 
   const onEvacMarkerClick = (value) => {
     setSelectedevacMarker(value);
   };
-  const [addocc, setAddOcc]= useState(false)
-  function handleAddOcc(value){
-    setAddOcc(value)
-  }
+
+  const [devmarkers, setDevMarkers] = useState([]);
+  const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
+  const onDevMarkerClick = (value) => {
+    setSelectedDevmarker(value);
+    console.log(value.DEVICE_NAME)
+  };
   
-  const [lattitude, SetLattitude]=useState();
-  const [longitude, SetLongitude]=useState();
-  const handlePosition =(position) => {
-    SetLattitude(position.lat());
-    SetLongitude(position.lng());
-  }
+  
 
   const hasRole1994 = auth.roles.includes('1994');
   return (
@@ -133,15 +129,15 @@ export const MapContainer = (props) => {
               onOpen={() => {
                 const devbutton = document.getElementById('devbutton');
                 if (devbutton) {
-                  devbutton.addEventListener('click', () => handleCam(true));
+                  devbutton.addEventListener('click', () => handleModal('dev'));
                 }}}
               >
                 <DevPopup selected={selectedDevmarker.DEVICE_NAME}/>
               </InfoWindow>
             )}
             
-            {selectedDevmarker && <DevModal open={showcam} onClose={() => handleCam(false)} devicename={selectedDevmarker.DEVICE_NAME}/> }
-            
+            {selectedDevmarker && <DevModal open={ showModal=== 'dev' ? true: false} onClose={() => handleModal(null)} devicename={selectedDevmarker.DEVICE_NAME}/> }
+            {selectedevacMarker && <InsertFamModal open={showModal === 'evac' ? true : false} onClose={() => handleModal(null)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
 
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
@@ -161,13 +157,11 @@ export const MapContainer = (props) => {
               onOpen={() => {
                 const button = document.querySelector('#button');
                 if (button) {
-                  button.addEventListener('click', () => handleAddOcc(true));
+                  button.addEventListener('click', () => handleModal('evac'));
                 }}}>
                 <EvacInfoPopup anchoredmarker={selectedevacMarker}/>
               </InfoWindow>
-            )}
-
-            {selectedevacMarker && <EvacInsertModal open={addocc} onClose={() => handleAddOcc(false)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
+            )}          
       
             {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} />}
 
