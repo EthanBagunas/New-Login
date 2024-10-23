@@ -17,6 +17,7 @@
     "@vis.gl/react-google-maps": "^1.1.3",
     "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
+    "dayjs": "^1.11.13",
     "google-maps-react": "^2.0.6",
     "mui-one-time-password-input": "^2.0.3",
     "otp-timer": "^1.1.5",
