@@ -4,6 +4,10 @@ import { styled } from '@mui/system';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 
+
+
+//! sample: type 54 only 4 then inc to 55, 55 ang mugawas
+ 
 const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
   const {inputid, updateForm} = props;
 

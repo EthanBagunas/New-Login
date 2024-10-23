@@ -23,7 +23,7 @@ const style = {
   };
 
 
-const EvacInsertModal =({open, onClose, occlocation, setEvac, closeSelectedmarker}) => {
+const InsertEvacModal =({open, onClose, location, setEvac, closeSelectedmarker}) => {
     const axiosPrivate= useAxiosPrivate();
     return(
         <Modal
@@ -34,13 +34,13 @@ const EvacInsertModal =({open, onClose, occlocation, setEvac, closeSelectedmarke
         PaperProps={{borderRadius: 4}}
         >
         <Box sx={style}>
-          <InsertOccupant location = {occlocation} setCapacity={setEvac} closeSelectmarker2={closeSelectedmarker} />
+          <InsertOccupant location = {location} setCapacity={setEvac} closeSelectmarker2={closeSelectedmarker} />
         </Box>
       </Modal>
     )
 }
 
-export default EvacInsertModal;
+export default InsertEvacModal;
 
 const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
   const [formData, setFormData] = useState({
@@ -96,7 +96,13 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
     "Lactating mothers",
     "Solo Parents",
   ]
-    
+
+  const updateForm= (inputid, imputval) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [Object.values(inputid)[0]]: inputval,
+    }))
+  }
     
 
   
@@ -111,7 +117,7 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
               return(
                 <label>
                 {data}
-                  <QuantityInput inputid ={keys[index]}/>
+                  <QuantityInput inputid ={keys[index]} updateform={updateForm}/>
                 </label>
               );
             })
@@ -124,7 +130,7 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
               return(
                 <label>
                 {data}
-                <QuantityInput inputid= {keys[index+5]}/>
+                <QuantityInput inputid= {keys[index+5]} updateform={updateForm}/>
                 </label>
               );
             })}

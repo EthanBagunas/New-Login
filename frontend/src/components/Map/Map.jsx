@@ -13,12 +13,12 @@ import { Button } from '@mui/material';
 import Dashboard from '../Dashboard/Dashboard';
 
 //device feat
-import { DevPopup } from '../DevInfo/DevPopup'
+import DevicePopup from '../DevInfo/DevPopup';
 import {DevModal} from '../BaseMUI/ModalView'
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
-import EvacInsertModal from '../EvacuationInfo/EvacInsertModal';
-import InsertFamModal from '../EvacuationInfo/FamInsertModal';
+import InsertEvacModal from '../EvacuationInfo/EvacInsertModal';
+import FamModal from '../EvacuationInfo/FamModal';
 
 
 
@@ -87,7 +87,6 @@ export const MapContainer = (props) => {
   const [selectedDevmarker, setSelectedDevmarker] = useState(null); 
   const onDevMarkerClick = (value) => {
     setSelectedDevmarker(value);
-    console.log(value.DEVICE_NAME)
   };
   
   
@@ -132,12 +131,16 @@ export const MapContainer = (props) => {
                   devbutton.addEventListener('click', () => handleModal('dev'));
                 }}}
               >
-                <DevPopup selected={selectedDevmarker.DEVICE_NAME}/>
+                <DevicePopup selected={selectedDevmarker.DEVICE_NAME}/>
               </InfoWindow>
             )}
             
             {selectedDevmarker && <DevModal open={ showModal=== 'dev' ? true: false} onClose={() => handleModal(null)} devicename={selectedDevmarker.DEVICE_NAME}/> }
-            {selectedevacMarker && <InsertFamModal open={showModal === 'evac' ? true : false} onClose={() => handleModal(null)} occlocation= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
+
+            {selectedevacMarker && <InsertEvacModal open={showModal === 'evac' ? true : false} onClose={() => handleModal(null)} location= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
+            
+            <FamModal open={showModal === 'fam' ? true: false} onClose={()=>handleModal(null)} /> 
+            
 
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
@@ -163,7 +166,7 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}          
       
-            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} />}
+            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} famModal={() => handleModal('fam')}/>}
 
             <Marker
               position={{ lat: lattitude, lng: longitude }}
