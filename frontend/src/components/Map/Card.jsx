@@ -24,10 +24,11 @@ const CardItem= ({theme, items}, drawershow) => {
   const {SetLogsData} = useContext(LogsDataContext);
   const {setShowHistory, setShowCamfeed} = useContext(DrawerExtendedContext);
 
-  const [openVideoModal, setOpenVideoModal] = useState(false);
+  //! IDK not needed na guro
+  //const [openVideoModal, setOpenVideoModal] = useState(false);
 
   const handleSetLogsTabledata = (value) => {
-    setDrawerStatus(true);
+    setShowHistory(true);
     SetLogsData(value)
   }
 
@@ -52,25 +53,21 @@ const CardItem= ({theme, items}, drawershow) => {
                         {items.LOCATION}
                       </Typography>
                     </Grid>
-                    {drawershow && (
                     <Grid item xs={12}>
-                        <Typography variant="h5" component="div">
-                          Water Level: {items.DIST_M}
-                        </Typography>
-                        <Typography variant="body2">
-                          {items.CAP_DATETIME}
-                        </Typography>
+                      <Typography variant="h5" component="div">
+                        Water Level: {items.DIST_M}
+                      </Typography>
+                      <Typography variant="body2">
+                        {items.CAP_DATETIME}
+                      </Typography>
                     </Grid>
-                    )}
-                </Grid>
+                  </Grid>
                 </CardContent>
-                {drawershow && (
                   <Button size="small" onClick={() => {
                     handleSetLogsTabledata(items.DEVICE_ID)} 
                     }>
                       Learn More
                     </Button>
-                  )}
                 <CardActions>
                   
                 </CardActions>

@@ -23,7 +23,7 @@ const GetAllDetails = (req, res) => {
     const {level} = req.params;
     const { min, max } = ranges[level];
     
-    const sql = `SELECT latest.DEVICE_ID, latest.CAP_DATETIME, latest.DIST_M, settings.lat, settings.lng, settings.LOCATION FROM latest INNER JOIN settings ON latest.DEVICE_ID = settings.DEVICE_ID WHERE DIST_M BETWEEN ? AND ? `;
+    const sql = `SELECT latest.DEVICE_ID, latest.CAP_DATETIME, latest.DIST_M, settings.lat, settings.lng, settings.LOCATION FROM latest INNER JOIN settings ON latest.DEVICE_ID = settings.DEVICE_NAME COLLATE utf8mb4_general_ci WHERE DIST_M BETWEEN ? AND ? `;
     getAllLvl(sql, [min, max], res);
 
 };
@@ -84,7 +84,7 @@ const InsertOccupant= (req, res) => {
 
 const GetHistory = (req, res) => {
   const {deviceId} = req.params;
-  const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M FROM logs WHERE DEVICE_ID = ?;'
+  const sql = 'SELECT CaptureID, CAP_DATETIME, DIST_M , status FROM logs WHERE DEVICE_ID = ?;'
   con.query(sql, deviceId, (err, results) => {
     if (err) {
       console.error('error running query:', err);

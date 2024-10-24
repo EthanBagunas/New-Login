@@ -83,12 +83,6 @@ const TemporaryDrawer = ({ open, level, onClose}) => {
               <Grid item xs={6} sx={{position: 'relative', top:'30px', right: '50px'}}>
               {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <FeedPopup />) : null}
               </Grid>    
-              
-              <Grid item xs={6} sx={{ position: 'relative', top: '30px', right: '50px' }}>
-              {(showhistory ^ showcamfeed) ? (showhistory ? <DataTable /> : <CameraFeed />) : null}
-            </Grid>
-                          
-             
             </Grid>
             <Button onClick={onClose} style= {{margin:'20px', position:'relative', top:'5%', backgroundColor: '#00ccff', borderRadius: 4}}>
               Close Window
