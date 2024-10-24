@@ -106,7 +106,7 @@ export const MapContainer = (props) => {
               <MarkerContext.Provider value= {{devmarkers, setDevMarkers}}>
                 <LevelButtons />
               </MarkerContext.Provider>
-            </LevelContext.Provider>
+          </LevelContext.Provider>
 
             {devmarkers.map((marker, index) => (
               <Marker
