@@ -76,7 +76,6 @@ const InsertOccupant= (req, res) => {
   Senior_Citizen_M = Senior_Citizen_M + VALUES(Senior_Citizen_M), Pregnant_women = Pregnant_women + VALUES(Pregnant_women), 
   Lactating_mothers = Lactating_mothers + VALUES(Lactating_mothers), Solo_Parent = Solo_Parent + VALUES(Solo_Parent)
 `;
-
   // Execute the query using only the occupant data values
   con.query(sql, [occupantData.Infants, occupantData.Toddlers, occupantData.Preschoolers, occupantData.SchoolAge, occupantData.Teenage, occupantData.Adult, occupantData.Senior_Citizen, occupantData.Pregnant_women, occupantData.Lactating_mothers, occupantData.Solo_Parent, occupantData.occupant_location], (err, result) => {
     if (err) {

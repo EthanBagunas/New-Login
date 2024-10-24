@@ -10,9 +10,12 @@ const verifyJWT = require('./middleware/verifyJWT');
 const { logger } = require('./middleware/logEvents');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
+
+const updateProfileRouter = require('./routes/authUpdate');
+const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
+const evacRouter= require('./routes/evacuationRoutes');
 const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
-const updateProfileRouter = require('./routes/authUpdate');
 
 
 app.use(logger);
@@ -41,9 +44,8 @@ app.use('/insertPurok',require('./routes/authInsertPurok'));
 
 app.use('/auth', require('./routes/auth'));
 
-
-const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
 app.use(mapRouter);
+app.use(evacRouter);
 
 
 app.use('/logout', require('./routes/logout'));
