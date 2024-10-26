@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Grid, Avatar } from '@mui/material';
 import Button from '@mui/material/Button';
 import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutlined';
@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const RegistrationForm = () => {
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -31,7 +32,7 @@ const RegistrationForm = () => {
       return;
     }
 
-    axios.post(`http://localhost:7000/sendotp`, formData)
+    axiosPrivate.post(`/sendotp`, formData)
       .then(response => {
         toast.success('OTP sent successfully! Redirecting...');
         setTimeout(() => {

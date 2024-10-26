@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Grid, Paper } from "@mui/material";
 import Button from '@mui/material/Button';
 import OtpTimer from 'otp-timer';
@@ -8,12 +8,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const validateOtp = async (otp, form, nav) => {
+  const axiosPrivate = useAxiosPrivate();
   try {
-    const response = await axios.post(`http://localhost:7000/validateotp/${otp}`, form);
-    toast.success('OTP verified successfully! Redirecting to login...');
-    setTimeout(() => {
-      nav('/', { replace: true });
-    }, 2000); // Adjust the delay time as necessary
+    const response = await axiosPrivate.post(`/validateotp/${otp}`, form);
+    if (response.status === 200) {
+      toast.success(response.data.message, toast_style);
+       setTimeout(() => { nav('/', { replace: true });}, 2000);
+    } else {
+      toast.error(response.data.message, toast_style); 
+    }
   } catch (error) {
     toast.error('OTP verification failed. Please try again.');
     console.error(error);
@@ -26,8 +29,23 @@ const RegistrationOtp = () => {
   const formData = location.state.formData;
 
   const [showTimer, setShowTimer] = useState(true);
-  const handleClick = (status) => {
+
+  // TODO: just call the handleFormSubmit in ./Signup
+  const handleResend = (status) => {
+    const axiosPrivate = useAxiosPrivate();
     setShowTimer(status);
+    if (formData.password !== formData.passwordConfirm) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    axiosPrivate.post(`/sendotp`, formData)
+      .then(response => {
+        toast.success('OTP sent successfully! Redirecting...');
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error('An error occurred. Please try again.');
+      });
   };
 
   useEffect(() => {

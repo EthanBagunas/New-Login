@@ -5,18 +5,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import {Paper} from '@mui/material';
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useState, useEffect, useContext } from 'react';
 
 import { LogsDataContext } from './Drawer';
 
-export default function DataTable(){
-
+export default function DataTable(){  
+  const axiosPrivate = useAxiosPrivate();
   const {logsdata} = useContext(LogsDataContext);
 
   useEffect(()=> {
     if (logsdata != ''){
-      axios.get(`http://localhost:7000/history/${logsdata}`)
+      axiosPrivate.get(`/history/${logsdata}`)
       .then(response => {
         handleEntries(response.data);
       })
