@@ -8,16 +8,14 @@ import successImage from '../styles/success.png';
 import errorImage from '../styles/error.png';
 import mapIcon from '../styles/map-icon.png';
 import "../styles/BrgyForm.css";
-import IconButton from '@mui/material/IconButton';
-
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
-import { drawerClasses } from "@mui/material";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 
 
 function BrgyForm() {
   const { auth } = useAuth();
+  const navigate = useNavigate(); // Hook for navigation
   const [brgyName, setBrgyName] = useState("");
   const [lguType, setLguType] = useState("City");
   const [province, setProvince] = useState("");
@@ -29,14 +27,21 @@ function BrgyForm() {
   const [website, setWebsite] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [places, setPlaces] = useState([]); 
   const [isViewing, setIsViewing] = useState(false); 
+
   const [dateViewing, setDateViewing] = useState(false);
   const [date, setDates] = useState([]); 
+  
+  const [PurokViewing, setPurokViewing] = useState(false);
+  const [purok, setPurok] = useState([]); 
+  const [PurokInfoOpen, setPurokInfoOpen] = useState(false);
+  const [PurokInfo, setPurokInfo] = useState(null);
+
   const [officialData, setOfficialData] = useState(null);
   const [hiddenContainerOpen, setHiddenContainerOpen] = useState(false); // State for hidden container
   const [showContainer, setShowContainer] = useState(true); // Add this state
-  
 
   const logo1InputRef = useRef(null);
   const logo2InputRef = useRef(null);
@@ -183,6 +188,20 @@ const fetchBarangayOfficial = async (place) => {
     toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
   }
 };
+const fetchPurokSetup = async (place) => {
+  try {
+    const response = await axios.get(`/show-purok/${place}`, {
+      headers: {
+        'Authorization': `Bearer ${auth?.accessToken}`,
+      },
+    });
+
+    setPurok(response.data); // Update the places state with fetched 
+  } catch (error) {
+    console.error("Error fetching Official Date:", error);
+    toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
+  }
+};
 
   const toggleViewMode = () => {
     setLogo1(null);
@@ -191,7 +210,7 @@ const fetchBarangayOfficial = async (place) => {
     setDrawerOpen(false);   
     setIsViewing(!isViewing);
   };
- 
+
   
 
 
@@ -248,6 +267,32 @@ const fetchBarangayOfficial = async (place) => {
       toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
     }
   };
+    
+  const  handlePurokClick = async (selectedPurok) => {
+   
+    try {
+      const response = await axios.get(`/purok-info/${selectedPurok}`, {
+        headers: {
+          'Authorization': `Bearer ${auth?.accessToken}`,
+        }
+      });
+      const data = response.data;
+      console.log(data);
+      
+      setPurokInfo(data);
+      if (!PurokInfoOpen) {
+        setPurokInfoOpen(true); // Open the hidden container
+      }
+      
+      setShowContainer(false);
+      
+      
+    } catch (error) {
+      console.error("Error fetching barangay info by date:", error);
+      toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
+    }
+  };
+
   
   const resetForm = () => {
     setBrgyName("");
@@ -276,7 +321,20 @@ const fetchBarangayOfficial = async (place) => {
   const Lgu =()=>{
     setShowContainer(true); 
     setHiddenContainerOpen(false);
+    setPurokInfoOpen(false);
   }
+  const handleRedirect = (path) => {
+    navigate(path); // Use navigate for redirection
+   
+  };
+  const togglePurok = (place) => {
+    setPurokViewing(!PurokViewing);
+    fetchPurokSetup(place);
+ 
+   };
+  
+
+
 
   return (
     <div>
@@ -320,7 +378,7 @@ const fetchBarangayOfficial = async (place) => {
                                 </li>
                               ))}
                             </ul>
-                          <button onClick={ClearContainer}>Show LGU Data</button>
+                          <button onClick={ClearContainer}>Show Selected Barangay</button>
                         </div>
                       )}
                     </Backdrop>
@@ -357,10 +415,50 @@ const fetchBarangayOfficial = async (place) => {
                               ))}
                             </ul>
                             <div className="button-group">
-                              <button onClick={resetForm}>Insert Form</button>
+                            <button onClick={ClearContainer}>Show Selected Barangay</button>
                             </div>
                           </div>
                         )}
+                    </Backdrop>
+                    <Backdrop
+                      sx={{ 
+                        color: '#fff', 
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darken the backdrop
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                      open={PurokViewing} // Show when date viewing is enabled
+                      onClick={() => setPurokViewing(false)} // Close when clicking on the backdrop
+                    >
+                      {PurokViewing && (
+                        <div
+                          className="drawer-content"
+                          style={{
+                            backgroundColor: '#fff',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            textAlign: 'center',
+                            zIndex: 1301,
+                            color: 'black'  
+                          }}
+                        >
+                          <h2>Available Listed Purok</h2>
+                          <ul>
+                              {purok.map((purok) => (
+                                <li
+                                  key={purok.purok_name}
+                                  onClick={() => handlePurokClick(purok.purok_name)}
+                                  className="date-item" // Add this class for styling
+                                >
+                                  {purok.purok_name} 
+                                </li>
+                              ))}
+                            </ul>
+                          <button onClick={ClearContainer}>Show Selected Barangay</button>
+                        </div>
+                      )}
                     </Backdrop>
                     
                 {successMessage && (
@@ -409,12 +507,21 @@ const fetchBarangayOfficial = async (place) => {
                                     <p>{website || "N/A"}</p>
                                   </div>
                                 </div>
-
-                        <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
-                        <button onClick={()=> toggleDateViewing(brgyName)}>
-                          {dateViewing ? "Hide Dates" : "Show Dates"}
-                        </button>
-                         </div>
+                        
+                                <div className="button-container" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
+                                  <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
+                                  <button onClick={() => toggleDateViewing(brgyName)}>
+                                    {dateViewing ? "Hide Dates" : "Show Dates"}
+                                  </button>
+                                  <button onClick={toggleDrawer}>
+                                    {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
+                                  </button>
+                                  <button onClick={resetForm}>Show Insert Form</button>
+                                  <button onClick={()=>togglePurok(brgyName)}>
+                                    {drawerOpen ? "Hide Purok" : "Show Listed Purok"}
+                                  </button>
+                                </div>
+                              </div>
                           ) : (
                             <div className="brgy-form-grid">
                               {/* Barangay Name */}
@@ -447,6 +554,8 @@ const fetchBarangayOfficial = async (place) => {
                                   placeholder="Enter Province"
                                 />
                               </div>
+
+                              {/* Region */}
                               <div className="form-group">
                                 <label>Region*</label>
                                 <input
@@ -482,6 +591,7 @@ const fetchBarangayOfficial = async (place) => {
                                 )}
                               </div>
 
+                              {/* Same structure for Logo 2 */}
                               <div className="form-group">
                                 <label>Logo 2*</label>
                                 <div
@@ -539,21 +649,60 @@ const fetchBarangayOfficial = async (place) => {
                                   placeholder="Enter Website (if any)"
                                 />
                               </div>
+
                               <div className="button-group">
-                          <button onClick={handleAddBrgyInfo}>
-                            {brgyName ? "Update Barangay Info" : "Add Barangay Info"}
-                          </button>
-                          <button onClick={toggleDrawer}>
-                          {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
-                            </button>
-                            
-                  
-              </div>   
+                                <button onClick={handleAddBrgyInfo}>
+                                  {brgyName ? "Update Barangay Info" : "Add Barangay Info"}
+                                </button>
+                                <button onClick={toggleDrawer}>
+                                  {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
+                                </button>
+                                <button onClick={() => handleRedirect('/brgy-official')}>
+                                  Insert Barangay Official
+                                </button>
+                                
+                                
+                              </div>
                             </div>
+
                           )
                           )}
 
-                      
+                            {PurokInfoOpen && PurokInfo && (
+                              <div className="purok-info-container view-mode">
+                                <h2>Purok Information</h2>
+                                <div className="purok-info-view">
+                                  <div className="purok-view-fields">
+                                    <div className="purok-view-field">
+                                      <strong>Purok Name:</strong>
+                                      <p>{PurokInfo.purok_name}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Barangay:</strong>
+                                      <p>{PurokInfo.barangay}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Type:</strong>
+                                      <p>{PurokInfo.type}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Province:</strong>
+                                      <p>{PurokInfo.province}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Region:</strong>
+                                      <p>{PurokInfo.region}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Purok President:</strong>
+                                      <p>{PurokInfo.purok_president}</p>
+                                    </div>
+                                  </div>
+                                  <button onClick={Lgu}>Back to barangay's information</button>
+                                </div>
+                              </div>
+                            )}
+
               {hiddenContainerOpen && officialData && (
                     <div className="brgy-official-container">
                       <div className="official-info card">
@@ -601,11 +750,14 @@ const fetchBarangayOfficial = async (place) => {
                               {officialData.sk_mem7}
                             </p>
                           </div>
-                          <button onClick={Lgu}>Show LGU Information</button>
+                          <button onClick={Lgu}>Back to barangay's information</button>
                         </div>
                       </div>
                     </div>
-                  )}          
+                  )} 
+
+                  
+                  
       </div>
                  
      

@@ -55,6 +55,8 @@ app.use('/showLgu', require('./routes/authshowLgu'));
 app.use('/lgu-date', require('./routes/authLguDate'));
 app.use('/getelectedofficial', require('./routes/authElectedOfficial'));
 
+app.use('/adminIn', require('./routes/authAdmin'));
+
 
 app.use('/insertBrgy', require('./routes/autInsertbrgy'));
 app.use('/getBrgy', require('./routes/authshowBrgy'));
@@ -65,8 +67,8 @@ app.use('/getbrgyOfficial', require('./routes/authshowbrgyOfficial'));
 
 
 app.use('/insertPurok', require('./routes/authInsertPurok'));
-app.use('/show-brgy', require('./routes/authPurokbrgy'));
 app.use('/show-purok', require('./routes/authPurokname'));
+app.use('/purok-info', require('./routes/authPurokInfo'));
 app.use('/auth', require('./routes/auth'));
 
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
@@ -81,6 +83,7 @@ app.use('/ProfilePage', require('./routes/api/authProf'));
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users'));
+
 
 app.use('/api/protected-route', verifyJWT, (req, res) => {
     res.json({ message: "You have access to this protected route", user: req.user, roles: req.roles });

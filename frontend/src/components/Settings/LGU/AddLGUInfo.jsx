@@ -8,9 +8,6 @@ import Navbar from '../../Navbar';
 import useAuth from '../../../hooks/useAuth'; 
 import successImage from '../styles/success.png'; // Import your success image
 import errorImage from '../styles/error.png'; // Import your error image
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
 
 const modalStyle = {
@@ -231,6 +228,10 @@ const HandleShowData = () => {
   setHasData(true);
   setShowForm(false);
 };  
+const handleRedirect = (path) => {
+  navigate(path); // Use navigate for redirection
+ 
+};
 
                 return (
                   <div>
@@ -457,6 +458,9 @@ const HandleShowData = () => {
                               <button onClick={toggleDateViewing}>
                                 {dateViewing ? "Hide Dates" : "Show Dates"}
                               </button>
+                              <button onClick={() => handleRedirect('/elected-official')}>
+                                   Insert LGU Official
+                                </button>
                             </div>
 
                            

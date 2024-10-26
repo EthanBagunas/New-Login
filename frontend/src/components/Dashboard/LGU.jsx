@@ -41,17 +41,9 @@ const AddLGU = ({ lat, lng, setLat, setLng }) => {
               <Icon icon="mdi:city" style={{ marginRight: '4px', width: '40px', height: '40px' }} />
               <Typography variant="body1">LGU Setup</Typography>
             </Button>
-            <Button onClick={() => handleRedirect('/elected-official')} style={buttonStyle}>
-              <Icon icon="mdi:account-star" style={{ marginRight: '4px', width: '40px', height: '40px' }} /> {/* Updated icon */}
-              <Typography variant="body1">Elected Official</Typography>
-            </Button>
             <Button onClick={() => handleRedirect('/brgy-setup')} style={buttonStyle}>
               <Icon icon="mdi:home-circle" style={{ marginRight: '4px', width: '40px', height: '40px' }} />
               <Typography variant="body1">Brgy Setup</Typography>
-            </Button>
-            <Button onClick={() => handleRedirect('/brgy-official')} style={buttonStyle}>
-              <Icon icon="mdi:account" style={{ marginRight: '4px', width: '40px', height: '40px' }} />
-              <Typography variant="body1">Brgy Official</Typography>
             </Button>
             <Button onClick={() => handleRedirect('/purok-setup')} style={buttonStyle}>
               <Icon icon="mdi:map-marker" style={{ marginRight: '4px', width: '40px', height: '40px' }} />

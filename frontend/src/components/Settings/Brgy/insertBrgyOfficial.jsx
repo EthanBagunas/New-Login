@@ -13,6 +13,7 @@ const Barangay_Form = () => {
   const { auth } = useAuth(); 
   const navigate = useNavigate(); 
   const [periodFrom, setPeriodFrom] = useState('');
+  const [brgyName, setBrgyName] = useState("");
   const [periodTo, setPeriodTo] = useState('');
   const [barangayChairman, setBarangayChairman] = useState('');
   const [barangaySecretary, setBarangaySecretary] = useState('');
@@ -67,6 +68,7 @@ const Barangay_Form = () => {
         skMember5,
         skMember6,
         skMember7,
+        brgyName,
       }, { 
         headers: {
           'Content-Type': 'application/json',
@@ -85,6 +87,11 @@ const Barangay_Form = () => {
         toast.error(<CustomToast message="Failed to add Barangay Elected Officials. Please try again." image={errorImage} />);
     }
   };
+  const handleRedirect = (path) => {
+    navigate(path); // Use navigate for redirection
+   
+  };
+
 
   return (
     <div>
@@ -103,12 +110,23 @@ const Barangay_Form = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
+              
               <label htmlFor="periodFrom">Period Covered From:</label>
               <input
                 type="date"
                 id="periodFrom"
                 value={periodFrom}
                 onChange={(e) => setPeriodFrom(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="barangayName">Barangay Name</label>
+              <input
+                type="text"
+                id="BarangayName"
+                value={brgyName}
+                onChange={(e) => setBrgyName(e.target.value)}
                 required
               />
             </div>
@@ -122,8 +140,8 @@ const Barangay_Form = () => {
                 required
               />
             </div>
-          </div>
-          <div className="form-row">
+           </div>
+           <div className="form-row">
             <div className="form-group">
               <label htmlFor="barangayChairman">Barangay Chairman:</label>
               <input
@@ -339,7 +357,10 @@ const Barangay_Form = () => {
             </div>
           </div>
           <div className="form-row">
-            <button type="submit" className="submit-button">Submit</button>
+            <button type="submit">Submit</button>
+            <button onClick={() => handleRedirect('/brgy-setup')}>
+                                   Barangay Setup
+                                </button>
           </div>
         </form>
         

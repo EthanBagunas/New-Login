@@ -1,0 +1,46 @@
+/* admin.css */
+
+/* Backdrop styling */
+.backdrop {
+    color: #fff;
+    z-index: 1300;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark backdrop */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Form container styling */
+.form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1301;
+    color: black;
+}
+
+
+/* Input and label styling */
+.form-container label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* Button styling */
+
+
+.form-container button:hover {
+    background-color: #0099cc; /* Change color on hover */
+}
