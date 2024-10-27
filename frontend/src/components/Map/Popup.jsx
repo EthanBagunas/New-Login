@@ -43,7 +43,7 @@ const usePopupState = () => {
   const axiosPrivate = useAxiosPrivate();
   const [anchor, setAnchor] = useState(null);
   
-  const [poptext, setPoptext] = useContext(LevelContext);
+  const {poptext, setPoptext} = useContext(LevelContext);
 
   const open = Boolean(anchor);
   const id = open ? 'simple-popup' : undefined;
