@@ -6,44 +6,26 @@ import Typography from '@mui/material/Typography';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-export default function AccordionExpandIcon({mainlist, nestedlistapi}) {
-
-  const axiosPrivate= useAxiosPrivate();
-  
-  const [nestedlist, setNestedlist] =React.useState([])
-
-  const handleNestedlist= (id) => {
-    axiosPrivate.get(`${nestedlistapi}/${id}`)
-    .then(response => {
-      console.log(response.data)
-      setNestedlist(response.data)
-    })
-    .catch(error=> { 
-      console.error(error);
-    })
-    
-
-  }
-  
+export default function AccordionExpandIcon({mainlist}) {
   return (
     <div>
       { mainlist && mainlist.map((entry, index) =>
-
         <Accordion>
         <AccordionSummary
           expandIcon={<ArrowDownwardIcon/>}
           aria-controls="panel1-content"
           id="panel1-header"
-          onClick={()=> handleNestedlist(entry.id)}
           >
           <Typography>{entry.id} {entry.firstname} {entry.lastname}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {nestedlist && nestedlist.map((item, index)=> {
-          <Typography>
-            {item.id} {item.firstname} {item.lastname}
-          </Typography>
-          })}
+         {entry.members && entry.members.map((item, index) => (
+              <div key={index}>
+                <Typography>
+                  {item.id} {item.firstname} {item.lastname}
+                </Typography>
+              </div>
+            ))}
         </AccordionDetails>
       </Accordion>
       )}

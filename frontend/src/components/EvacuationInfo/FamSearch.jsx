@@ -23,7 +23,6 @@ class FamSearch extends ModalView {
         if(prevState.location !== this.state.location) {
             axios.get(`http://localhost:7000/famdata/${this.state.location}`)
             .then(response => {
-                console.log(response.data)
                 this.setState({viewheads: response.data})
             })
             .catch(error=> { 

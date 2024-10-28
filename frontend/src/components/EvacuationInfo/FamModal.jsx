@@ -238,9 +238,6 @@ class InsertFamModal extends ModalView {
     );}
 } 
 
-
-
-
   export default InsertFamModal;
 
     const labels=[  
