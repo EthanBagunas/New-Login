@@ -60,10 +60,28 @@ class InsertFamModal extends ModalView {
                     <Grid item xs={12}>
                         <this.MemberTable/>
                     </Grid>
+                    <Grid item xs={6}>
+                    <Button variant="contained" onClick={this.handleSubmit}>Submit</Button>
+                    </Grid>
                 </Grid>
             </div>)
             , openModal: this.state.open})
         }
+
+    handleSubmit= ()=> {
+        //!useaaxiosprivate
+        axios.post('http://localhost:7000/faminfo', {
+            head:this.state.HeadFormData,
+            members: this.state.TableData,
+        })
+        .then(response => {
+            
+        })
+        .catch(error=> { 
+            console.error(error);
+        })
+        
+    }
     
     updateHeadForm = (id, value) => {
         this.setState(prevState => ({
@@ -97,7 +115,7 @@ class InsertFamModal extends ModalView {
                         <BasicSelect type={"gender"} label={"Gender"} inputval= {this.state.HeadFormData.gender} handleChange={this.updateHeadForm}/>
                     </Grid>
                     <Grid item xs= {8}>
-                        <AutoCompleteComboBox label={"Occupant ID:"} type= {"occupant_id"} updateform={this.updateHeadForm}/>
+                        <AutoCompleteComboBox label={"Occupant ID:"} type= {"occupant_id"} updateform={this.updateHeadForm} dropdownapi={'/occupantid'}/>
                     </Grid>
                     <Grid item xs={12}>
                         <DatePickerValue inputkey={"birthdate"} inputval={this.state.HeadFormData.birthdate} updateform= {this.updateHeadForm}/>
@@ -106,7 +124,7 @@ class InsertFamModal extends ModalView {
                     </Grid>
             </FormControl>
             )}
-    
+
     updateMemForm = (id, value) => {
         this.setState(prevState => ({
             MemberFormData: {
@@ -115,7 +133,7 @@ class InsertFamModal extends ModalView {
             },
         }));
     }
-
+    
     InsertMemForm = ()=> {
         return (
             <FormControl>
@@ -155,6 +173,10 @@ class InsertFamModal extends ModalView {
             </FormControl>
         )
     }
+    
+    
+   
+    
 
     handleAddMember= () => {
         const newMember = { ...this.state.MemberFormData }; // Create a copy of MemberFormData
@@ -167,7 +189,12 @@ class InsertFamModal extends ModalView {
             relationship_head: '',
             birthdate: dayjs(),
         }
-    }));
+        }));
+    }
+    handleRemoveMember = (firstname) => {
+        this.setState(prevState => ({
+            TableData: prevState.TableData.filter(entry => entry.firstname !== firstname),
+        }));
     }
 
     MemberTable = ()=> {
@@ -187,20 +214,21 @@ class InsertFamModal extends ModalView {
                     </TableHead>
                     <TableBody>
                         {this.state.TableData && (
-                            this.state.TableData.map((entry) => (
-                                <TableRow
-                                key={entry.firstname}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                    {entry.firstname}
-                                    </TableCell>
-                                    <TableCell align="right">{entry.lastname}</TableCell>
-                                    <TableCell align="right">{entry.gender}</TableCell>
-                                    <TableCell align="right">{entry.birthdate[5]}</TableCell>
-                                    <TableCell align="right">{entry.relationship_head}</TableCell>
-                                </TableRow>
-                            ))
+                        this.state.TableData.map((entry) => (
+                            <TableRow
+                            key={entry.firstname}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
+                                {entry.firstname}
+                                </TableCell>
+                                <TableCell align="right">{entry.lastname}</TableCell>
+                                <TableCell align="right">{entry.gender}</TableCell>
+                                <TableCell align="right">{entry.birthdate[5]}</TableCell>
+                                <TableCell align="right">{entry.relationship_head}</TableCell>
+                                <Button onClick={()=> this.handleRemoveMember(entry.firstname)}>Remove</Button>
+                            </TableRow>
+                        ))
                         )}
                     </TableBody>
                 </Table>
@@ -242,14 +270,4 @@ class InsertFamModal extends ModalView {
    
     
 /*
-    handleSubmit= ()=> {
-        //!useaaxiosprivate
-        axios.post('http://localhost:7000/faminfo', this.state.FormData)
-        .then(response => {
-            console.log(response.data)
-            this.getTable();
-        })
-        .catch(error=> { 
-            console.error('Error fetching occupants:', error);
-        })
-    }*/
+ */

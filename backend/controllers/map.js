@@ -78,11 +78,13 @@ const InsertOccupant= (req, res) => {
 `;
   // Execute the query using only the occupant data values
   con.query(sql, [occupantData.Infants, occupantData.Toddlers, occupantData.Preschoolers, occupantData.SchoolAge, occupantData.Teenage, occupantData.Adult, occupantData.Senior_Citizen, occupantData.Pregnant_women, occupantData.Lactating_mothers, occupantData.Solo_Parent, occupantData.occupant_location], (err, result) => {
+    console.log(result);
     if (err) {
       console.error('error running query:', err);
       return res.status(500).json({ error: err });
     }
-    return res.status(201).json({ message: 'Occupant data inserted successfully' });
+    
+    return res.status(201).json({ message: `Occupant Id: ${result.insertId}` });
   });
 };
 
