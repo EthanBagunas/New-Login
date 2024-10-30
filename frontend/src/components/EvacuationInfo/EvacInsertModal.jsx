@@ -7,8 +7,7 @@ import QuantityInput from "../BaseMUI/NumberInput";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { axiosPrivate } from "../../api/axios";
-export const FormContext= React.createContext()
-
+import InsertFamModal from "./FamModal";
 
 const style = {
     position: 'absolute',
@@ -22,41 +21,24 @@ const style = {
     p: 4,
   };
 
-
-const InsertEvacModal =({open, onClose, location, setEvac, closeSelectedmarker}) => {
+  const InsertEvacModal= ({open, onClose, location, setEvac, closeSelectedmarker}) => {
     const axiosPrivate= useAxiosPrivate();
-    return(
-        <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        onClose={onClose}
-        PaperProps={{borderRadius: 4}}
-        >
-        <Box sx={style}>
-          <InsertOccupant location = {location} setCapacity={setEvac} closeSelectmarker2={closeSelectedmarker} />
-        </Box>
-      </Modal>
-    )
-}
-
-export default InsertEvacModal;
-
-const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
-  const [formData, setFormData] = useState({
-    Infants:0,
-    Toddlers:0,
-    Preschoolers:0,
-    SchoolAge:  0,
-    Teenage: 0,
-    Adult:0,
-    Senior_Citizen:0,
-    Pregnant_women: 0,
-    Lactating_mothers: 0,
-    Solo_Parent:0,
-    occupant_location: useState(location),
-  });
-
+    
+    const [formData, setFormData] = useState({
+      Infants:0,
+      Toddlers:0,
+      Preschoolers:0,
+      SchoolAge:  0,
+      Teenage: 0,
+      Adult:0,
+      Senior_Citizen:0,
+      Pregnant_women: 0,
+      Lactating_mothers: 0,
+      Solo_Parent:0,
+      occupant_location: useState(location),
+    });
+    
+    const keys= Object.keys(formData);
   useEffect(() => {
     setFormData((prevState) => ({
       ...prevState,
@@ -67,10 +49,11 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
   const handleSubmit = () => {
     axiosPrivate.post('/insertoccupant', formData)
       .then(response => {
+        alert(response.data.message);
         axiosPrivate.get('/evacmarker/all')
         .then(response => {
-          setCapacity(response.data);
-          closeSelectmarker2();
+          setEvac(response.data);
+          closeSelectedmarker();
         })
         .catch(error => {
           console.error(error);
@@ -83,33 +66,24 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
     
   };
 
-  const keys= Object.keys(formData);
-  const labels=[  
-    "Infants(0-11months)" ,
-    "Toddlers(1-3yrs)" ,
-    "Preschoolers (4-5yrs)",
-    "School Age (6-12yrs)",
-    "Teenage (13-19yrs)",
-    "Adult (20-59yrs)",
-    "Senior Citizen (60yrs above)",
-    "Pregnant Women",
-    "Lactating mothers",
-    "Solo Parents",
-  ]
-
-  const updateForm= (inputid, imputval) => {
+  
+  const updateForm= (inputid, inputval) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [Object.values(inputid)[0]]: inputval,
     }))
   }
     
-
-  
-
   return(
+        <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        onClose={onClose}
+        PaperProps={{borderRadius: 4}}
+        >
+        <Box sx={style}>
     <FormControl>
-      <FormContext.Provider value= {{formData, setFormData}}>
       <FormLabel>Add New Occupants</FormLabel>
         <Grid container spacing={6} >
           <Grid item xs={6}>
@@ -137,9 +111,25 @@ const InsertOccupant= ({location, setCapacity, closeSelectmarker2}) => {
           </Grid>
         </Grid>
         <Button onClick={handleSubmit}>Submit</Button>
-        </FormContext.Provider> 
   </FormControl>
+   </Box>
+   </Modal>
   )
 }
 
+export default InsertEvacModal;
 
+
+
+const labels=[  
+  "Infants(0-11months)" ,
+  "Toddlers(1-3yrs)" ,
+  "Preschoolers (4-5yrs)",
+  "School Age (6-12yrs)",
+  "Teenage (13-19yrs)",
+  "Adult (20-59yrs)",
+  "Senior Citizen (60yrs above)",
+  "Pregnant Women",
+  "Lactating mothers",
+  "Solo Parents",
+]
