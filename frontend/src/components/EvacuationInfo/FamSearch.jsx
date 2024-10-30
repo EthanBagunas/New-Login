@@ -5,7 +5,7 @@ import axios from 'axios';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import AccordionExpandIcon from '../BaseMUI/Accordian';
 import { AccordionActions } from '@mui/material';
-class FamSearch extends ModalView {
+class FamSearch extends React.Component {
 
     constructor(props) {
         super(props);
@@ -35,12 +35,12 @@ class FamSearch extends ModalView {
     }
 
     render(){
-        return this.BaseModal({content: 
-            (<div>
-                <AutoCompleteComboBox label={"Search Location"} type={'location'} dropdownapi={'/allevac'} updateform={this.updatelocation}/>   
-                <AccordionExpandIcon mainlist={this.state.viewheads} nestedlistapi={'/fammemberdata'}/>
-            </div>)
-            , openModal: this.state.open})
+        return (
+          <div>
+            <AutoCompleteComboBox label={"Search Location"} type={'location'} dropdownapi={'/allevac'} updateform={this.updatelocation}/>   
+            <AccordionExpandIcon mainlist={this.state.viewheads} nestedlistapi={'/fammemberdata'}/>
+          </div>  
+        )
     }
 }
 export default FamSearch; 

@@ -18,9 +18,8 @@ import {DevModal} from '../BaseMUI/ModalView'
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
 import InsertEvacModal from '../EvacuationInfo/EvacInsertModal';
+
 import FamModal from '../EvacuationInfo/FamModal';
-
-
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
@@ -140,7 +139,7 @@ export const MapContainer = (props) => {
 
             {selectedevacMarker && <InsertEvacModal open={showModal === 'evac' ? true : false} onClose={() => handleModal(null)} location= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
             
-            <FamModal open={showModal === 'fam' ? true: false} onClose={()=>handleModal(null)} /> 
+            <FamModal open={showModal=== 'fam' ? true: false} onClose={() => handleModal(null)}/>
             
 
             {evacmarkers.map((evacmarker, index) => (

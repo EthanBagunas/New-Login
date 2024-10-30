@@ -58,33 +58,48 @@ const getAllEvac= (req, res) => {
   });
 }
 
-const getFamilyInfo= (req,res) => {
-  const {location} = req.params;
-  const sql = 'SELECT FamilyInfo.* FROM Occupants JOIN FamilyInfo ON Occupants.occupant_id = FamilyInfo.occupant_id WHERE Occupants.occupant_location = ? ;';
-  const memsql = 'SELECT * FROM FamilyInfo WHERE fam_id =?'
-  
-  con.query(sql, [location],(err, results) => {
+const getFamilyInfo = (req, res) => {
+
+  const { location } = req.params;
+
+  const sql = 'SELECT FamilyInfo.* FROM Occupants JOIN FamilyInfo ON Occupants.occupant_id = FamilyInfo.occupant_id WHERE Occupants.occupant_location = ?;';
+
+  con.query(sql, [location], (err, results) => {
     if (err) {
       console.error('error running query:', err);
       return res.status(500).json({ error: err });
     }
-    return res.json(results);
-  });
-}
-const getFamilyInfoDetails= (req,res) => {
-  const {famid} = req.params;
-  const sql = 'SELECT * FROM FamilyInfo_Details WHERE fam_id =?'
 
-  con.query(sql, [famid],(err, results) => {
-    if (err) {
-      console.error('error running query:', err);
-      return res.status(500).json({ error: err });
-    }
-    return res.json(results);
-  });
-}
+    // Create an array of promises for getting family details
+    const familyInfoPromises = results.map(family => {
+      return new Promise((resolve, reject) => {
+        const famid = family.id; // Assuming fam_id is a property in the results
+        const memsql = 'SELECT * FROM FamilyInfo_Details WHERE fam_id = ?';
+        con.query(memsql, [famid], (err, detailsResults) => {
+          if (err) {
+            return reject(err);
+          }
+          family.members = detailsResults; // Add members to the family object
+          resolve(family);
+        });
+      });
+    });
+    // Wait for all family info details to be fetched
+    Promise.all(familyInfoPromises)
+      .then(familiesWithDetails => {
+        return res.json(familiesWithDetails);
+      })
+      .catch(err => {
+        console.error('error fetching family details:', err);
+        return res.status(500).json({ error: err });
+      });
 
-module.exports = {insertFamilyInfo,insertFamilyInfoDetails, getAllOccupantIds, getAllEvac, getFamilyInfo, getFamilyInfoDetails};
+  });
+
+};
+
+
+module.exports = {insertFamilyInfo,insertFamilyInfoDetails, getAllOccupantIds, getAllEvac, getFamilyInfo, };
 
 
 /*
