@@ -10,8 +10,7 @@ import { Icon } from '@iconify/react';
 
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-
-const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal}) => {
+const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal, ViewList}) => {
 
   return (
     <div>
@@ -28,16 +27,11 @@ const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal}) => {
         left: '5%', // Set left to 50% to center the drawer horizontally        
         transform: 'translate(-50%, -50%)', // Translate the drawer to center it       
         width: 60, // Set the width of the drawer15        
-        height: 400, // Set the height of the drawer      
+        height: 600, // Set the height of the drawer      
         }}} >
         <Grid container spacing={2} style={{ position: 'relative', top: '50%', transform: 'translateY(-50%)' }}>
           <Grid item size={12}>
             <AddDevice lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
-          </Grid>
-          <Grid item size={12}>
-            <Button>
-              <Icon icon="healthicons:ui-user-profile" style={iconstyle} />
-            </Button>
           </Grid>
           <Grid item size={12}>
             <Button>
@@ -59,16 +53,24 @@ const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal}) => {
               <Icon icon="healthicons:emergency-post"style={iconstyle} onClick={() => showEvac()}/>
             </Button>
           </Grid>
+          <Grid item size={12}>
+            <Button>
+              <Icon icon="la:clipboard-list" style={iconstyle} onClick={()=>ViewList()}/>
+            </Button>
+          </Grid>
         </Grid>
       </Drawer>
-    </div>
+    </div>  
   );
 };
 
 export default Dashboard;
 
 const iconstyle=
-  { color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }
+{
+  color: '#ff3300', width: '30px', 
+  height: '30px', margin: '10px 0' 
+}
 
 
 

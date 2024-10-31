@@ -18,8 +18,10 @@ import {DevModal} from '../BaseMUI/ModalView'
 // evacuation feat
 import EvacInfoPopup from '../EvacuationInfo/EvacPopup';
 import InsertEvacModal from '../EvacuationInfo/EvacInsertModal';
-
 import FamModal from '../EvacuationInfo/FamModal';
+
+//Viewlist to show data from the db in a table format
+import ViewList from '../ViewListTables/ListTables';
 
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
@@ -140,8 +142,7 @@ export const MapContainer = (props) => {
             {selectedevacMarker && <InsertEvacModal open={showModal === 'evac' ? true : false} onClose={() => handleModal(null)} location= {selectedevacMarker.LOCATION} setEvac={SetEvacMarkers} closeSelectedevacmarker={()=> setSelectedevacMarker(null)}/> }
             
             <FamModal open={showModal=== 'fam' ? true: false} onClose={() => handleModal(null)}/>
-            
-
+            <ViewList open={showModal=== 'viewlist' ? true: false} onClose={() => handleModal(null)}/>
             {evacmarkers.map((evacmarker, index) => (
               <Marker key={index} position={{ lat: evacmarker.lat, lng: evacmarker.lng }}
               icon= {{
@@ -166,7 +167,7 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}          
       
-            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} famModal={() => handleModal('fam')}/>}
+            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} famModal={() => handleModal('fam')} ViewList={()=> handleModal('viewlist')}/>}
 
             <Marker
               position={{ lat: lattitude, lng: longitude }}

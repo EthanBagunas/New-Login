@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-export default function AutoCompleteComboBox({label, type, updateform, dropdownapi}) {
+export default function AutoCompleteComboBox({label, type, updateform, dropdownapi, alterstyle}) {
 
   const axiosPrivate= useAxiosPrivate();
   const [dropdown, setDropDown] =React.useState();
@@ -23,8 +23,12 @@ export default function AutoCompleteComboBox({label, type, updateform, dropdowna
       disablePortal
       options={dropdown}
       getOptionLabel={(dropdown)=> dropdown.toString()}
-      sx={{ width: 200 }}
+      sx={alterstyle ? alterstyle : style}
       renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
+}
+
+const style={
+  width:200
 }
