@@ -6,14 +6,19 @@ import OtpTimer from 'otp-timer';
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MuiOtpInput } from 'mui-one-time-password-input'
 
-const validateOtp = async (otp, form, nav) => {
-  const axiosPrivate = useAxiosPrivate();
+const toast_style= {
+  position: 'bottom-right',
+  closeOnClick: true,
+  pauseOnHover: true
+}
+const validateOtp = async (otp, form, navigate, axiosPrivate) => {
   try {
     const response = await axiosPrivate.post(`/validateotp/${otp}`, form);
     if (response.status === 200) {
       toast.success(response.data.message, toast_style);
-       setTimeout(() => { nav('/', { replace: true });}, 2000);
+       setTimeout(() => { navigate('/', { replace: true });}, 2000);
     } else {
       toast.error(response.data.message, toast_style); 
     }
@@ -24,9 +29,22 @@ const validateOtp = async (otp, form, nav) => {
 };
 
 const RegistrationOtp = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const formData = location.state.formData;
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+
+  const formData = location.state?.formData;
+  const [otp, setOtp] = useState('')
+
+  useEffect(() => {
+    if (otp.length === 6) {
+      validateOtp(otp, formData, navigate,axiosPrivate);
+    }
+  }, [otp]);
+
+  const handleChange = (newValue) => {
+    setOtp(newValue)
+  }
 
   const [showTimer, setShowTimer] = useState(true);
 
@@ -48,14 +66,10 @@ const RegistrationOtp = () => {
       });
   };
 
-  useEffect(() => {
-    // You can add additional logic here if needed
-  }, [formData]);
-
   const paperStyle = {
     padding: 20,
-    height: 100,
-    width: 300,
+    height: 250,
+    width: 400,
     margin: '20px auto',
     display: 'flex',
     justifyContent: 'center',
@@ -68,26 +82,29 @@ const RegistrationOtp = () => {
       <Paper elevation={10} style={paperStyle}>
         <div>
           <h5>We've sent a One-Time Password to the contact number you've provided</h5>
-          <input
-            type="text"
-            id="otpInput"
-            placeholder="Enter the OTP Here..."
-            size={35}
-          />
           <br />
-          {showTimer && <OtpTimer seconds={10} resend={() => handleClick(true)} text="Resending OTP in ..." />}
-          <Button
-            style={{ textAlign: 'center' }}
-            color="secondary"
-            onClick={() => validateOtp(document.getElementById('otpInput').value, formData, navigate)}
-          >
-            Submit
-          </Button>
+          <MuiOtpInput value= {otp} onChange={handleChange} length={6} />
+            <br />
+            <Grid container justifyContent="center">
+            
+            {showTimer && <OtpTimer seconds={10} resend={() => handleResend(true)} textColor= {"#000000"} background={"#00ccff"} text="Resending OTP in ..." />}
+            </Grid>
+            
         </div>
       </Paper>
-      <ToastContainer />
+      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false}closeOnClick/>
     </Grid>
   );
 };
 
 export default RegistrationOtp;
+
+/*
+<Button
+            style={{ textAlign: 'center' }}
+            backgroundColor={"#00ccff"}
+            onClick={() => validateOtp(otp, formData, navigate)}
+            >
+            Submit
+            </Button>
+*/
