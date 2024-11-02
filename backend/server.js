@@ -11,6 +11,7 @@ const verifyJWT = require('./middleware/verifyJWT');
 const { logger } = require('./middleware/logEvents');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
+const {GetWaterLevel} =require('./controllers/mqtt');
 
 const updateProfileRouter = require('./routes/authUpdate');
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
@@ -108,6 +109,10 @@ app.all('*', (req, res) => {
 app.use(errorHandler);
 
 // Automatically run the stream.bat script when the server starts
+
+GetWaterLevel();
+
+//GetWaterLevel();
 
 
 // Start the server
