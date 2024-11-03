@@ -60,7 +60,12 @@ export const MapContainer = (props) => {
     SetLongitude(position.lng());
   }
 
-  //const [showaddmaker, setShowaddmarker]= useState(false);
+  const [dashpop, setDashpop]= useState(false);
+  const handleDashPop=() => {
+    SetLatitude(null);
+    SetLongitude(null);
+    setDashpop(!dashpop)
+  }
   const [showModal, setShowModal]= useState('')
   function handleModal(value){
     setShowModal(value)

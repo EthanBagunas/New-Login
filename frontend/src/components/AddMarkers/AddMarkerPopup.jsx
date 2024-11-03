@@ -9,11 +9,12 @@ import AddMarkerPopupContent from "./AddMarkerPopupContent";
 
 
 
-const AddMarkers = ({lat, lng, setLat, setLng}) => {
+const AddMarkers = ({dashpop}) => {
   const [anchor, setAnchor] = React.useState(null);
   
     const handleAnchor = (event) => {
       setAnchor(anchor ? null : event.currentTarget);
+      dashpop;
     };
   
     const open = Boolean(anchor);
@@ -32,8 +33,8 @@ const AddMarkers = ({lat, lng, setLat, setLng}) => {
             <CustomizedTab 
                 label1={"Water Level Device "}
                 label2={"Evacuation Zone "}
-                tab1={<AddMarkerPopupContent markertype="dev" lat={lat} lng={lng} setLat={setLat} setLng={setLng} />}
-                tab2={<AddMarkerPopupContent markertype="evac" lat={lat} lng={lng} setLat={setLat} setLng={setLng} />}
+                tab1={<AddMarkerPopupContent markertype="dev" />}
+                tab2={<AddMarkerPopupContent markertype="evac"/>}
             />
             </Box>
           </div>

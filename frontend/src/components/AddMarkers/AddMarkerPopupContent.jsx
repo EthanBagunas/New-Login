@@ -8,7 +8,7 @@ import BasicSelect from "../BaseMUI/DropDownInput";
 import { NewMarkerContext } from "../Map/Map";
 
 const AddMarkerPopupContent = ({markertype, }) => {
-    const {latitude, longitude, SetLatitude, SetLongitude}= useContext(NewMarkerContext)
+    const {latitude, longitude}= useContext(NewMarkerContext)
     const axiosPrivate = useAxiosPrivate();
     const theme =useTheme();
 
@@ -34,22 +34,29 @@ const AddMarkerPopupContent = ({markertype, }) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
       };
-      const handleSubmit = (event) => {
+      const handleSubmit = async (event) => {
         console.log(formData);
-        /*
         event.preventDefault();
-        axiosPrivate.post(`/setdevices`, formData)
-          .then(response => {
-            console.log(response.data);
-            return { message: 'Successfully added device' };
-          })
-          .catch(error => {
-            console.error(error);
-            res.error('An error occurred. Please try again.');
-          });
-        */
-          SetLatitude(null);
-          SetLongitude(null);
+        if (markertype === 'dev') {
+          axiosPrivate.post(`/setdevices`, formData)
+            .then(response => {
+              console.log(response.data);
+              return { message: 'Successfully added device' };
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        } else if (markertype === 'evac') {
+          axiosPrivate.post(`/setevac`, formData)
+            .then(response => {
+              console.log(response.data);
+              return { message: 'Successfully added evacuation zone' };
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+        
       };
       return (
         <FormControl margin="normal">

@@ -97,9 +97,21 @@ const getFamilyInfo = (req, res) => {
   });
 
 };
+const SetEvacuation = (req, res) => {
+  const { evacName, location, latitude, longitude, currentstatus } = req.body;
+
+  const sql = 'INSERT INTO EvacuationCenter (Evac_Name, LOCATION, lat, lng, status) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION=?, lat=?, lng=?, status=?';
+  con.query(sql, [evacName, location, latitude, longitude, currentstatus, location, latitude, longitude, currentstatus], (err, results) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).json({ error: err });
+      }
+      return res.json(results);
+  });
+}
 
 
-module.exports = {insertFamilyInfo,insertFamilyInfoDetails, getAllOccupantIds, getAllEvac, getFamilyInfo, };
+module.exports = {insertFamilyInfo,insertFamilyInfoDetails, getAllOccupantIds, getAllEvac, getFamilyInfo, SetEvacuation,};
 
 
 /*
