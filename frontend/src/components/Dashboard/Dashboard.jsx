@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import axios from 'axios';
-import AddDevice from './AddDevices';
+import AddMarkers from '../AddMarkers/AddMarkerPopup';
 import AddLGU from './LGU';
 
 
@@ -31,7 +31,7 @@ const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal, ViewList}) => 
         }}} >
         <Grid container spacing={2} style={{ position: 'relative', top: '50%', transform: 'translateY(-50%)' }}>
           <Grid item size={12}>
-            <AddDevice lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
+            <AddMarkers lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
           </Grid>
           <Grid item size={12}>
             <Button>

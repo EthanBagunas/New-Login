@@ -26,6 +26,7 @@ import ViewList from '../ViewListTables/ListTables';
 export const MarkerContext = React.createContext();
 export const LevelContext = React.createContext();
 export const LogsDataContext = React.createContext();
+export const NewMarkerContext= React.createContext();
 
 const markerIcons = {
   Normal: normalIcon,
@@ -52,14 +53,14 @@ export const MapContainer = (props) => {
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
   const [poptext, setPoptext] = useState('');
   
-  const [lattitude, SetLattitude]=useState();
+  const [latitude, SetLatitude]=useState();
   const [longitude, SetLongitude]=useState();
   const handlePosition =(position) => {
-    SetLattitude(position.lat());
+    SetLatitude(position.lat());
     SetLongitude(position.lng());
   }
 
-
+  //const [showaddmaker, setShowaddmarker]= useState(false);
   const [showModal, setShowModal]= useState('')
   function handleModal(value){
     setShowModal(value)
@@ -166,15 +167,15 @@ export const MapContainer = (props) => {
                 <EvacInfoPopup anchoredmarker={selectedevacMarker}/>
               </InfoWindow>
             )}          
-      
-            {hasRole1994 && <Dashboard lat={lattitude} lng= {longitude} setLat={SetLattitude} setLng={SetLongitude}  showEvac={handleEvacMarkers} famModal={() => handleModal('fam')} ViewList={()=> handleModal('viewlist')}/>}
-
-            <Marker
-              position={{ lat: lattitude, lng: longitude }}
-              icon={{
-                url: markerIcons['High'],
-                scaledSize: new window.google.maps.Size(30, 30)
-              }}/>
+            <NewMarkerContext.Provider value={{latitude, longitude, SetLatitude, SetLongitude}}>
+              {hasRole1994 && <Dashboard showEvac={handleEvacMarkers} famModal={() => handleModal('fam')} ViewList={()=> handleModal('viewlist')}/>}
+            </NewMarkerContext.Provider>
+                <Marker
+                  position={{ lat: latitude, lng: longitude }}
+                  icon={{
+                    url: markerIcons['High'],
+                    scaledSize: new window.google.maps.Size(30, 30)
+                  }}/>
           </Map>
       </div>
     );
