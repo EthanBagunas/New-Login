@@ -110,9 +110,8 @@ app.use(errorHandler);
 
 // Automatically run the stream.bat script when the server starts
 
-GetWaterLevel();
 
-//GetWaterLevel();
+GetWaterLevel();
 
 
 // Start the server

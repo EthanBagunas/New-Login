@@ -40,35 +40,95 @@ module.exports= {GetWaterLevel};
 
 
 function Insert2Latest(message) {
-    const [devid, waterlvl] = message.toString().split(',');
 
-    const currentDateTime = new Date().toISOString().replace('T', ' ').replace(/\..+/, '');
-    console.log('CurrentTime:', currentDateTime); // Output: 2023-01-03 12:36:25
-    console.log('Device_ID:', devid);
-    console.log('Water Level:', waterlvl);
+  const [devid, waterlvl] = message.toString().split(',');
+  const currentDateTime = new Date().toISOString().replace('T', ' ').replace(/\..+/, '');
 
-    const sql = `
-    START TRANSACTION;
-    IF EXISTS (SELECT 1 FROM latest WHERE DEVICE_ID = ?) THEN
-        INSERT INTO logs (DEVICE_ID, CAP_DATETIME, DIST_M)
-        SELECT DEVICE_ID, CAP_DATETIME, DIST_M
-        FROM latest
-        WHERE DEVICE_ID = ?;
-        DELETE FROM latest WHERE DEVICE_ID = ?;
-    END IF;
+  // Start a transaction
 
-    INSERT INTO latest (DEVICE_ID, CAP_DATETIME, DIST_M)
-    VALUES (?, ?, ?);
+  db.beginTransaction((err) => {
+      if (err) {
+          console.error('Error starting transaction:', err);
+          return;
+      }
 
-    COMMIT;
-    `;
+      // Check if the device ID already exists in the latest table
+      const checkSql = `SELECT * FROM latest WHERE DEVICE_ID = ?`;
+      db.query(checkSql, [devid], (error, results) => {
+          if (error) {
+              return db.rollback(() => {
+                  console.error('Error checking latest:', error);
+              });
+          }
+          // If there's an existing entry, move it to logs
+          if (results.length > 0) {
+              const moveToLogsSql = `
+                  INSERT INTO logs (DEVICE_ID, CAP_DATETIME, DIST_M)
+                  VALUES (?, ?, ?)
+              `;
+              const oldRecord = results[0];
+              db.query(moveToLogsSql, [oldRecord.DEVICE_ID, oldRecord.CAP_DATETIME, oldRecord.DIST_M], (moveError) => {
+                  if (moveError) {
+                      return db.rollback(() => {
+                          console.error('Error moving to logs:', moveError);
+                      });
+                  }
+                  // Now delete the old record from latest
+                  const deleteSql = `DELETE FROM latest WHERE DEVICE_ID = ?`;
+                  db.query(deleteSql, [devid], (deleteError) => {
+                      if (deleteError) {
+                          return db.rollback(() => {
+                              console.error('Error deleting from latest:', deleteError);
+                          });
+                      }
 
-    db.query(sql, [devid, devid, devid, devid, currentDateTime, waterlvl], (error, result) => {
-        if (error) {
-            console.error('Error inserting data into latest:', error);
-            return; // Don't throw error here, continue to commit the transaction
-        }
-        console.log(result);
-        // Send success response
+                      const insertSql = `
+                          INSERT INTO latest (DEVICE_ID, CAP_DATETIME, DIST_M)
+                          VALUES (?, ?, ?)
+                      `;
+                      db.query(insertSql, [devid, currentDateTime, waterlvl], (insertError) => {
+                          if (insertError) {
+                              return db.rollback(() => {
+                                  console.error('Error inserting into latest:', insertError);
+                              });
+                          }
+                          // Commit the transaction
+                          db.commit((commitError) => {
+                              if (commitError) {
+                                  return db.rollback(() => {
+                                      console.error('Error committing transaction:', commitError);
+                                  });
+                              }
+                              console.log('Transaction completed successfully.');
+                          });
+                      });
+                  });
+              });
+          } else {
+              // If no existing entry, just insert the new record
+              const insertSql = `
+                  INSERT INTO latest (DEVICE_ID, CAP_DATETIME, DIST_M)
+                  VALUES (?, ?, ?)
+              `;
+              db.query(insertSql, [devid, currentDateTime, waterlvl], (insertError) => {
+                  if (insertError) {
+                      return db.rollback(() => {
+                          console.error('Error inserting into latest:', insertError);
+                      });
+                  }
+
+
+                  db.commit((commitError) => {
+                      if (commitError) {
+                          return db.rollback(() => {
+                              console.error('Error committing transaction:', commitError);
+                          });
+                      }
+                      console.log('Transaction completed successfully.');
+                  });
+              });
+          }
       });
+  });
+
 }
