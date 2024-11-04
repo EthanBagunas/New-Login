@@ -7,17 +7,15 @@ import axios from '../../../api/axios';
 import successImage from '../styles/success.png';
 import errorImage from '../styles/error.png';
 import mapIcon from '../styles/map-icon.png';
-import "../styles/brgyForm.css";
-import IconButton from '@mui/material/IconButton';
-
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import "../styles/BrgyForm.css";
 import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
-import { drawerClasses } from "@mui/material";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 
 
 function BrgyForm() {
   const { auth } = useAuth();
+  const navigate = useNavigate(); // Hook for navigation
   const [brgyName, setBrgyName] = useState("");
   const [lguType, setLguType] = useState("City");
   const [province, setProvince] = useState("");
@@ -29,13 +27,21 @@ function BrgyForm() {
   const [website, setWebsite] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [places, setPlaces] = useState([]); 
   const [isViewing, setIsViewing] = useState(false); 
+
   const [dateViewing, setDateViewing] = useState(false);
   const [date, setDates] = useState([]); 
+  
+  const [PurokViewing, setPurokViewing] = useState(false);
+  const [purok, setPurok] = useState([]); 
+  const [PurokInfoOpen, setPurokInfoOpen] = useState(false);
+  const [PurokInfo, setPurokInfo] = useState(null);
+
   const [officialData, setOfficialData] = useState(null);
   const [hiddenContainerOpen, setHiddenContainerOpen] = useState(false); // State for hidden container
-  
+  const [showContainer, setShowContainer] = useState(true); // Add this state
 
   const logo1InputRef = useRef(null);
   const logo2InputRef = useRef(null);
@@ -182,11 +188,29 @@ const fetchBarangayOfficial = async (place) => {
     toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
   }
 };
+const fetchPurokSetup = async (place) => {
+  try {
+    const response = await axios.get(`/show-purok/${place}`, {
+      headers: {
+        'Authorization': `Bearer ${auth?.accessToken}`,
+      },
+    });
+
+    setPurok(response.data); // Update the places state with fetched 
+  } catch (error) {
+    console.error("Error fetching Official Date:", error);
+    toast.error(<CustomToast message="Failed to fetch Official Date." image={errorImage} />);
+  }
+};
 
   const toggleViewMode = () => {
+    setLogo1(null);
+    setLogo2(null);
+    setIsViewing(false);
+    setDrawerOpen(false);   
     setIsViewing(!isViewing);
   };
- 
+
   
 
 
@@ -220,6 +244,7 @@ const fetchBarangayOfficial = async (place) => {
 
   
   const handleDateClick = async (selectedDate) => {
+   
     try {
       const response = await axios.get(`/getbrgyOfficial/${selectedDate}`, {
         headers: {
@@ -228,19 +253,46 @@ const fetchBarangayOfficial = async (place) => {
       });
       const data = response.data;
       console.log(data);
-  
+      
       setOfficialData(data);
       if (!hiddenContainerOpen) {
         setHiddenContainerOpen(true); // Open the hidden container
       }
-  
-      setIsViewing(true); // Switch to date view mode
-      setDrawerOpen(false);   // Close drawer if open
+      
+      setShowContainer(false);
+      
+      
     } catch (error) {
       console.error("Error fetching barangay info by date:", error);
       toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
     }
   };
+    
+  const  handlePurokClick = async (selectedPurok) => {
+   
+    try {
+      const response = await axios.get(`/purok-info/${selectedPurok}`, {
+        headers: {
+          'Authorization': `Bearer ${auth?.accessToken}`,
+        }
+      });
+      const data = response.data;
+      console.log(data);
+      
+      setPurokInfo(data);
+      if (!PurokInfoOpen) {
+        setPurokInfoOpen(true); // Open the hidden container
+      }
+      
+      setShowContainer(false);
+      
+      
+    } catch (error) {
+      console.error("Error fetching barangay info by date:", error);
+      toast.error(<CustomToast message="Failed to fetch Barangay official info. Please try again." image={errorImage} />);
+    }
+  };
+
   
   const resetForm = () => {
     setBrgyName("");
@@ -265,378 +317,452 @@ const fetchBarangayOfficial = async (place) => {
     setOfficialData(null); 
     setDateViewing(false);
   };  
-  
+
+  const Lgu =()=>{
+    setShowContainer(true); 
+    setHiddenContainerOpen(false);
+    setPurokInfoOpen(false);
+  }
+  const handleRedirect = (path) => {
+    navigate(path); // Use navigate for redirection
+   
+  };
+  const togglePurok = (place) => {
+    setPurokViewing(!PurokViewing);
+    fetchPurokSetup(place);
+ 
+   };
   
 
- 
+
 
   return (
     <div>
       <Navbar />
-      <div className={`brgy-form-container ${isViewing ? 'view-mode' : ''}`}>
-        <h2>{brgyName ? `Edit ${brgyName} Information` : "Add Barangay Information"}</h2>
+      
 
                 <ToastContainer />
                 <Backdrop
                       sx={{ 
                         color: '#fff', 
                         zIndex: (theme) => theme.zIndex.drawer + 1,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)' // Darken the backdrop
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darken the backdrop
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                       open={dateViewing} // Show when date viewing is enabled
                       onClick={() => setDateViewing(false)} // Close when clicking on the backdrop
-                    />
-                     <Backdrop
+                    >
+                      {dateViewing && (
+                        <div
+                          className="drawer-content"
+                          style={{
+                            backgroundColor: '#fff',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            textAlign: 'center',
+                            zIndex: 1301,
+                            color: 'black'  
+                          }}
+                        >
+                          <h2>Available Dates</h2>
+                            <ul>
+                              {date.map((date) => (
+                                <li
+                                  key={date.period_from}
+                                  onClick={() => handleDateClick(date.period_from)}
+                                  className="date-item" // Add this class for styling
+                                >
+                                  {date.period_from} - {date.period_to}
+                                </li>
+                              ))}
+                            </ul>
+                          <button onClick={ClearContainer}>Show Selected Barangay</button>
+                        </div>
+                      )}
+                    </Backdrop>
+                    <Backdrop
+                        sx={{ 
+                          color: '#fff', 
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darken the backdrop
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                        }}
+                        open={drawerOpen} // Show when drawer is open
+                        onClick={() => setDrawerOpen(false)} // Close when clicking on the backdrop
+                      >
+                        {drawerOpen && (
+                          <div
+                            className={`drawer-content ${drawerOpen ? 'open' : ''}`}
+                            style={{ 
+                              backgroundColor: '#fff',
+                              padding: '20px',
+                              borderRadius: '10px',
+                              zIndex: 1301,
+                              color: 'black'  
+                            }} // Add the z-index here
+                          >
+                            <img src={mapIcon} alt="Map Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                            <h2>BARANGAY</h2>
+                            <ul>
+                              {places.map((place) => (
+                                <li key={place.brgyName} onClick={() => handlePlaceClick(place.brgyName)} className="date-item" >
+                                  {place.brgyName}
+                                </li>
+                              ))}
+                            </ul>
+                            <div className="button-group">
+                            <button onClick={ClearContainer}>Show Selected Barangay</button>
+                            </div>
+                          </div>
+                        )}
+                    </Backdrop>
+                    <Backdrop
                       sx={{ 
                         color: '#fff', 
                         zIndex: (theme) => theme.zIndex.drawer + 1,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)' // Darken the backdrop
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darken the backdrop
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
-                      open={drawerOpen} // Show when date viewing is enabled
-                      onClick={() => setDrawerOpen(false)} // Close when clicking on the backdrop
-                    />
+                      open={PurokViewing} // Show when date viewing is enabled
+                      onClick={() => setPurokViewing(false)} // Close when clicking on the backdrop
+                    >
+                      {PurokViewing && (
+                        <div
+                          className="drawer-content"
+                          style={{
+                            backgroundColor: '#fff',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            textAlign: 'center',
+                            zIndex: 1301,
+                            color: 'black'  
+                          }}
+                        >
+                          <h2>Available Listed Purok</h2>
+                          <ul>
+                              {purok.map((purok) => (
+                                <li
+                                  key={purok.purok_name}
+                                  onClick={() => handlePurokClick(purok.purok_name)}
+                                  className="date-item" // Add this class for styling
+                                >
+                                  {purok.purok_name} 
+                                </li>
+                              ))}
+                            </ul>
+                          <button onClick={ClearContainer}>Show Selected Barangay</button>
+                        </div>
+                      )}
+                    </Backdrop>
+                    
                 {successMessage && (
                   <div className="popup-message">
                     <p>Success! Barangay Information Added.</p>
                   </div>
                 )}
-                        {isViewing ? (
-                <div className="brgy-form-view card" style={{ position: 'relative' }}>
-                  <IconButton
-                style={{ 
-                  position: 'absolute', 
-                  left: '-50px',  // Adjust this to position the button to the left
-                  top: '50%', 
-                  transform: 'translateY(-50%)',
-                  backgroundColor: 'white',  // Optional, adds visibility
-                  border: '1px solid #ccc',  // Optional, adds a border for better visibility
-                }}
-                onClick={toggleHiddenContainer}
-              >
-                <ArrowBackIosIcon /> {/* Left-facing arrow icon */}
-              </IconButton>
-                  <div className="centered-logo">
-                    <img 
-                      src={logo1 || "../styles/map-icon.png"} 
-                      alt="Logo 1" 
-                      className="logo-preview" 
-                    />
-                  </div>
-                  <div className="brgy-view-fields">
-                    {/* Barangay Information Fields */}
-                    <div className="brgy-view-field">
-                      <strong>Barangay Name:</strong>
-                      <p>{brgyName}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Type:</strong>
-                      <p>{lguType}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Province:</strong>
-                      <p>{province}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Region:</strong>
-                      <p>{region}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Contact Number:</strong>
-                      <p>{contactNumber}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Email:</strong>
-                      <p>{email}</p>
-                    </div>
-                    <div className="brgy-view-field">
-                      <strong>Website:</strong>
-                      <p>{website || "N/A"}</p>
-                    </div>
-                  </div>
+                        {showContainer && ( // Use this to conditionally render the container
+                        isViewing ? (
+                              <div className="brgy-form-container" style={{ position: 'relative' }}>
+                                <div className="centered-logo">
+                                  <img 
+                                    src={logo1 || "../styles/map-icon.png"} 
+                                    alt="Logo 1" 
+                                    className="logo-preview" 
+                                  />
+                                </div>
+                                <div className="brgy-view-fields">
+                                  {/* Barangay Information Fields */}
+                                  <div className="brgy-view-field">
+                                    <strong>Barangay Name:</strong>
+                                    <p>{brgyName}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Type:</strong>
+                                    <p>{lguType}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Province:</strong>
+                                    <p>{province}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Region:</strong>
+                                    <p>{region}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Contact Number:</strong>
+                                    <p>{contactNumber}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Email:</strong>
+                                    <p>{email}</p>
+                                  </div>
+                                  <div className="brgy-view-field">
+                                    <strong>Website:</strong>
+                                    <p>{website || "N/A"}</p>
+                                  </div>
+                                </div>
+                        
+                                <div className="button-container" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
+                                  <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
+                                  <button onClick={() => toggleDateViewing(brgyName)}>
+                                    {dateViewing ? "Hide Dates" : "Show Dates"}
+                                  </button>
+                                  <button onClick={toggleDrawer}>
+                                    {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
+                                  </button>
+                                  <button onClick={resetForm}>Show Insert Form</button>
+                                  <button onClick={()=>togglePurok(brgyName)}>
+                                    {drawerOpen ? "Hide Purok" : "Show Listed Purok"}
+                                  </button>
+                                </div>
+                              </div>
+                          ) : (
+                            <div className="brgy-form-grid">
+                              {/* Barangay Name */}
+                              <div className="form-group">
+                                <label>Barangay Name*</label>
+                                <input
+                                  type="text"
+                                  value={brgyName}
+                                  onChange={(e) => setBrgyName(e.target.value)}
+                                  placeholder="Enter Barangay Name"
+                                />
+                              </div>
 
-          <button className="edit-btn" onClick={toggleViewMode}>Edit Information</button>
-          <button onClick={()=> toggleDateViewing(brgyName)}>
-            {dateViewing ? "Hide Dates" : "Show Dates"}
-          </button>
-        
-                    {dateViewing && (
-                       <div
-                         className={`drawer ${dateViewing ? 'open' : ''}`}
-                         style={{ zIndex: 1301 }} // Add the z-index here
-                       >
-                <h2>Available Dates</h2>
-                <ul>
-                {date.map((date) => (
-                <li key={date.period_from} onClick={() => handleDateClick(date.period_from)}>
-                  {date.period_from} - {date.period_to} 
-                </li>
-              ))}
-                </ul>
-                <div className="button-group">
-                    <button onClick={resetForm}>Insert Form</button>
-                    <button onClick={ClearContainer}>Clear Offical</button>
-                   
-                </div>
-            </div>
-            
-        )}
-         {hiddenContainerOpen && (
-          <div className="brgy-official-container">
-            {officialData ? (
-              <div className="official-info card">
-                <h3>{officialData.brgyName} Official Information</h3>
-                <div className="official-view-fields">
-                  <div className="official-view-field">
-                    <strong>Period From:</strong>
-                    <p>{officialData.period_from}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Period To:</strong>
-                    <p>{officialData.period_to}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Chair:</strong>
-                    <p>{officialData.brgy_chair}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Secretary:</strong>
-                    <p>{officialData.brgy_sec}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Treasurer:</strong>
-                    <p>{officialData.brgy_Treas}</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Councilors:</strong>
-                    <p>
-                      {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
-                      {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
-                      {officialData.brgy_councilor7}
-                    </p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Chairs:</strong>
-                    <p>
-                      {officialData.sk_chair1}, {officialData.sk_chair2}
-                    </p>
-                  </div>
-                  <div className="official-viezw-field">
-                    <strong>SK Members:</strong>
-                    <p>
-                      {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
-                      {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
-                      {officialData.sk_mem7}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="official-info card empty-data">
-                <h2>Please Select A Date</h2>
-                <h3>Official Information</h3>
-                <div className="official-view-fields">
-                  <div className="official-view-field">
-                    <strong>Period From:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Period To:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Chair:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Secretary:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Barangay Treasurer:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>Councilors:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Chairs:</strong>
-                    <p>empty</p>
-                  </div>
-                  <div className="official-view-field">
-                    <strong>SK Members:</strong>
-                    <p>empty</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-        </div>
-              ) : (
-                <div className="brgy-form-grid">
-                  {/* Barangay Name */}
-                  <div className="form-group">
-                    <label>Barangay Name*</label>
-                    <input
-                      type="text"
-                      value={brgyName}
-                      onChange={(e) => setBrgyName(e.target.value)}
-                      placeholder="Enter Barangay Name"
-                    />
-                  </div>
+                              {/* City or Municipality */}
+                              <div className="form-group">
+                                <label>Type (City or Municipality)</label>
+                                <select value={lguType} onChange={(e) => setLguType(e.target.value)}>
+                                  <option value="City">City</option>
+                                  <option value="Municipality">Municipality</option>
+                                </select>
+                              </div>
 
-                  {/* City or Municipality */}
-                  <div className="form-group">
-                    <label>Type (City or Municipality)</label>
-                    <select value={lguType} onChange={(e) => setLguType(e.target.value)}>
-                      <option value="City">City</option>
-                      <option value="Municipality">Municipality</option>
-                    </select>
-                  </div>
+                              {/* Province */}
+                              <div className="form-group">
+                                <label>Province*</label>
+                                <input
+                                  type="text"
+                                  value={province}
+                                  onChange={(e) => setProvince(e.target.value)}
+                                  placeholder="Enter Province"
+                                />
+                              </div>
 
-                  {/* Province */}
-                  <div className="form-group">
-                    <label>Province*</label>
-                    <input
-                      type="text"
-                      value={province}
-                      onChange={(e) => setProvince(e.target.value)}
-                      placeholder="Enter Province"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Region*</label>
-                    <input
-                      type="text"
-                      value={region}
-                      onChange={(e) => setRegion(e.target.value)}
-                      placeholder="Enter Region"
-                    />
-                  </div>
+                              {/* Region */}
+                              <div className="form-group">
+                                <label>Region*</label>
+                                <input
+                                  type="text"
+                                  value={region}
+                                  onChange={(e) => setRegion(e.target.value)}
+                                  placeholder="Enter Region"
+                                />
+                              </div>
 
-                  {/* Logo Uploads */}
-                  <div className="form-group">
-                    <label>Logo 1*</label>
-                    <div
-                      className="upload-area"
-                      onDrop={(e) => handleLogoDrop(e, setLogo1)}
-                      onDragOver={(e) => e.preventDefault()}
-                      onClick={() => logo1InputRef.current.click()}
-                    >
-                      <input
-                        type="file"
-                        onChange={(e) => handleLogoUpload(e, setLogo1)}
-                        hidden
-                        ref={logo1InputRef}
-                      />
-                      <p>Drag & drop or click to upload</p>
-                    </div>
-                    {logo1 && (
-                      <div className="upload-preview">
-                        <img src={URL.createObjectURL(logo1)} alt="Logo 1 Preview" />
-                        <button onClick={() => handleRemoveLogo(setLogo1)}>X</button>
+                              {/* Logo Uploads */}
+                              <div className="form-group">
+                                <label>Logo 1*</label>
+                                <div
+                                  className="upload-area"
+                                  onDrop={(e) => handleLogoDrop(e, setLogo1)}
+                                  onDragOver={(e) => e.preventDefault()}
+                                  onClick={() => logo1InputRef.current.click()}
+                                >
+                                  <input
+                                    type="file"
+                                    onChange={(e) => handleLogoUpload(e, setLogo1)}
+                                    hidden
+                                    ref={logo1InputRef}
+                                  />
+                                  <p>Drag & drop or click to upload</p>
+                                </div>
+                                {logo1 && (
+                                  <div className="upload-preview">
+                                    <img src={URL.createObjectURL(logo1)} alt="Logo 1 Preview" />
+                                    <button onClick={() => handleRemoveLogo(setLogo1)}>X</button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Same structure for Logo 2 */}
+                              <div className="form-group">
+                                <label>Logo 2*</label>
+                                <div
+                                  className="upload-area"
+                                  onDrop={(e) => handleLogoDrop(e, setLogo2)}
+                                  onDragOver={(e) => e.preventDefault()}
+                                  onClick={() => logo2InputRef.current.click()}
+                                >
+                                  <input
+                                    type="file"
+                                    onChange={(e) => handleLogoUpload(e, setLogo2)}
+                                    hidden
+                                    ref={logo2InputRef}
+                                  />
+                                  <p>Drag & drop or click to upload</p>
+                                </div>
+                                {logo2 && (
+                                  <div className="upload-preview">
+                                    <img src={URL.createObjectURL(logo2)} alt="Logo 2 Preview" />
+                                    <button onClick={() => handleRemoveLogo(setLogo2)}>X</button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Contact Number */}
+                              <div className="form-group">
+                                <label>Contact Number*</label>
+                                <input
+                                  type="text"
+                                  value={contactNumber}
+                                  onChange={(e) => setContactNumber(e.target.value)}
+                                  placeholder="Enter Contact Number"
+                                  maxLength={7}
+                                />
+                              </div>
+
+                              {/* Email */}
+                              <div className="form-group">
+                                <label>Email Address*</label>
+                                <input
+                                  type="email"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                  placeholder="Enter Email Address"
+                                />
+                              </div>
+
+                              {/* Website */}
+                              <div className="form-group">
+                                <label>Website</label>
+                                <input
+                                  type="text"
+                                  value={website}
+                                  onChange={(e) => setWebsite(e.target.value)}
+                                  placeholder="Enter Website (if any)"
+                                />
+                              </div>
+
+                              <div className="button-group">
+                                <button onClick={handleAddBrgyInfo}>
+                                  {brgyName ? "Update Barangay Info" : "Add Barangay Info"}
+                                </button>
+                                <button onClick={toggleDrawer}>
+                                  {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
+                                </button>
+                                <button onClick={() => handleRedirect('/brgy-official')}>
+                                  Insert Barangay Official
+                                </button>
+                                
+                                
+                              </div>
+                            </div>
+
+                          )
+                          )}
+
+                            {PurokInfoOpen && PurokInfo && (
+                              <div className="purok-info-container view-mode">
+                                <h2>Purok Information</h2>
+                                <div className="purok-info-view">
+                                  <div className="purok-view-fields">
+                                    <div className="purok-view-field">
+                                      <strong>Purok Name:</strong>
+                                      <p>{PurokInfo.purok_name}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Barangay:</strong>
+                                      <p>{PurokInfo.barangay}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Type:</strong>
+                                      <p>{PurokInfo.type}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Province:</strong>
+                                      <p>{PurokInfo.province}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Region:</strong>
+                                      <p>{PurokInfo.region}</p>
+                                    </div>
+                                    <div className="purok-view-field">
+                                      <strong>Purok President:</strong>
+                                      <p>{PurokInfo.purok_president}</p>
+                                    </div>
+                                  </div>
+                                  <button onClick={Lgu}>Back to barangay's information</button>
+                                </div>
+                              </div>
+                            )}
+
+              {hiddenContainerOpen && officialData && (
+                    <div className="brgy-official-container">
+                      <div className="official-info card">
+                        <h3>{officialData.brgyName} Official Information</h3>
+                        <div className="official-view-fields">
+                          <div className="official-view-field">
+                            <strong>Period From:</strong>
+                            <p>{officialData.period_from}</p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>Period To:</strong>
+                            <p>{officialData.period_to}</p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>Barangay Chair:</strong>
+                            <p>{officialData.brgy_chair}</p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>Barangay Secretary:</strong>
+                            <p>{officialData.brgy_sec}</p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>Barangay Treasurer:</strong>
+                            <p>{officialData.bryg_Treas}</p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>Councilors:</strong>
+                            <p>
+                              {officialData.brgy_councilor1}, {officialData.brgy_councilor2}, {officialData.brgy_councilor3}, 
+                              {officialData.brgy_councilor4}, {officialData.brgy_councilor5}, {officialData.brgy_councilor6}, 
+                              {officialData.brgy_councilor7}
+                            </p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>SK Chairs:</strong>
+                            <p>
+                              {officialData.sk_chair1}, {officialData.sk_chair2}
+                            </p>
+                          </div>
+                          <div className="official-view-field">
+                            <strong>SK Members:</strong>
+                            <p>
+                              {officialData.sk_mem1}, {officialData.sk_mem2}, {officialData.sk_mem3}, 
+                              {officialData.sk_mem4}, {officialData.sk_mem5}, {officialData.sk_mem6}, 
+                              {officialData.sk_mem7}
+                            </p>
+                          </div>
+                          <button onClick={Lgu}>Back to barangay's information</button>
+                        </div>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="form-group">
-                    <label>Logo 2*</label>
-                    <div
-                      className="upload-area"
-                      onDrop={(e) => handleLogoDrop(e, setLogo2)}
-                      onDragOver={(e) => e.preventDefault()}
-                      onClick={() => logo2InputRef.current.click()}
-                    >
-                      <input
-                        type="file"
-                        onChange={(e) => handleLogoUpload(e, setLogo2)}
-                        hidden
-                        ref={logo2InputRef}
-                      />
-                      <p>Drag & drop or click to upload</p>
                     </div>
-                    {logo2 && (
-                      <div className="upload-preview">
-                        <img src={URL.createObjectURL(logo2)} alt="Logo 2 Preview" />
-                        <button onClick={() => handleRemoveLogo(setLogo2)}>X</button>
-                      </div>
-                    )}
-                  </div>
+                  )} 
 
-                  {/* Contact Number */}
-                  <div className="form-group">
-                    <label>Contact Number*</label>
-                    <input
-                      type="text"
-                      value={contactNumber}
-                      onChange={(e) => setContactNumber(e.target.value)}
-                      placeholder="Enter Contact Number"
-                      maxLength={7}
-                    />
-                  </div>
-
-                  {/* Email */}
-                  <div className="form-group">
-                    <label>Email Address*</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter Email Address"
-                    />
-                  </div>
-
-                  {/* Website */}
-                  <div className="form-group">
-                    <label>Website</label>
-                    <input
-                      type="text"
-                      value={website}
-                      onChange={(e) => setWebsite(e.target.value)}
-                      placeholder="Enter Website (if any)"
-                    />
-                  </div>
-                </div>
-              )}
-
-            <div className="button-group">
-                <button onClick={handleAddBrgyInfo}>
-                  {brgyName ? "Update Barangay Info" : "Add Barangay Info"}
-                </button>
-                <button onClick={toggleDrawer}>
-                {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
-                
-                  </button>
                   
-               
-              </div>
-              
-                {drawerOpen && (
-                  <div
-                  className={`drawer ${drawerOpen ? 'open' : ''}`}
-                  style={{ zIndex: 1301 }} // Add the z-index here
-                >
-            <img src={mapIcon} alt="Map Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
-            <h2>BARANGAY</h2>
-            <ul>
-              {places.map((place) => (
-                <li key={place.brgyName} onClick={() => handlePlaceClick(place.brgyName)}>
-                  {place.brgyName}
-                </li>
-              ))}
-            </ul>
-            <div className="button-group">
-              <button onClick={resetForm}>Insert Form</button>
-            </div>
-          </div>
-        )}
-          
-               
+                  
       </div>
-      
+                 
+     
+
            
-    </div>
   );
 }
 

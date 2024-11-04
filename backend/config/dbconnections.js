@@ -17,6 +17,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: ""
+    database: "crud"
+
 })
-*/
+module.exports = db */

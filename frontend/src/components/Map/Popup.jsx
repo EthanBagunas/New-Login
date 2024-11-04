@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import TemporaryDrawer from './Drawer';
-import axios from 'axios';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { MarkerContext, LevelContext } from './Map';
 
 
@@ -36,10 +36,26 @@ const PopupBody = styled('div')(
   font-weight: 500;
   font-size: 0.875rem;
   z-index: 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 `,
 );
 
 const usePopupState = () => {
+  const axiosPrivate = useAxiosPrivate();
   const [anchor, setAnchor] = useState(null);
   
   const {poptext, setPoptext} = useContext(LevelContext);
@@ -52,15 +68,15 @@ const usePopupState = () => {
   };
 
 
-const {markers, setMarkers} = useContext(MarkerContext)
+const {devmarkers, setDevMarkers} = useContext(MarkerContext)
 
 const handleMarkers = (positions) => {
-  setMarkers(positions);
+  setDevMarkers(positions);
 };
 
   useEffect(() => {
     if (poptext !== ''){
-        axios.get(`http://localhost:7000/marker/${poptext}`)
+        axiosPrivate.get(`/marker/${poptext}`)
           .then(response => {
             console.log('markers are:', response.data);
             handleMarkers(response.data);

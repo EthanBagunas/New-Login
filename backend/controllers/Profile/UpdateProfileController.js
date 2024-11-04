@@ -13,11 +13,11 @@ const UpdateProf = async (req, res) => {
     console.log('Request Body:', req.body); // Log the incoming request body
 
     // Destructure the request body
-    const { firstName, lastName, position, description, username } = req.body; 
+    const { firstName, lastName, position, description, id } = req.body; 
     const profilePic = req.file; // Get the uploaded file as a buffer
 
     // Validate required fields
-    if (!firstName || !lastName || !username) {
+    if (!firstName || !lastName || !id) {
         return res.status(400).json({ message: 'First name, last name, and username are required' });
     }
 
@@ -36,7 +36,7 @@ const UpdateProf = async (req, res) => {
     const profilePicBuffer = profilePic ? profilePic.buffer : null;
 
     // Execute the SQL query
-    db.query(sql, [firstName, lastName, position, description, profilePicBuffer, username], (err, result) => {
+    db.query(sql, [firstName, lastName, position, description, profilePicBuffer, id], (err, result) => {
         if (err) {
             console.error('Error updating user details:', err);
             return res.status(500).json({ message: 'Error updating user details' });

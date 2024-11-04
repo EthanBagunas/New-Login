@@ -11,7 +11,7 @@ import { Icon } from '@iconify/react';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
-const Dashboard = ({lat, lng, setLat, setLng}) => {
+const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal}) => {
 
   return (
     <div>
@@ -36,17 +36,22 @@ const Dashboard = ({lat, lng, setLat, setLng}) => {
           </Grid>
           <Grid item size={12}>
             <Button>
-              <Icon icon="healthicons:ui-user-profile" style={{ color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }} />
-            </Button>
-          </Grid>
-          <Grid item size={12}>
-            <Button>
-              <Icon icon="mingcute:alert-line" style={{ color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }} />
+              <Icon icon="mingcute:alert-line" style={iconstyle} />
             </Button>
           </Grid>
           <Grid item size={12}>
             <Button>
             <AddLGU lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
+            </Button>
+          </Grid>
+          <Grid item size={12}>
+            <Button>
+                <Icon icon="material-symbols:family-restroom" style={iconstyle} onClick={()=> famModal()}/>
+            </Button>
+          </Grid>
+          <Grid item size={12}>
+            <Button>
+              <Icon icon="healthicons:emergency-post"style={iconstyle} onClick={() => showEvac()}/>
             </Button>
           </Grid>
         </Grid>
@@ -56,6 +61,9 @@ const Dashboard = ({lat, lng, setLat, setLng}) => {
 };
 
 export default Dashboard;
+
+const iconstyle=
+  { color: '#ff3300', width: '30px', height: '30px', margin: '10px 0' }
 
 
 

@@ -72,6 +72,11 @@ const Elected_Form = () => {
     }
   };
 
+  const handleRedirect = (path) => {
+    navigate(path); // Use navigate for redirection
+   
+  };
+  
   return (
     <div className="elected-form-container">
       <Navbar />
@@ -227,7 +232,12 @@ const Elected_Form = () => {
               />
             </div>
           </div>
-          <button type="submit" className="submit-button">Submit</button>
+          <div className="submit-official">
+          <button type="submit" >Submit</button>
+          <button onClick={() => handleRedirect('/lgu-setup')}>
+                                   LGU-Setup
+                                </button>
+         </div>
         </form>
       </div>
       <ToastContainer />
