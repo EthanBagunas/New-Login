@@ -50,6 +50,7 @@ export const MapContainer = (props) => {
   const { auth = { roles: [] } } = useAuth(); // Get user roles from auth
   const [poptext, setPoptext] = useState('');
   
+  
   const [lattitude, SetLattitude]=useState();
   const [longitude, SetLongitude]=useState();
 

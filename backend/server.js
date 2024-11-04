@@ -15,6 +15,10 @@ const credentials = require('./middleware/credentials');
 const updateProfileRouter = require('./routes/authUpdate');
 const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
 const evacRouter= require('./routes/evacuationRoutes');
+
+const updateProfileRouter = require('./routes/authUpdate');
+const mapRouter = require('./routes/mapRoutes'); // Import the MapRoute module
+const evacRouter= require('./routes/evacuationRoutes');
 const userRouter = require('./routes/userRoutes');
 const setdeviceRouter = require('./routes/setdeviceRoutes');
 
