@@ -19,7 +19,6 @@ const grey = {
 };
 
 const PopupBody = styled('div')(({ theme }) => ({
-  width: 'max-content',
   padding: '12px 16px',
   margin: '8px',
   borderRadius: '8px',
@@ -33,15 +32,15 @@ const PopupBody = styled('div')(({ theme }) => ({
   fontSize: '0.875rem',
   zIndex: 1,
   display: 'flex',
-  flexDirection: 'column', // Align children vertically
-  alignItems: 'center', // Center the video and canvas
+  flexDirection: 'column',
+  alignItems: 'center',
 }));
 
-const FeedPopup = () => {
+const FeedPopup = ({ devicename, onClose }) => {
   const { auth } = useAuth();
-  const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isOpenCVLoaded, setIsOpenCVLoaded] = useState(false);
+  const [streamUrl, setStreamUrl] = useState('');
 
   useEffect(() => {
     const loadOpenCV = async () => {
@@ -86,113 +85,115 @@ const FeedPopup = () => {
   }, [auth]);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const baseUrl = 'http://localhost:7000';
+    switch (devicename) {
+      case 'DEV001':
+        setStreamUrl(`${baseUrl}/Camera1/stream.m3u8`);
+        break;
+      case 'DEV002':
+        setStreamUrl(`${baseUrl}/Camera2/stream2.m3u8`);
+        break;
+      default:
+        console.error('Unknown device name');
+        break;
+    }
+  }, [devicename]);
+
+
+  useEffect(() => {
     const canvas = canvasRef.current;
+    const video = document.createElement('video'); // Create video element for streaming
+    const ctx = canvas.getContext('2d');
+    const videoWidth = 640;
+    const videoHeight = 360;
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
 
-    if (video && canvas) {
-      const videoWidth = 640;
-      const videoHeight = 360;
-      video.width = videoWidth;
-      video.height = videoHeight;
-      canvas.width = videoWidth;
-      canvas.height = videoHeight;
+    
 
-      const ctx = canvas.getContext('2d');
+    if (Hls.isSupported() && streamUrl) {
+      const hls = new Hls();
+      hls.loadSource(streamUrl);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl') && streamUrl) {
+      video.src = streamUrl;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+      });
+    }
 
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource('http://localhost:7000/stream.m3u8');
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-        });
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = 'http://localhost:7000/stream.m3u8';
-        video.addEventListener('loadedmetadata', () => {
-          video.play();
-        });
+    const processFrame = () => {
+      if (video.paused || video.ended) return;
+
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      let greenPixels = [];
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const [h, s, v] = rgbToHsv(r, g, b);
+        const lowerGreen = { h: 35, s: 52, v: 72 };
+        const upperGreen = { h: 85, s: 255, v: 255 };
+
+        if (h >= lowerGreen.h && h <= upperGreen.h && s >= lowerGreen.s && s <= upperGreen.s && v >= lowerGreen.v) {
+          const x = (i / 4) % canvas.width;
+          const y = Math.floor((i / 4) / canvas.width);
+          greenPixels.push({ x, y });
+        }
       }
 
-      const processFrame = () => {
-        if (video.paused || video.ended) return;
+      if (greenPixels.length > 0) {
+        const xMin = Math.min(...greenPixels.map(p => p.x));
+        const xMax = Math.max(...greenPixels.map(p => p.x));
+        const yMin = Math.min(...greenPixels.map(p => p.y));
+        const yMax = Math.max(...greenPixels.map(p => p.y));
 
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(xMin, yMin, xMax - xMin, yMax - yMin);
+        ctx.fillStyle = 'red';
+        ctx.font = '16px Arial';
+        ctx.fillText('Color Yellow', xMax + 5, yMin + 20);
+      }
 
-        // Create an empty array to hold green pixels
-        let greenPixels = [];
+      requestAnimationFrame(processFrame);
+    };
 
-        // Loop through the pixel data
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];     // Red channel
-          const g = data[i + 1]; // Green channel
-          const b = data[i + 2]; // Blue channel
+    const rgbToHsv = (r, g, b) => {
+      r /= 255, g /= 255, b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, v = max;
+      const d = max - min;
+      s = max === 0 ? 0 : d / max;
 
-          // Convert RGB to HSV
-          const [h, s, v] = rgbToHsv(r, g, b);
-
-          // Define lower and upper green thresholds in HSV
-          const lowerGreen = { h: 35, s: 52, v: 72 }; // Lower threshold
-          const upperGreen = { h: 85, s: 255, v: 255 }; // Upper threshold
-
-          // Check if the pixel falls within the green range
-          if (
-            h >= lowerGreen.h && h <= upperGreen.h &&
-            s >= lowerGreen.s && s <= upperGreen.s &&
-            v >= lowerGreen.v && v <= upperGreen.v
-          ) {
-            const x = (i / 4) % canvas.width;
-            const y = Math.floor((i / 4) / canvas.width);
-            greenPixels.push({ x, y });
-          }
+      if (max === min) {
+        h = 0;
+      } else {
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
         }
+        h /= 6;
+      }
+      return [h * 360, s * 255, v * 255];
+    };
 
-        if (greenPixels.length > 0) {
-          const xMin = Math.min(...greenPixels.map(p => p.x));
-          const xMax = Math.max(...greenPixels.map(p => p.x));
-          const yMin = Math.min(...greenPixels.map(p => p.y));
-          const yMax = Math.max(...greenPixels.map(p => p.y));
+    video.addEventListener('play', processFrame);
 
-          ctx.strokeStyle = 'red'; // Set bounding box color
-          ctx.lineWidth = 2; // Set line width
-          ctx.strokeRect(xMin, yMin, xMax - xMin, yMax - yMin); // Draw bounding box
-
-          // Draw "Color Green" label beside the bounding box
-          ctx.fillStyle = 'red';
-          ctx.font = '16px Arial';
-          ctx.fillText('Color Yellow', xMax + 5, yMin + 20); // Adjust position as needed
-        }
-
-        requestAnimationFrame(processFrame);
-      };
-
-      // Function to convert RGB to HSV
-      const rgbToHsv = (r, g, b) => {
-        r /= 255, g /= 255, b /= 255;
-        const max = Math.max(r, g, b), min = Math.min(r, g, b);
-        let h, s, v = max;
-
-        const d = max - min;
-        s = max === 0 ? 0 : d / max;
-
-        if (max === min) {
-          h = 0; // Achromatic
-        } else {
-          switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
-          }
-          h /= 6;
-        }
-
-        return [h * 360, s * 255, v * 255]; // Scale h to [0, 360] and s, v to [0, 255]
-      };
-
-      video.addEventListener('play', processFrame);
-    }
-  }, [videoRef, canvasRef, isOpenCVLoaded]);
+    // Cleanup on unmount
+    return () => {
+      video.pause();
+      video.src = '';
+      video.load();
+    };
+  }, [isOpenCVLoaded,streamUrl, canvasRef]);
 
   return (
     <PopupBody>
@@ -202,9 +203,8 @@ const FeedPopup = () => {
       ) : (
         <p>Loading OpenCV...</p>
       )}
-      <video ref={videoRef} controls style={{ width: '500px', marginTop: '8px' }} /><br></br>
-      <h1>WITH FILTER</h1>
-      <canvas ref={canvasRef} style={{ width: '500px', marginTop: '20px', display: 'block' }} />
+      <h1>{devicename}</h1>
+      <canvas ref={canvasRef} style={{ width: '500px', height: 'auto', marginTop: '20px' }} />
     </PopupBody>
   );
 };

@@ -42,9 +42,29 @@ exec('stream.bat', (err, stdout, stderr) => {
     }
 });
 
-app.get('/stream.m3u8', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'stream.m3u8'));
-  });
+
+app.get('/Camera1/stream.m3u8', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Camera1', 'stream.m3u8'));
+});
+
+exec('stream2.bat', (err, stdout, stderr) => {
+    if (err) {
+        console.error(`Error starting stream: ${err.message}`);
+        return;
+    }
+    console.log(`Stream started: ${stdout}`);
+    if (stderr) {
+        console.error(`Stream stderr: ${stderr}`);
+    }
+});
+
+
+
+app.get('/Camera2/stream2.m3u8', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Camera2', 'stream2.m3u8'));
+});
+
+
 
 
 
@@ -60,6 +80,7 @@ app.use('/lgu-date', require('./routes/authLguDate'));
 app.use('/getelectedofficial', require('./routes/authElectedOfficial'));
 
 app.use('/adminIn', require('./routes/authAdmin'));
+app.use('/passChange', require('./routes/authChangePass'));
 
 
 app.use('/insertBrgy', require('./routes/autInsertbrgy'));

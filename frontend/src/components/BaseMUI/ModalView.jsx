@@ -1,19 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { Button, Modal, Box } from "@mui/material";
+import FeedPopup from '../Map/FeedPopup'; // Adjust the import path as necessary
 
 class ModalView extends React.Component {
+    
     constructor(props) {
         super(props);
-        this.state= {
-            open:props.open || false,
-        }
+        this.state = {
+            open: props.open || false,
+        };
     }
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
         this.props.onClose();
     }
-    updateTable= (data)=>{
+
+    updateTable = (data) => {
         this.setState({ TableData: data });
     }
 
@@ -23,7 +26,6 @@ class ModalView extends React.Component {
                 ...prevState.FormData,
                 [id]: value,
             },
-            
         }));
     }
     
@@ -45,40 +47,55 @@ class ModalView extends React.Component {
     }
 }
 
-class DevModal extends ModalView{
+class DevModal extends ModalView {
     constructor(props) {
         super(props);
         this.state= {
             devicename: props.devicename,
-        }
+            showFeedPopup: false, // Manage the feed popup visibility in state
+        };
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.open !== this.props.open) {
             this.setState({ 
-                open: this.props.open ,
+                open: this.props.open,
                 devicename: this.props.devicename,
             });
         }
     }
 
-    CamView= ()=> {
-        return(
+    toggleFeedPopup = () => {
+        this.setState(prevState => ({ showFeedPopup: !prevState.showFeedPopup }));
+    }
+
+    CamView = () => {
+        return (
             <div>
                 <p>{this.state.devicename}</p>
+                <Button onClick={this.toggleFeedPopup}>
+                    {this.state.showFeedPopup ? "Close Video Feed" : "Open Video Feed"}
+                </Button>
+                {this.state.showFeedPopup && (
+                     <FeedPopup 
+                    devicename={this.state.devicename} // Pass devicename as a prop
+                    onClose={this.toggleFeedPopup} 
+                />
+                )}
             </div>
-        );_
+        );
     }
-    render () {
-        return this.BaseModal({content: <this.CamView/>, openModal: this.state.open})
+
+    render() {
+        return this.BaseModal({ content: <this.CamView />, openModal: this.state.open });
     }
 }
 
 export default ModalView;
-export {DevModal}
+export { DevModal };
 
 const style = {
-    borderRadius:4,
+    borderRadius: 4,
     position: 'absolute',
     top: '50%',
     left: '50%',
