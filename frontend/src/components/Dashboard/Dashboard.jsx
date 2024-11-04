@@ -10,7 +10,7 @@ import { Icon } from '@iconify/react';
 
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal, ViewList}) => {
+const Dashboard = ({DashPop, showEvac, famModal, ViewList}) => {
 
   return (
     <div>
@@ -31,7 +31,7 @@ const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal, ViewList}) => 
         }}} >
         <Grid container spacing={2} style={{ position: 'relative', top: '50%', transform: 'translateY(-50%)' }}>
           <Grid item size={12}>
-            <AddMarkers lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
+            <AddMarkers DashPop={DashPop}/> 
           </Grid>
           <Grid item size={12}>
             <Button>
@@ -40,7 +40,7 @@ const Dashboard = ({lat, lng, setLat, setLng, showEvac, famModal, ViewList}) => 
           </Grid>
           <Grid item size={12}>
             <Button>
-            <AddLGU lat={lat} lng= {lng} setLat={setLat}   setLng={setLng} /> 
+            <AddLGU/> 
             </Button>
           </Grid>
           <Grid item size={12}>

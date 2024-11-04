@@ -42,7 +42,10 @@ module.exports= {GetWaterLevel};
 function Insert2Latest(message) {
 
   const [devid, waterlvl] = message.toString().split(',');
-  const currentDateTime = new Date().toISOString().replace('T', ' ').replace(/\..+/, '');
+  const currentDateTime = new Date();
+  const utcOffset = 8 * 60; // UTC+8 in minutes
+  const localDateTime = new Date(currentDateTime.getTime() + (utcOffset * 60 * 1000));
+  const formattedDateTime = localDateTime.toISOString().replace('T', ' ').replace(/..+/, '');
 
   // Start a transaction
 
@@ -86,7 +89,7 @@ function Insert2Latest(message) {
                           INSERT INTO latest (DEVICE_ID, CAP_DATETIME, DIST_M)
                           VALUES (?, ?, ?)
                       `;
-                      db.query(insertSql, [devid, currentDateTime, waterlvl], (insertError) => {
+                      db.query(insertSql, [devid, formattedDateTime, waterlvl], (insertError) => {
                           if (insertError) {
                               return db.rollback(() => {
                                   console.error('Error inserting into latest:', insertError);
@@ -110,7 +113,7 @@ function Insert2Latest(message) {
                   INSERT INTO latest (DEVICE_ID, CAP_DATETIME, DIST_M)
                   VALUES (?, ?, ?)
               `;
-              db.query(insertSql, [devid, currentDateTime, waterlvl], (insertError) => {
+              db.query(insertSql, [devid, formattedDateTime, waterlvl], (insertError) => {
                   if (insertError) {
                       return db.rollback(() => {
                           console.error('Error inserting into latest:', insertError);

@@ -173,14 +173,16 @@ export const MapContainer = (props) => {
               </InfoWindow>
             )}          
             <NewMarkerContext.Provider value={{latitude, longitude, SetLatitude, SetLongitude}}>
-              {hasRole1994 && <Dashboard showEvac={handleEvacMarkers} famModal={() => handleModal('fam')} ViewList={()=> handleModal('viewlist')}/>}
+              {hasRole1994 && <Dashboard showEvac={handleEvacMarkers} famModal={() => handleModal('fam')} ViewList={()=> handleModal('viewlist')} DashPop={handleDashPop}/>}
             </NewMarkerContext.Provider>
-                <Marker
-                  position={{ lat: latitude, lng: longitude }}
-                  icon={{
-                    url: markerIcons['High'],
-                    scaledSize: new window.google.maps.Size(30, 30)
-                  }}/>
+            {dashpop && (
+              <Marker
+              position={{ lat: latitude, lng: longitude }}
+              icon={{
+                url: markerIcons['High'],
+                scaledSize: new window.google.maps.Size(30, 30)
+              }}/>
+            )}
           </Map>
       </div>
     );

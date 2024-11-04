@@ -5,7 +5,7 @@ import { FormControl, FormLabel, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
-const AddLGU = ({ lat, lng, setLat, setLng }) => {
+const AddLGU = () => {
   const navigate = useNavigate(); // Hook for navigation
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -19,8 +19,6 @@ const AddLGU = ({ lat, lng, setLat, setLng }) => {
   // Function to handle page navigation
   const handleRedirect = (path) => {
     navigate(path); // Use navigate for redirection
-    setLat(null);
-    setLng(null);
   };
 
   return (

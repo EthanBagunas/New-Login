@@ -9,12 +9,12 @@ import AddMarkerPopupContent from "./AddMarkerPopupContent";
 
 
 
-const AddMarkers = ({dashpop}) => {
+const AddMarkers = ({DashPop}) => {
   const [anchor, setAnchor] = React.useState(null);
   
     const handleAnchor = (event) => {
       setAnchor(anchor ? null : event.currentTarget);
-      dashpop;
+      DashPop();
     };
   
     const open = Boolean(anchor);
