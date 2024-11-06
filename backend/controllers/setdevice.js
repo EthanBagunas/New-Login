@@ -9,6 +9,12 @@ const SetDevices = (req, res) => {
             console.error(err);
             return res.status(500).json({ error: err });
         }
+        if (results.affectedRows === 1) {
+            console.log("New device inserted");
+            InitLevel(deviceName); // Call InitLevel function here
+        } else {
+            console.log("Device details updated");
+        }
         return res.json(results);
     });
 }
@@ -17,8 +23,8 @@ const SetDevices = (req, res) => {
 
 const InitLevel= (devname)=>{
     const curr_date = new Date().toISOString().replace('T', ' ').replace(/\..+/, '');
-    const sql= 'INSERT into latest (DEVICE_ID, CAP_DATETIME, DIST_M) VALUES (?, ?, ?) WHERE EXISTS (SELECT 1 FROM settings WHERE DEVICE_NAME = ?);'
-    con.query(sql,[devname, curr_date, 0, devname], (err) => {
+    const sql= 'INSERT into latest (DEVICE_ID, CAP_DATETIME, DIST_M) VALUES (?, ?, ?);'
+    con.query(sql,[devname, curr_date, 0], (err) => {
         if (err) {
             console.error(err);
         }
