@@ -23,7 +23,7 @@ const AddMarkers = ({DashPop}) => {
     return (
       <div>
         <Button onClick={handleAnchor} >
-          <Icon icon="mdi:map-marker-add-outline" style={{ color: '#ff3300', width: '40px', height: '40px' }} />
+          <Icon icon="mdi:map-marker-add-outline" style={{ color: '#e64833', width: '40px', height: '40px' }} />
         </Button>
         <BasePopup id={id} open={open} anchor={anchor} placement="right-end">
           <PopupBody> 

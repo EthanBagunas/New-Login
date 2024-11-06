@@ -32,17 +32,28 @@ export default function CustomizedTab({label1, label2, label3, tab1, tab2, tab3}
   );
 }
 
-const redPalette = {
-  50: '#FFE7E6', // Very light red
-  100: '#FFB3B1', // Light red
-  200: '#FF7F7C', // Lighter red
-  300: '#FF4C49', // Medium-light red
-  400: '#FF3330', // Standard red (500)
-  500: '#FF3330', // Same as 400 for consistency
-  600: '#E02926', // Darker red
-  700: '#C02422', // Dark red
-  800: '#A0201E', // Very dark red  
-  900: '#7C161A', // Deepest red
+const yellowPalette = {
+
+  50: '#FFF9E6', // Very light yellow
+
+  100: '#FFE7B3', // Light yellow
+
+  200: '#FFDB7F', // Lighter yellow
+
+  300: '#FFCF4C', // Medium-light yellow
+
+  400: '#e64833', // Standard yellow (500)
+
+  500: '#e64833', // Same as 400 for consistency
+
+  600: '#E0A300', // Darker yellow
+
+  700: '#C09C00', // Dark yellow
+
+  800: '#A08C00', // Very dark yellow  
+
+  900: '#7C6A00', // Deepest yellow
+
 };
 
 function useIsDarkMode() {
@@ -58,7 +69,7 @@ function Styles() {
       {`
       .CustomTabsList {
         min-width: 400px;
-        background-color: ${redPalette[500]};
+        background-color: ${yellowPalette[500]};
         border-radius: 12px;
         margin-bottom: 16px;
         display: flex;
@@ -88,17 +99,17 @@ function Styles() {
       }
 
       .CustomTab:hover {
-        background-color: ${redPalette[400]};
+        background-color: ${yellowPalette[400]};
       }
 
       .CustomTab:focus {
         color: #fff;
-        outline: 3px solid ${redPalette[200]};
+        outline: 3px solid ${yellowPalette[200]};
       }
 
       .CustomTab.${tabClasses.selected} {
         background-color: #fff;
-        color: ${redPalette[600]};
+        color: ${yellowPalette[600]};
       }
 
       .CustomTab.${buttonClasses.disabled} {

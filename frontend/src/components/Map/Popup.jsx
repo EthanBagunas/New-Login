@@ -1,23 +1,19 @@
+
 import React, {useState, useEffect, useContext} from 'react';
-import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
+import { Unstable_Popup as BasePopup, PopupContext } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import TemporaryDrawer from './Drawer';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { MarkerContext, LevelContext } from './Map';
+import Box from '@mui/material/Box';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import {Button, Paper} from '@mui/material/';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Icon } from '@iconify/react';
 
 
-const grey = {
-  50: '#F3F6F9',
-  100: '#E5EAF2',
-  200: '#DAE2ED',
-  300: '#C7D0DD',
-  400: '#B0B8C4',
-  500: '#9DA8B7',
-  600: '#6B7A90',
-  700: '#434D5B',
-  800: '#303740',
-  900: '#1C2025',
-};
 
 const PopupBody = styled('div')(
   ({ theme }) => `
@@ -25,8 +21,7 @@ const PopupBody = styled('div')(
   padding: 12px 16px;
   margin: 8px;
   border-radius: 8px;
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-  background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  background-color:transparent
   box-shadow: ${
     theme.palette.mode === 'dark'
       ? `0px 4px 8px rgb(0 0 0 / 0.7)`
@@ -36,6 +31,7 @@ const PopupBody = styled('div')(
   font-weight: 500;
   font-size: 0.875rem;
   z-index: 1;
+
 `,
 );
 
@@ -81,12 +77,92 @@ const handleMarkers = (positions) => {
     return (
       <BasePopup id={id} open={open} anchor={anchor} >
         <TemporaryDrawer open={drawerOpen} level={poptext} onClose={toggleDrawer(false)}/>
-        <PopupBody onClick={toggleDrawer(true)}>{poptext}</PopupBody>
-    </BasePopup>
+        <PopupBody onClick={toggleDrawer(true)}>
+          <PopupContent/>
+        </PopupBody>
+      </BasePopup>
     );
   };
   
   return {handleClick, Popup};
 };
 
+
+
+
 export default usePopupState;
+export {cardinfo, PopupContent};
+
+const themeColors = {
+  Normal: "#04dc04", // Green
+  Low: "#fcfc04", // Yellow
+  Medium: "#ffa500", // Orange
+  High: "#fc3c04", // Red
+  Extreme: "#e404fc" // Purple
+};
+
+const cardinfo= {
+  "Normal": {
+    main: "ALERT LEVEL 1",
+    warning: "BE AWARE: BAD WEATHER CONDITION",
+    level:"Water Level Under 5.0m",
+  },
+  "Low":{
+    main: "ALERT LEVEL 2",
+    warning: "BE PREPARED: FOR IMMINENT FLOODING",
+    level:"Water Level 6.0m to 10.0m ",
+  },
+  "Medium":{
+    main: "ALERT LEVEL 3",
+    warning: "BE ALERT: PREPARE TO EVACUATE",
+    level:"Water Level 11.0m to 15.0m ",
+  },
+  "High":{
+    main: "ALERT LEVEL 4",
+    warning: "TAKE ACTION: EVACUATE NOW",
+    level:"Water Level 16.0m to 20.0m ",
+  },
+  "Extreme":{
+    main: "ALERT LEVEL 5",
+    warning: "WARNING: SEVERE FLOODING",
+    level:"Water Level 21.0m to 50.0m ",
+  },
+}
+
+
+const PopupContent= () => {
+
+  const {poptext} = useContext(LevelContext);
+  return(
+<Box sx={{ml:'30px', display:'flex', marginTop: 2,  border: '2px solid grey', borderRadius: 4, boxShadow: 7 , borderColor: themeColors[poptext],  backgroundColor:'#FFFFFF'}} height={300} width={300} my={4} display="flex" alignItems="center" gap={2} p={2}>
+    <React.Fragment>
+          <CardContent style={{color: themeColors[poptext]}}>
+          <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <Icon icon= "material-symbols:flood-outline-rounded" style={{height: '70px', width: '70px' , color: "inherit"}}/>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="h3" sx={{ fontSize: 30, top: '70px' }} color="text.primary" gutterBottom>
+                  {cardinfo[poptext].main}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant= "subtitle2" color="text.secondary">
+                  {cardinfo[poptext].warning}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h5" component="div">
+                  {cardinfo[poptext].level}
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+          <CardActions>
+            
+          </CardActions>
+      </React.Fragment>
+      </Box>
+   
+  )
+}

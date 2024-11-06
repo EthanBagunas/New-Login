@@ -68,7 +68,7 @@ export default Dashboard;
 
 const iconstyle=
 {
-  color: '#ff3300', width: '30px', 
+  color: '#e64833', width: '30px', 
   height: '30px', margin: '10px 0' 
 }
 

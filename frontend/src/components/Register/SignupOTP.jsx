@@ -87,7 +87,7 @@ const RegistrationOtp = () => {
             <br />
             <Grid container justifyContent="center">
             
-            {showTimer && <OtpTimer seconds={10} resend={() => handleResend(true)} textColor= {"#000000"} background={"#00ccff"} text="Resending OTP in ..." />}
+            {showTimer && <OtpTimer seconds={10} resend={() => handleResend(true)} textColor= {"#000000"} background={"#33D1E6"} text="Resending OTP in ..." />}
             </Grid>
             
         </div>
@@ -102,7 +102,7 @@ export default RegistrationOtp;
 /*
 <Button
             style={{ textAlign: 'center' }}
-            backgroundColor={"#00ccff"}
+            backgroundColor={"#33D1E6"}
             onClick={() => validateOtp(otp, formData, navigate)}
             >
             Submit

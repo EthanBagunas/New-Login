@@ -26,7 +26,7 @@ const AddLGU = () => {
       <Button onClick={handleAnchor}>
         <Icon 
           icon="ic:round-settings" 
-          style={{ color: '#ff3300', width: '30px', height: '30px', margin: '1px', marginRight: '16px' }} 
+          style={{ color: '#e64833', width: '30px', height: '30px', margin: '1px', marginRight: '16px' }} 
         />
       </Button>
 

@@ -99,7 +99,7 @@ export const MapContainer = (props) => {
   
   
 
-  const hasRole1994 = auth.roles.includes('1994');
+  const hasRole1994 = auth.roles.includes('1994') || auth.roles.includes('1990') ;
   return (
       <div>
         <Navbar/> 
