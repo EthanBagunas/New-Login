@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../../../api/axios';
 import { ToastContainer, toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
 import "../styles/AddPurokInfo.css"; 
 import Navbar from '../../Navbar';
 import useAuth from '../../../hooks/useAuth'; 
-import successImage from '../styles/success.png'; // Import your success image
-import errorImage from '../styles/error.png'; // Import your error image
-import Backdrop from '@mui/material/Backdrop'; // Import Backdrop
+import successImage from '../styles/success.png';
+import errorImage from '../styles/error.png';
+import Backdrop from '@mui/material/Backdrop';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { styled } from '@mui/system';
 
 function AddPurokInfo() {
   const { auth } = useAuth(); 
   const navigate = useNavigate(); 
+  const location = useLocation();
+  const { brgyName: initialBrgyName } = location.state || {}; 
+  const [brgyName, setBrgyName] = useState(initialBrgyName || "");
+  const [isReadOnly, setIsReadOnly] = useState(!!initialBrgyName); 
+
   const [purokName, setPurokName] = useState("");
-  const [barangay, setBarangay] = useState("");
-  const [type, setType] = useState("Residential");
+  const [type, setType] = useState("Residential"); 
   const [province, setProvince] = useState("");
   const [region, setRegion] = useState("");
   const [purokPresident, setPurokPresident] = useState("");
   const [successMessage, setSuccessMessage] = useState(false); 
-  const [brgy, setBrgy] = useState([]); // State for barangay data
-  const [purok, setPurok] = useState([]); // State for barangay data
-  const [informationViewing, setInformationViewing] = useState(false); // State for backdrop visibility
+  const [brgy, setBrgy] = useState([]);
+  const [purok, setPurok] = useState([]);
+  const [informationViewing, setInformationViewing] = useState(false); 
+  const [showForm, setShowForm] = useState(true); // Control form visibility
 
-  // Fetch barangay names
   useEffect(() => {
     const fetchBarangays = async () => {
       try {
@@ -33,11 +39,9 @@ function AddPurokInfo() {
             'Authorization': `Bearer ${auth?.accessToken}`, 
           }
         });
-        console.log("DATA:", response.data);
         
-        // Create a Set to filter unique barangay names
         const uniqueBarangays = new Set(response.data.map(item => item.barangay));
-        setBrgy([...uniqueBarangays]); // Convert Set back to an array and set the state
+        setBrgy([...uniqueBarangays]); 
       } catch (error) {
         console.error("Error fetching barangays:", error);
       }
@@ -46,33 +50,12 @@ function AddPurokInfo() {
     fetchBarangays();
   }, [auth]);
 
-  useEffect(() => {
-    const fetchPurok = async () => {
-      try {
-        const response = await axios.get('/show-purok', {
-          headers: {
-            'Authorization': `Bearer ${auth?.accessToken}`, 
-          }
-        });
-        console.log("DATA:", response.data);
-        
-        // Create a Set to filter unique barangay names
-       
-        setPurok([response.data]); // Convert Set back to an array and set the state
-      } catch (error) {
-        console.error("Error fetching barangays:", error);
-      }
-    };
-
-    fetchPurok();
-  }, [auth]);
-
   const showBarangay = () => {
-    setInformationViewing(true); // Show the backdrop
+    setInformationViewing(true);
   };
 
   const validateInputs = () => {
-    if (!purokName || !barangay || !province || !region || !purokPresident) {
+    if (!purokName || !brgyName || !province || !region || !purokPresident) {
       toast.error(<CustomToast message="All fields are required." image={errorImage} />);
       return false;
     }
@@ -93,7 +76,7 @@ function AddPurokInfo() {
 
     const formData = {
       purokName,
-      barangay,
+      brgyName,
       type,
       province,
       region,
@@ -107,7 +90,6 @@ function AddPurokInfo() {
           'Authorization': `Bearer ${auth?.accessToken}`, 
         }
       });
-      console.log("Response:", response.data);
       setSuccessMessage(true);
       toast.success(<CustomToast message="Purok Information Added Successfully!" image={successImage} />);
       setTimeout(() => {
@@ -120,9 +102,33 @@ function AddPurokInfo() {
   };
 
   const ClearDate = () => {
-    console.log("Showing LGU data...");
-    setInformationViewing(false); // Close the backdrop
+    setInformationViewing(false);
   };
+  const HandlebackClick = () => {
+    setShowForm(true); // Hide form when place is clicked
+  };
+ 
+
+  const handlePlaceClick = async (brgy) => {
+    try {
+      const response = await axios.get(`/purok/${brgy}`, {
+        headers: {
+          'Authorization': `Bearer ${auth?.accessToken}`,
+        },
+      });
+      setPurok(response.data);
+      setShowForm(false); // Hide form when place is clicked
+    } catch (error) {
+      console.error("Error fetching barangay info:", error);
+      toast.error(<CustomToast message="Failed to fetch Barangay info. Please try again." image={errorImage} />);
+    }
+  };
+
+  const StyledTableCell = styled(TableCell)({
+    fontWeight: 'bold',
+    backgroundColor: '#f0f0f0',
+    color: '#333',
+  });
 
   return (
     <div>
@@ -130,7 +136,7 @@ function AddPurokInfo() {
       <div className="add-purok-info-container">
         <h2>Add Purok Information</h2>
 
-        <ToastContainer /> 
+        <ToastContainer />
 
         {successMessage && (
           <div className="popup-message">
@@ -138,117 +144,130 @@ function AddPurokInfo() {
           </div>
         )}
 
-        <div className="form-grid">
-          {/* Purok Name */}
-          <div className="form-group">
-            <label>Purok Name*</label>
-            <input
-              type="text"
-              value={purokName}
-              onChange={(e) => setPurokName(e.target.value)}
-              placeholder="Enter Purok Name"
-            />
-          </div>
-
-          {/* Barangay */}
-          <div className="form-group">
-            <label>Barangay*</label>
-            <input
-              type="text"
-              value={barangay}
-              onChange={(e) => setBarangay(e.target.value)}
-              placeholder="Enter Barangay"
-            />
-          </div>
-
-          {/* Type */}
-          <div className="form-group">
-            <label>Type (Residential or Commercial)</label>
-            <select value={type} onChange={(e) => setType(e.target.value)}>
-              <option value="Residential">Residential</option>
-              <option value="Commercial">Commercial</option>
-            </select>
-          </div>
-
-          {/* Province */}
-          <div className="form-group">
-            <label>Province*</label>
-            <input
-              type="text"
-              value={province}
-              onChange={(e) => setProvince(e.target.value)}
-              placeholder="Enter Province"
-            />
-          </div>
-
-          {/* Region */}
-          <div className="form-group">
-            <label>Region*</label>
-            <input
-              type="text"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              placeholder="Enter Region"
-            />
-          </div>
-
-          {/* Purok President */}
-          <div className="form-group">
-            <label>Purok President*</label>
-            <input
-              type="text"
-              value={purokPresident}
-              onChange={(e) => setPurokPresident(e.target.value)}
-              placeholder="Enter Purok President's Name"
-            />
-          </div>
-        </div>
-
-        <div className="button-group">
+        {showForm && (
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Purok Name*</label>
+              <input
+                type="text"
+                value={purokName}
+                onChange={(e) => setPurokName(e.target.value)}
+                placeholder="Enter Purok Name"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="barangayName">Barangay Name</label>
+              <input
+                type="text"
+                id="BarangayName"
+                value={brgyName}
+                onChange={(e) => {
+                  setBrgyName(e.target.value);
+                  if (!initialBrgyName) setIsReadOnly(false);
+                }}
+                required
+                readOnly={isReadOnly}
+              />
+            </div>
+            <div className="form-group">
+              <label>Type</label>
+              <select value={type} onChange={(e) => setType(e.target.value)}>
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Province*</label>
+              <input
+                type="text"
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
+                placeholder="Enter Province"
+              />
+            </div>
+            <div className="form-group">
+              <label>Region*</label>
+              <input
+                type="text"
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                placeholder="Enter Region"
+              />
+            </div>
+            <div className="form-group">
+              <label>Purok President*</label>
+              <input
+                type="text"
+                value={purokPresident}
+                onChange={(e) => setPurokPresident(e.target.value)}
+                placeholder="Enter Purok President's Name"
+              />
+            </div>
+            <div className="button-group">
           <button onClick={handleAddPurokInfo}>Add Purok Information</button>
-          <button onClick={showBarangay}>Show Barangay</button>
-        </div>
-
-        {/* Backdrop for showing barangay information */}
+          <button onClick={() => setInformationViewing(true)}>Show Barangay</button>
+        </div>    
+          </div>
+    
+        )}
+        
         <Backdrop
-          sx={{ 
-            color: '#fff', 
+          sx={{
+            color: '#fff',
             zIndex: (theme) => theme.zIndex.drawer + 1,
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
           }}
-          open={informationViewing} // Show when information viewing is enabled
-          onClick={() => setInformationViewing(false)} // Close when clicking on the backdrop
+          open={informationViewing}
+          onClick={() => setInformationViewing(false)}
         >
-          {informationViewing && ( 
-            <div
-              className="drawer-content"
-              style={{
-                backgroundColor: '#fff',
-                padding: '20px',
-                borderRadius: '10px',
-                textAlign: 'center',
-                zIndex: 1301,
-                color: 'black'  
-              }}
-            >
-              <h2>Available Barangays</h2> 
+          {informationViewing && (
+            <div className="drawer-content" style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', color: 'black' }}>
+              <h2>Available Barangays</h2>
               <ul>
-                {brgy.map((brgy) => ( 
-                  <li
-                    key={brgy} // Use the barangay name directly as the key
-                    className="date-item" // Add this class for styling
-                  >
-                    {brgy} {/* Display the unique barangay name */}
+                {brgy.map((brgy) => (
+                  <li key={brgy} onClick={() => handlePlaceClick(brgy)} className="date-item">
+                    {brgy}
                   </li>
                 ))}
               </ul>
-              <button onClick={ClearDate}>Show LGU Data</button>
+              <button onClick={() => setInformationViewing(false)}>Close</button>
             </div>
           )}
         </Backdrop>
+
+        {!showForm && (
+          <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Purok Name</StyledTableCell>
+                  <StyledTableCell>Type</StyledTableCell>
+                  <StyledTableCell>Province</StyledTableCell>
+                  <StyledTableCell>Region</StyledTableCell>
+                  <StyledTableCell>Purok President</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {purok.map((purokItem, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{purokItem.purok_name}</TableCell>
+                    <TableCell>{purokItem.type}</TableCell>
+                    <TableCell>{purokItem.province}</TableCell>
+                    <TableCell>{purokItem.region}</TableCell>
+                    <TableCell>{purokItem.purok_president}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <br></br>
+              <button onClick={ HandlebackClick}>Back to insert</button>
+            </Table>
+         
+          </TableContainer>
+        )}
+       
       </div>
     </div>
   );

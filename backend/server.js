@@ -93,7 +93,10 @@ app.use('/getbrgyOfficial', require('./routes/authshowbrgyOfficial'));
 
 app.use('/insertPurok', require('./routes/authInsertPurok'));
 app.use('/show-purok', require('./routes/authPurokname'));
+app.use('/show-brgy', require('./routes/authShowBrgyPurok'));
 app.use('/purok-info', require('./routes/authPurokInfo'));
+app.use('/purok', require('./routes/authShowPurok'));
+
 app.use('/auth', require('./routes/auth'));
 
 app.use(mapRouter);

@@ -1,28 +1,33 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import AuthContext from './context/AuthProvider'; // Adjust path as needed
+import { useLocation, useNavigate } from 'react-router-dom';
+import AuthContext from './context/AuthProvider';
 import axios from './api/axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './login.css'; // Import the same CSS for styling
+import './login.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PWD_RESET = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PHONE_REGEX = /^[0-9]{10,15}$/;
 const Reset_URL = '/reset';
 
 function Reset() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { auth } = useContext(AuthContext);
-    const emailFromState = location.state?.email || auth.email; // Use email from state or context
+    const emailFromState = location.state?.email || auth.email;
     const userRef = useRef(null);
     const errRef = useRef(null);
 
-    const [pwd, setPwd] = useState('');
-    const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
+    const hasRole1994 = auth.roles.includes('1994');
 
+    const [pwd, setPwd] = useState('');
+    const [number, setNumber] = useState('');
+    const [validPwd, setValidPwd] = useState(false);
+    const [validNumber, setValidNumber] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
-
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -38,22 +43,27 @@ function Reset() {
     }, [pwd, matchPwd]);
 
     useEffect(() => {
+        setValidNumber(PHONE_REGEX.test(number));
         setErrMsg('');
-    }, [pwd, matchPwd]);
+    }, [pwd, matchPwd, number]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const isValidPwd = PWD_RESET.test(pwd);
-        if (!isValidPwd) {
-            setErrMsg("Invalid Entry");
+        const isValidPhone = hasRole1994 ? PHONE_REGEX.test(number) : true;
+
+        if (!isValidPwd || !isValidPhone) {
+            setErrMsg("Invalid entry");
             return;
         }
-    
+
         try {
             const response = await axios.post(
                 Reset_URL,
-                { email: emailFromState, password: pwd },
+                hasRole1994
+                    ? { email: emailFromState, password: pwd, mobile: number }
+                    : { email: emailFromState, password: pwd },
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
@@ -62,6 +72,14 @@ function Reset() {
             setSuccess(true);
             setPwd('');
             setMatchPwd('');
+            setNumber('');
+
+            toast.success("Password reset successfully!", {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 5000,
+            });
+
+            navigate('/home');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -79,7 +97,7 @@ function Reset() {
             }
         }
     };
-    
+
     return (
         <section className="container">
             <div className="login-container">
@@ -94,11 +112,11 @@ function Reset() {
                                 className={errMsg ? 'alert alert-danger' : 'd-none'}
                                 aria-live="assertive"
                             >
-                                {errMsg}    
+                                {errMsg}
                             </p>
                             <p className="instructions">
-                                       Must include 1 special char, 1 number, & 1 capital letter.
-                             </p>
+                                Must include 1 special char, 1 number, & 1 capital letter.
+                            </p>
                             <div className="mb-3">
                                 <label htmlFor="password">Password</label>
                                 <input
@@ -130,7 +148,31 @@ function Reset() {
                                     Must match the first password input field.
                                 </p>
                             </div>
-                            <button type="submit" disabled={!validPwd || !validMatch} className="btn btn-success w-100">
+                            {hasRole1994 && (
+                                <div className="mb-3">
+                                    <label htmlFor="number">Mobile Number</label>
+                                    <input
+                                        type="tel"
+                                        id="number"
+                                        placeholder="Enter a mobile Number"
+                                        className="form-control"
+                                        onChange={(e) => setNumber(e.target.value)}
+                                        value={number}
+                                        required
+                                        aria-invalid={validNumber ? "false" : "true"}
+                                        ref={userRef}
+                                        pattern="[0-9]{10,15}"
+                                    />
+                                    <p id="numbernote" className={validNumber ? "offscreen" : "instructions"}>
+                                        Mobile number should contain 11 digits.
+                                    </p>
+                                </div>
+                            )}
+                            <button
+                                type="submit"
+                                disabled={!validPwd || !validMatch || (hasRole1994 && !validNumber)}
+                                className="btn btn-success w-100"
+                            >
                                 Reset Password
                             </button>
                         </form>

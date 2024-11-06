@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Barangay_Form.css'; // Keep your existing CSS file
 import axios from '../../../api/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../../Navbar';
@@ -11,9 +11,15 @@ import useAuth from '../../../hooks/useAuth';
 
 const Barangay_Form = () => {
   const { auth } = useAuth(); 
+  const location = useLocation();
+  const { brgyName: initialBrgyName } = location.state || {};  
+  const [brgyName, setBrgyName] = useState(initialBrgyName || "");  
+
+  
+  
   const navigate = useNavigate(); 
   const [periodFrom, setPeriodFrom] = useState('');
-  const [brgyName, setBrgyName] = useState("");
+
   const [periodTo, setPeriodTo] = useState('');
   const [barangayChairman, setBarangayChairman] = useState('');
   const [barangaySecretary, setBarangaySecretary] = useState('');
@@ -126,10 +132,12 @@ const Barangay_Form = () => {
                 type="text"
                 id="BarangayName"
                 value={brgyName}
-                onChange={(e) => setBrgyName(e.target.value)}
+                onChange={(e) => setBrgyName(e.target.value)}  // You may keep this, but won't be used if input is readonly
                 required
+                readOnly // Locks the input, prevents editing
               />
             </div>
+
             <div className="form-group">
               <label htmlFor="periodTo">Period Covered To:</label>
               <input

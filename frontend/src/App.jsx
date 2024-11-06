@@ -63,7 +63,7 @@ function App() {
             <Route path="reset" element={<Reset />} />
             
             
-            <Route path="unauthorized" element={<Unauthorized />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
             <Route element={<PersistLogin />}>
             <Route element={<RequireNoAuth />}>
               

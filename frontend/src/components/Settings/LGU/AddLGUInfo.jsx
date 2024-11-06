@@ -456,7 +456,7 @@ const handleRedirect = (path) => {
                             <div className="button-container">
                               <button onClick={handleEditLGUInfo}>Edit LGU Info</button>
                               <button onClick={toggleDateViewing}>
-                                {dateViewing ? "Hide Dates" : "Show Dates"}
+                                {dateViewing ? "Hide Dates" : "View Officials for Selected Date"}
                               </button>
                               <button onClick={() => handleRedirect('/elected-official')}>
                                    Insert LGU Official
@@ -495,7 +495,7 @@ const handleRedirect = (path) => {
                                         <div className="official-view-field">
                                         <strong>Councilors:</strong>
                                         <p>
-                                          {officialData.councilor_1}, {officialData.councilor_2}, {officialData.councilor_3}, {officialData.councilor_4}, {officialData.councilor_5}, {officialData.councilor_6}
+                                          {officialData.councilor_1}<br></br> {officialData.councilor_2}<br></br> {officialData.councilor_3}<br></br> {officialData.councilor_4}<br></br> {officialData.councilor_5}<br></br> {officialData.councilor_6}<br></br> {officialData.councilor_7}<br></br>
                                         </p>
                                         </div>
                                         <div className="official-view-field">

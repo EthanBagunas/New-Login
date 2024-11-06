@@ -323,8 +323,8 @@ const fetchPurokSetup = async (place) => {
     setHiddenContainerOpen(false);
     setPurokInfoOpen(false);
   }
-  const handleRedirect = (path) => {
-    navigate(path); // Use navigate for redirection
+  const handleRedirect = () => {
+    navigate('/brgy-official', { state: { brgyName } });
    
   };
   const togglePurok = (place) => {
@@ -333,8 +333,10 @@ const fetchPurokSetup = async (place) => {
  
    };
   
-
-
+   const handleRedirectPurok = () => {
+    navigate('/purok-setup', { state: { brgyName } });
+  };
+  
 
   return (
     <div>
@@ -444,7 +446,7 @@ const fetchPurokSetup = async (place) => {
                             color: 'black'  
                           }}
                         >
-                          <h2>Available Listed Purok</h2>
+                          <h2>Available Listed Purok for {brgyName}</h2>
                           <ul>
                               {purok.map((purok) => (
                                 <li
@@ -457,6 +459,7 @@ const fetchPurokSetup = async (place) => {
                               ))}
                             </ul>
                           <button onClick={ClearContainer}>Show Selected Barangay</button>
+                          <button onClick={handleRedirectPurok}>Go to Purok Form</button>
                         </div>
                       )}
                     </Backdrop>
@@ -520,6 +523,9 @@ const fetchPurokSetup = async (place) => {
                                   <button onClick={()=>togglePurok(brgyName)}>
                                     {drawerOpen ? "Hide Purok" : "Show Listed Purok"}
                                   </button>
+                                  <button onClick={() => handleRedirect()}>
+                                  Go to Official Form
+                                </button>
                                 </div>
                               </div>
                           ) : (
@@ -657,11 +663,7 @@ const fetchPurokSetup = async (place) => {
                                 <button onClick={toggleDrawer}>
                                   {drawerOpen ? "Hide Barangay's" : "Show Barangay's"}
                                 </button>
-                                <button onClick={() => handleRedirect('/brgy-official')}>
-                                  Insert Barangay Official
-                                </button>
-                                
-                                
+                            
                               </div>
                             </div>
 
@@ -699,6 +701,7 @@ const fetchPurokSetup = async (place) => {
                                     </div>
                                   </div>
                                   <button onClick={Lgu}>Back to barangay's information</button>
+            
                                 </div>
                               </div>
                             )}

@@ -15,3 +15,6 @@
 20241010	15:43:30	62d670cb-16a7-40a8-a80d-761b14d58c7d	ReferenceError: sql is not defined
 20241010	15:44:54	1265f0fa-cf5b-4593-a8d4-0b59f9d083c7	TypeError: Assignment to constant variable.
 >>>>>>> main
+20241106	00:33:16	b2130245-2309-4ac5-a482-e2055e69ae1b	ReferenceError: active is not defined
+20241106	00:34:22	c69248fa-b588-4355-82b1-46f6d433f876	ReferenceError: active is not defined
+20241106	03:11:48	ad32d2ed-b839-409d-84cd-ad6fe2ef1898	ReferenceError: Cannot access 'brgy' before initialization
