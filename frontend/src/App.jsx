@@ -36,18 +36,19 @@ import AddPurokInfo from './components/Settings/Purok/Purok_setup';
 const ROLES = {
   'User': 2001,
   'Editor': 1994,
-  'Admin': 5150
+  'Super_Admin': 1990
+
 }
 
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff3300', // your primary color
+      main: '#e64833', // your primary color
     },
 
     background: {
-      default: '#00ccff', // your background color
+      default: '#33D1E6', // your background color
     },
   },
 });
@@ -82,7 +83,6 @@ function App() {
                 </Route>
 
                 <Route element={<RequireAuth allowedRoles={[1994]}/>}>
-                <Route path="admin" element={<Admin />} />
                 <Route exact path="/test" element={<Test />} />
                 <Route path="/lgu-setup" element={<AddLGUInfo />} />
                 <Route path="/elected-official" element={<Elected_Form />} />
@@ -92,9 +92,11 @@ function App() {
                 
                 
               </Route>
+                <Route element={<RequireAuth allowedRoles={[1990]}/>}>
 
+                <Route path="admin" element={<Admin />} />
 
-
+                  </Route>
                 </Route>
             </Routes>
             </div>
