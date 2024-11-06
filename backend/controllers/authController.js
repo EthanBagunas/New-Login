@@ -30,7 +30,8 @@ const handleLogin = async (req, res) => {
                 }
 
                 if (isMatch) {
-                    const firstTimeLogin = !user.password_changed;
+                    // Determine if this is a first-time login based on a separate `firstTimeLogin` flag
+                    const firstTimeLogin = !user.password_changed; // Assuming the `password_changed` column reflects this
 
                     // Create tokens
                     const accessToken = jwt.sign(
@@ -46,7 +47,7 @@ const handleLogin = async (req, res) => {
                     );
 
                     // Store the refresh token in the database
-                    const updateSql = "UPDATE login SET refresh_token = ?, password_changed = TRUE WHERE username = ?";
+                    const updateSql = "UPDATE login SET refresh_token = ? WHERE username = ?";
                     db.query(updateSql, [refreshToken, email], (updateErr) => {
                         if (updateErr) {
                             console.error('Update error:', updateErr);
@@ -68,7 +69,7 @@ const handleLogin = async (req, res) => {
                             maxAge: 1 * 60 * 60 * 1000 // 1 hour
                         });
 
-                        // Send response with user info
+                        // Send response with user info, including firstTimeLogin flag
                         return res.status(200).json({
                             id: user.id,
                             email: user.username,

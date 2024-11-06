@@ -32,7 +32,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await axios.post(
                 LOGIN_URL,
@@ -42,23 +42,24 @@ function Login() {
                     withCredentials: true,
                 }
             );
-
+    
             const { accessToken, roles, firstTimeLogin, id } = response?.data; // Extract ID from response
-
+    
             // Set auth state including user ID
             setAuth({ user: email, id, roles, accessToken });
-
-            setFirstTimeLogin(firstTimeLogin);
+    
             setEmail('');
             setPassword('');
-
+    
+            // Only navigate to the reset page if firstTimeLogin is true (before resetting the password)
             if (firstTimeLogin) {
                 navigate('/reset', { state: { email }, replace: true });
             } else {
                 navigate(from, { replace: true });
             }
+    
             setPersist(rememberMe); 
-
+    
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -72,6 +73,7 @@ function Login() {
             errRef.current.focus();
         }
     };
+    
 
     return (
         <section className="container">

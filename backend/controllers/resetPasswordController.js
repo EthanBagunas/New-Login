@@ -13,7 +13,7 @@ const resetPassword = async (req, res) => {
 
     try {
         // Step 1: Retrieve the user's role based on email
-        const roleQuery = 'SELECT role FROM login WHERE username = ?';
+        const roleQuery = 'SELECT role, password_changed FROM login WHERE username = ?';
         db.query(roleQuery, [email], async (err, results) => {
             if (err) {
                 console.error('Database error:', err);
@@ -26,6 +26,7 @@ const resetPassword = async (req, res) => {
             }
 
             const userRole = results[0].role;
+            const passwordChanged = results[0].password_changed;
 
             // Step 2: Validate mobile number if role is '1994'
             if (userRole === '1994') {
@@ -40,12 +41,12 @@ const resetPassword = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Step 4: Update the password (and mobile number if applicable)
-            let updateQuery = 'UPDATE login SET password = ?';
-            const queryParams = [hashedPassword, email];
+            let updateQuery = 'UPDATE login SET password = ?, password_changed = ?';
+            const queryParams = [hashedPassword, 1, email]; // Set password_changed to 1
 
             if (userRole === '1994') {
                 updateQuery += ', number = ? WHERE username = ?';
-                queryParams.splice(1, 0, mobile); // Insert mobile in the second position
+                queryParams.splice(2, 0, mobile); // Insert mobile in the third position
             } else {
                 updateQuery += ' WHERE username = ?';
             }
@@ -61,7 +62,7 @@ const resetPassword = async (req, res) => {
                     return res.status(404).json({ message: 'User not found' });
                 }
 
-                // Password reset was successful
+                // Return success message for password reset
                 return res.status(200).json({
                     message: userRole === '1994'
                         ? 'Password and mobile number reset successfully'

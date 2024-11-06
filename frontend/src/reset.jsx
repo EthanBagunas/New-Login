@@ -4,7 +4,7 @@ import AuthContext from './context/AuthProvider';
 import axios from './api/axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './login.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify'; // Importing ToastContainer
 import 'react-toastify/dist/ReactToastify.css';
 
 const PWD_RESET = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -74,9 +74,9 @@ function Reset() {
             setMatchPwd('');
             setNumber('');
 
-            toast.success("Password reset successfully!", {
+            toast.success("Password reset successfully!", { // Toast notification
                 position: toast.POSITION.TOP_CENTER,
-                autoClose: 5000,
+                autoClose: 5000, // Set duration
             });
 
             navigate('/home');
@@ -180,6 +180,7 @@ function Reset() {
                 </div>
                 <div className="circle circle-two"></div>
             </div>
+            <ToastContainer /> {/* Add ToastContainer to render the toast notifications */}
         </section>
     );
 }

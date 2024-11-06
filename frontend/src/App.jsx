@@ -76,7 +76,7 @@ function App() {
 
                 
 
-                <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
+                <Route element={<RequireAuth allowedRoles={[1994, 2001,1990]}/>}>
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route exact path="/Home" element={<MapContainer />} /> 
